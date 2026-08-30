@@ -18,6 +18,7 @@ import {
   FLICKR_CREDIT,
   FLICKR_NOTE,
   FLICKR_OWNER_URL,
+  eventTravelFlag,
   type EventEntry,
 } from './events'
 import { CV_QUOTES } from './quotes'
@@ -887,6 +888,7 @@ function EventsPage({
               <EventRow
                 key={`${group.year}-${event.name}`}
                 event={event}
+                year={group.year}
                 active={activeId === `${group.year}-${event.name}`}
                 inlinePhoto={reduceMotion}
                 onActivate={() =>
@@ -936,12 +938,14 @@ function EventsPage({
 
 function EventRow({
   event,
+  year,
   active,
   inlinePhoto,
   onActivate,
   onDeactivate,
 }: {
   event: EventEntry
+  year: number
   active: boolean
   inlinePhoto: boolean
   onActivate: () => void
@@ -949,6 +953,7 @@ function EventRow({
 }) {
   const hasPhoto = Boolean(event.photo?.imageUrl)
   const label = event.game === 'CS' ? `${event.name} (CS)` : event.name
+  const flag = eventTravelFlag(event.name, year)
   const emmyLabel =
     event.emmy === 'winner'
       ? event.emmyAwardYear
@@ -993,6 +998,11 @@ function EventRow({
               aria-pressed={active}
             >
               {label}
+              {flag ? (
+                <span className="award-flag" title="Event location" aria-hidden="true">
+                  {flag}
+                </span>
+              ) : null}
               {emmyLabel ? (
                 <span className={`award-emmy award-emmy--${event.emmy}`}>
                   {emmyLabel}
@@ -1002,6 +1012,11 @@ function EventRow({
           ) : (
             <span className="award-name award-name--static">
               {label}
+              {flag ? (
+                <span className="award-flag" title="Event location" aria-hidden="true">
+                  {flag}
+                </span>
+              ) : null}
               {emmyLabel ? (
                 <span className={`award-emmy award-emmy--${event.emmy}`}>
                   {emmyLabel}

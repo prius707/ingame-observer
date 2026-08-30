@@ -1367,6 +1367,17 @@ body.invert #slider::-moz-range-thumb {
   cursor: default;
 }
 
+.award-flag {
+  display: inline-block;
+  margin-left: 0.4em;
+  font-size: 1.05em;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: none;
+  vertical-align: -0.05em;
+}
+
 .award-emmy {
   display: inline-block;
   margin-left: 0.55em;

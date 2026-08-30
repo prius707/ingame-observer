@@ -23,6 +23,78 @@ export type EventEntry = {
 
 export type EventYear = { year: number; events: EventEntry[] }
 
+/** Country flags for travel venues — matched from city/region in the event name. */
+const PLACE_FLAGS: ReadonlyArray<{ match: RegExp; flag: string }> = [
+  { match: /Los Angeles/i, flag: '🇺🇸' },
+  { match: /New York/i, flag: '🇺🇸' },
+  { match: /Boston/i, flag: '🇺🇸' },
+  { match: /Atlanta/i, flag: '🇺🇸' },
+  { match: /Chicago/i, flag: '🇺🇸' },
+  { match: /Oakland/i, flag: '🇺🇸' },
+  { match: /Toronto/i, flag: '🇨🇦' },
+  { match: /Santiago/i, flag: '🇨🇱' },
+  { match: /S[aã]o Paulo/i, flag: '🇧🇷' },
+  { match: /Belo Horizonte/i, flag: '🇧🇷' },
+  { match: /London/i, flag: '🇬🇧' },
+  { match: /Berlin/i, flag: '🇩🇪' },
+  { match: /Cologne/i, flag: '🇩🇪' },
+  { match: /Paris/i, flag: '🇫🇷' },
+  { match: /Madrid/i, flag: '🇪🇸' },
+  { match: /Lisbon/i, flag: '🇵🇹' },
+  { match: /Copenhagen/i, flag: '🇩🇰' },
+  { match: /Reykjav[ií]k/i, flag: '🇮🇸' },
+  { match: /Katowice/i, flag: '🇵🇱' },
+  { match: /Krak[oó]w/i, flag: '🇵🇱' },
+  { match: /Moscow/i, flag: '🇷🇺' },
+  { match: /Istanbul/i, flag: '🇹🇷' },
+  { match: /Bangkok/i, flag: '🇹🇭' },
+  { match: /Shanghai/i, flag: '🇨🇳' },
+  { match: /Seoul/i, flag: '🇰🇷' },
+  { match: /Tokyo/i, flag: '🇯🇵' },
+  { match: /Sydney/i, flag: '🇦🇺' },
+]
+
+/** Known venues when the event title has no city. */
+const NAMED_EVENT_FLAGS: ReadonlyArray<{ match: RegExp; flag: string }> = [
+  { match: /^VCT Americas\b/i, flag: '🇺🇸' },
+  { match: /^ESL Pro League Season \d+ Americas$/i, flag: '🇺🇸' },
+  { match: /^ESL Pro League Season \d+ Finals$/i, flag: '🇺🇸' }, // Dallas
+  { match: /^ELEAGUE\b/i, flag: '🇺🇸' }, // Atlanta
+  { match: /^IEM World Championship$/i, flag: '🇵🇱' }, // Katowice
+  { match: /^VALORANT Champions$/i, flag: '🇩🇪' }, // Berlin 2021
+  { match: /^VALORANT Game Changers Championship$/i, flag: '🇩🇪' },
+  { match: /^Red Bull Home Ground/i, flag: '🇩🇪' },
+  { match: /^VCT LOCK\/\//i, flag: '🇧🇷' },
+]
+
+/** BLAST Premier titles without a city — venue by season year. Online events omitted. */
+function blastPremierFlag(name: string, year: number): string | null {
+  if (!/^BLAST Premier\b/i.test(name)) return null
+  if (/Fall Finals?/i.test(name)) {
+    if (year === 2021 || year === 2022) return '🇩🇰' // Copenhagen
+  }
+  if (/Spring Finals?/i.test(name)) {
+    if (year === 2022) return '🇵🇹' // Lisbon
+  }
+  if (/World Final/i.test(name) && year === 2021) return '🇩🇰' // Copenhagen
+  return null
+}
+
+/** Flag emoji for where the event was held, or null if unknown / online. */
+export function eventTravelFlag(name: string, year?: number): string | null {
+  for (const { match, flag } of PLACE_FLAGS) {
+    if (match.test(name)) return flag
+  }
+  if (year != null) {
+    const blast = blastPremierFlag(name, year)
+    if (blast) return blast
+  }
+  for (const { match, flag } of NAMED_EVENT_FLAGS) {
+    if (match.test(name)) return flag
+  }
+  return null
+}
+
 export const FLICKR_CREDIT = "VALORANT Champions Tour Photos / Riot Games" as const
 export const FLICKR_OWNER_URL = "https://www.flickr.com/photos/valorantesports/" as const
 export const AMERICAS_FLICKR_CREDIT = "VCT Americas Photos / Riot Games" as const
