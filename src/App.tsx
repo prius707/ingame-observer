@@ -266,17 +266,6 @@ function App() {
           </a>
         </h1>
         <div className="header-actions">
-          {showPageTheme ? (
-            <button
-              type="button"
-              className="theme-toggle"
-              aria-pressed={pageDark}
-              aria-label={pageDark ? 'Switch to light mode' : 'Switch to dark mode'}
-              onClick={() => setPageDark((d) => !d)}
-            >
-              {pageDark ? 'Light' : 'Dark'}
-            </button>
-          ) : null}
           <a className="header-contact" href={SOCIAL.mailto}>
             Email
           </a>
@@ -408,6 +397,21 @@ function App() {
               Inspiration taken from getcoleman.com.
             </p>
             <p className="menu-legal">
+              {showPageTheme ? (
+                <>
+                  <button
+                    type="button"
+                    className="menu-theme-link"
+                    aria-pressed={pageDark}
+                    onClick={() => setPageDark((d) => !d)}
+                  >
+                    {pageDark ? 'Light mode' : 'Dark mode'}
+                  </button>
+                  <span className="menu-legal__sep" aria-hidden="true">
+                    ·
+                  </span>
+                </>
+              ) : null}
               <button
                 type="button"
                 className="menu-privacy-link"
