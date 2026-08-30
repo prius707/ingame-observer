@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { Fragment, useEffect, useId, useRef, useState } from 'react'
 import {
   CONTROLLER_EMAIL,
   CV_SECTIONS,
@@ -858,15 +858,19 @@ function EventsPage({
       </header>
 
       <nav className="events-years" aria-label="Jump to year">
-        {years.map((year) => (
-          <button
-            key={year}
-            type="button"
-            className="events-years__btn"
-            onClick={() => scrollToYear(year)}
-          >
-            {year}
-          </button>
+        {years.map((year, i) => (
+          <Fragment key={year}>
+            {i === 6 ? (
+              <span className="events-years__break" aria-hidden="true" />
+            ) : null}
+            <button
+              type="button"
+              className="events-years__btn"
+              onClick={() => scrollToYear(year)}
+            >
+              {year}
+            </button>
+          </Fragment>
         ))}
       </nav>
 
