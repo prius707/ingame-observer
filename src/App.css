@@ -144,12 +144,18 @@ a {
   line-height: 44px;
 }
 
-.header-contact {
+.header-actions {
   position: absolute;
-  /* rem (not em): keep vertical align with .menu-toggle regardless of font-size */
   top: calc(0.55rem + var(--safe-top));
-  right: calc(6.75em + var(--safe-right));
+  right: calc(3.25em + var(--safe-right));
   z-index: 121;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.theme-toggle,
+.header-contact {
   box-sizing: border-box;
   height: 44px;
   min-height: 44px;
@@ -158,27 +164,32 @@ a {
   border-radius: 999px;
   background: rgba(20, 20, 20, 0.92);
   color: inherit;
+  font: inherit;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   line-height: 42px;
   text-decoration: none;
   text-transform: uppercase;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.home--cv .header-contact,
-.home--clips .header-contact,
-.home--events .header-contact {
+.theme-toggle {
+  color: inherit;
+}
+
+.home--page:not(.home--dark) .theme-toggle,
+.home--page:not(.home--dark) .header-contact {
   color: #000;
   border-color: rgba(0, 0, 0, 0.35);
   background: rgba(255, 255, 255, 0.92);
 }
 
 .menu-toggle {
-  position: absolute;
-  /* rem matches .header-contact; menu-open sets font-size:0 so em would collapse to 0 */
-  top: calc(0.55rem + var(--safe-top));
-  right: calc(3.25em + var(--safe-right));
+  position: relative;
+  top: auto;
+  right: auto;
   box-sizing: border-box;
   width: 44px;
   height: 44px;
@@ -190,6 +201,7 @@ a {
   cursor: pointer;
   z-index: 130;
   -webkit-tap-highlight-color: transparent;
+  flex: 0 0 auto;
 }
 
 .menu-toggle.menu-open {
@@ -226,6 +238,7 @@ body.invert .menu-toggle.menu-open::after {
 }
 
 .menu-close {
+  position: absolute;
   top: calc(1em + var(--safe-top));
   right: calc(1.1em + var(--safe-right));
   z-index: 112;
@@ -1535,13 +1548,10 @@ body.invert .award-emmy--winner,
   color: inherit;
 }
 
-.home--page .page-footer {
-  border-top-color: rgba(0, 0, 0, 0.12);
-}
-
 .home--cv,
 .home--clips,
-.home--events {
+.home--events,
+.home--page {
   background: #fff;
   color: #000;
   isolation: auto;
@@ -1549,7 +1559,8 @@ body.invert .award-emmy--winner,
 
 .home--cv .site-title a,
 .home--clips .site-title a,
-.home--events .site-title a {
+.home--events .site-title a,
+.home--page .site-title a {
   color: #000;
 }
 
@@ -1576,21 +1587,54 @@ body.invert .award-emmy--winner,
   object-fit: contain;
 }
 
-.home--cv .menu-toggle.menu-open,
-.home--clips .menu-toggle.menu-open,
-.home--events .menu-toggle.menu-open {
+.home--page:not(.home--dark) .menu-toggle.menu-open {
   background: rgba(255, 255, 255, 0.92);
   border-color: rgba(0, 0, 0, 0.35);
   box-shadow: none;
 }
 
-.home--cv .menu-toggle.menu-open::after,
-.home--clips .menu-toggle.menu-open::after,
-.home--events .menu-toggle.menu-open::after {
+.home--page:not(.home--dark) .menu-toggle.menu-open::after {
   background: #000;
   box-shadow:
     0 -6px 0 0 #000,
     0 6px 0 0 #000;
+}
+
+/* Subpage dark mode (CV / Clips / Events / Privacy / 404) */
+.home--page.home--dark {
+  background: #000;
+  color: #fff;
+}
+
+.home--page.home--dark .site-title a {
+  color: #fff;
+}
+
+.home--page.home--dark .page-footer {
+  border-top-color: rgba(255, 255, 255, 0.18);
+}
+
+.home--page.home--dark .events-filter input,
+.home--page.home--dark .cv-partners__item,
+.home--page.home--dark .clip-nav-btn,
+.home--page.home--dark .events-years__btn {
+  accent-color: #fff;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.home--page.home--dark .award-emmy--winner {
+  color: #ff4d4d;
+}
+
+.home--page.home--dark .chat-ticker,
+.home--page.home--dark .clip-stage {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.home--page.home--dark .cv-quote,
+.home--page.home--dark .cv-section,
+.home--page.home--dark .privacy code {
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 @media (max-width: 720px) {
@@ -1603,11 +1647,16 @@ body.invert .award-emmy--winner,
   }
 
   .menu-toggle.menu-open {
+    right: auto;
+  }
+
+  .header-actions {
     right: calc(0.75rem + var(--safe-right));
   }
 
-  .header-contact {
-    right: calc(4.25rem + var(--safe-right));
+  .header-contact,
+  .theme-toggle {
+    right: auto;
     font-size: 0.62rem;
     padding-inline: 0.65em;
   }
@@ -1759,7 +1808,8 @@ body.invert .award-emmy--winner,
   .page-back,
   .cv-print,
   .menu-drawer,
-  .skip-link {
+  .skip-link,
+  .theme-toggle {
     display: none !important;
   }
 
@@ -1792,11 +1842,15 @@ body.invert .award-emmy--winner,
   }
 
   .menu-toggle.menu-open {
+    right: auto;
+  }
+
+  .header-actions {
     right: calc(1.25rem + var(--safe-right));
   }
 
   .header-contact {
-    right: calc(5.25rem + var(--safe-right));
+    right: auto;
   }
 
   .wrapper {

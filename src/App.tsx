@@ -36,6 +36,7 @@ import { assetPath } from './paths'
 import './App.css'
 
 const STORAGE_KEY = 'priusSliderPos'
+const PAGE_DARK_KEY = 'priusPageDark'
 
 type View = 'home' | 'privacy' | 'cv' | 'events' | 'clips' | 'notfound'
 
@@ -69,6 +70,13 @@ function App() {
   })
   const [menuOpen, setMenuOpen] = useState(false)
   const [invert, setInvert] = useState(false)
+  const [pageDark, setPageDark] = useState(() => {
+    try {
+      return sessionStorage.getItem(PAGE_DARK_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
   const [reduceMotion, setReduceMotion] = useState(() =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   )
@@ -143,6 +151,14 @@ function App() {
     document.body.classList.toggle('invert', invert)
     return () => document.body.classList.remove('invert')
   }, [invert])
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(PAGE_DARK_KEY, pageDark ? '1' : '0')
+    } catch {
+      /* ignore */
+    }
+  }, [pageDark])
 
   useEffect(() => {
     document.body.classList.toggle(
@@ -222,9 +238,17 @@ function App() {
           : view === 'events'
             ? 'home--page home--events'
             : ''
+  const showPageTheme = view !== 'home'
+  const homeClass = [
+    'home',
+    pageClass,
+    showPageTheme && pageDark ? 'home--dark' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   return (
-    <div className={`home${pageClass ? ` ${pageClass}` : ''}`}>
+    <div className={homeClass}>
       <a className="skip-link" href="#main">
         Skip to content
       </a>
@@ -241,20 +265,33 @@ function App() {
             prius
           </a>
         </h1>
-        <a className="header-contact" href={SOCIAL.mailto}>
-          Email
-        </a>
-        <button
-          ref={openBtnRef}
-          type="button"
-          className="menu-toggle menu-open"
-          aria-label="Open menu"
-          aria-expanded={menuOpen}
-          aria-controls={drawerId}
-          onClick={() => setMenuOpen(true)}
-        >
-          Menu
-        </button>
+        <div className="header-actions">
+          {showPageTheme ? (
+            <button
+              type="button"
+              className="theme-toggle"
+              aria-pressed={pageDark}
+              aria-label={pageDark ? 'Switch to light mode' : 'Switch to dark mode'}
+              onClick={() => setPageDark((d) => !d)}
+            >
+              {pageDark ? 'Light' : 'Dark'}
+            </button>
+          ) : null}
+          <a className="header-contact" href={SOCIAL.mailto}>
+            Email
+          </a>
+          <button
+            ref={openBtnRef}
+            type="button"
+            className="menu-toggle menu-open"
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            aria-controls={drawerId}
+            onClick={() => setMenuOpen(true)}
+          >
+            Menu
+          </button>
+        </div>
         {menuOpen && (
           <button
             type="button"
@@ -1096,15 +1133,15 @@ function PrivacyNotice({ onBack }: { onBack: () => void }) {
         </li>
       </ul>
 
-      <h3>Session storage (slider position)</h3>
+      <h3>Session storage</h3>
       <p>
-        The hard-sell slider may remember its position for the current browser
-        tab in <code>sessionStorage</code> (key{' '}
-        <code>{STORAGE_KEY}</code>). That value never leaves your device, is
-        not a cookie, and is cleared when the tab/session ends. It is used only
-        to keep the UI consistent while you browse — a limited, functional
-        purpose. If storage is blocked, the site still works with a default
-        position.
+        This site may remember two values for the current browser tab in{' '}
+        <code>sessionStorage</code>: the hard-sell slider position (key{' '}
+        <code>{STORAGE_KEY}</code>) and whether subpages use dark mode (key{' '}
+        <code>{PAGE_DARK_KEY}</code>). Those values never leave your device, are
+        not cookies, and are cleared when the tab/session ends. They are used
+        only to keep the UI consistent while you browse — a limited, functional
+        purpose. If storage is blocked, the site still works with defaults.
       </p>
 
       <h3>When you contact me</h3>
