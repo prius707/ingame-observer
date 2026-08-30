@@ -323,12 +323,18 @@ function App() {
                   />
                 </a>
                 <a
-                  className="social-link social-link--text"
+                  className="social-link"
                   href={SOCIAL.liquipedia}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Liquipedia
+                  <img
+                    className="social-icon"
+                    src={assetPath('icons/icon-liquipedia.svg')}
+                    alt="Liquipedia"
+                    width={36}
+                    height={36}
+                  />
                 </a>
               </div>
               <address className="menu-address">

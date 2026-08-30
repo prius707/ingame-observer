@@ -6,7 +6,7 @@ export type Pitch = {
   weight: number
 }
 
-const mail = 'mailto:djpriuskuntz@gmail.com'
+const mail = 'mailto:dj@ingame.observer'
 const x = 'https://x.com/priusOBS'
 const liquid = 'https://liquipedia.net/valorant/Prius'
 
@@ -150,7 +150,7 @@ export const PITCHES: Pitch[] = [
         </strong>
         <br />
         <strong>
-          GET IN TOUCH NOW at <a href={mail}>djpriuskuntz@gmail.com</a>
+          GET IN TOUCH NOW at <a href={mail}>dj@ingame.observer</a>
         </strong>
         . PROVEN 15+ years. PROVEN across four Sports Emmy nominations. PROVEN
         to win an Emmy. PROVEN on Majors, Masters, and Champions. PROVEN
@@ -169,7 +169,7 @@ export const PITCHES: Pitch[] = [
         </strong>
         <br />
         <strong>
-          GET IN TOUCH NOW at <a href={mail}>djpriuskuntz@gmail.com</a>
+          GET IN TOUCH NOW at <a href={mail}>dj@ingame.observer</a>
         </strong>
         . PROVEN 15+ years. PROVEN across four Sports Emmy nominations. PROVEN
         to win an Emmy. PROVEN consulting for Riot. PROVEN on the biggest
@@ -212,7 +212,7 @@ export const PAGE_TITLES = {
 export const SOCIAL = {
   twitter: 'https://x.com/priusOBS',
   linkedin: 'https://www.linkedin.com/in/david-kuntz-3521847a',
-  email: 'djpriuskuntz@gmail.com',
+  email: 'dj@ingame.observer',
   mailto: mail,
   location: 'Los Angeles - USA',
   liquipedia: liquid,
@@ -225,7 +225,7 @@ export const MENU_LINKS = [
   { label: 'Email', href: mail, external: false, mailto: true },
 ] as const
 
-export const CONTROLLER_EMAIL = 'djpriuskuntz@gmail.com'
+export const CONTROLLER_EMAIL = 'dj@ingame.observer'
 
 export const CV_SECTIONS = [
   {

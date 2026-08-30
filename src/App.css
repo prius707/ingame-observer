@@ -347,19 +347,6 @@ body.invert .menu-toggle.menu-open::after {
   margin-bottom: 1em;
 }
 
-.social-link--text {
-  width: auto;
-  height: auto;
-  padding: 0.35rem 0.5rem;
-  border-radius: 0;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-decoration: underline;
-  text-transform: uppercase;
-  text-underline-offset: 0.15em;
-}
-
 .social-link {
   display: inline-flex;
   align-items: center;
