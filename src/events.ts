@@ -25,12 +25,6 @@ export type EventYear = { year: number; events: EventEntry[] }
 
 /** Country flags for travel venues — matched from city/region in the event name. */
 const PLACE_FLAGS: ReadonlyArray<{ match: RegExp; flag: string }> = [
-  { match: /Los Angeles/i, flag: '🇺🇸' },
-  { match: /New York/i, flag: '🇺🇸' },
-  { match: /Boston/i, flag: '🇺🇸' },
-  { match: /Atlanta/i, flag: '🇺🇸' },
-  { match: /Chicago/i, flag: '🇺🇸' },
-  { match: /Oakland/i, flag: '🇺🇸' },
   { match: /Toronto/i, flag: '🇨🇦' },
   { match: /Santiago/i, flag: '🇨🇱' },
   { match: /S[aã]o Paulo/i, flag: '🇧🇷' },
@@ -54,12 +48,8 @@ const PLACE_FLAGS: ReadonlyArray<{ match: RegExp; flag: string }> = [
   { match: /Sydney/i, flag: '🇦🇺' },
 ]
 
-/** Known venues when the event title has no city. */
+/** Known venues when the event title has no city (US events intentionally unflagged). */
 const NAMED_EVENT_FLAGS: ReadonlyArray<{ match: RegExp; flag: string }> = [
-  { match: /^VCT Americas\b/i, flag: '🇺🇸' },
-  { match: /^ESL Pro League Season \d+ Americas$/i, flag: '🇺🇸' },
-  { match: /^ESL Pro League Season \d+ Finals$/i, flag: '🇺🇸' }, // Dallas
-  { match: /^ELEAGUE\b/i, flag: '🇺🇸' }, // Atlanta
   { match: /^IEM World Championship$/i, flag: '🇵🇱' }, // Katowice
   { match: /^VALORANT Champions$/i, flag: '🇩🇪' }, // Berlin 2021
   { match: /^VALORANT Game Changers Championship$/i, flag: '🇩🇪' },
