@@ -8,6 +8,7 @@ import {
   PARTNERS,
   PITCHES,
   SITE,
+  SITE_TAGLINE,
   SOCIAL,
 } from './data'
 import {
@@ -35,9 +36,14 @@ import './App.css'
 
 const STORAGE_KEY = 'priusSliderPos'
 
-type View = 'home' | 'privacy' | 'cv' | 'events' | 'clips'
+type View = 'home' | 'privacy' | 'cv' | 'events' | 'clips' | 'notfound'
+
+function isRootPath(pathname = window.location.pathname) {
+  return pathname === '/' || pathname === '' || pathname === '/index.html'
+}
 
 function readInitialView(): View {
+  if (!isRootPath()) return 'notfound'
   const h = window.location.hash
   if (h === '#privacy') return 'privacy'
   if (h === '#cv') return 'cv'
@@ -97,12 +103,16 @@ function App() {
   }, [view])
 
   useEffect(() => {
-    const onHash = () => {
+    const onNav = () => {
       setView(readInitialView())
       setMenuOpen(false)
     }
-    window.addEventListener('hashchange', onHash)
-    return () => window.removeEventListener('hashchange', onHash)
+    window.addEventListener('hashchange', onNav)
+    window.addEventListener('popstate', onNav)
+    return () => {
+      window.removeEventListener('hashchange', onNav)
+      window.removeEventListener('popstate', onNav)
+    }
   }, [])
 
   useEffect(() => {
@@ -163,17 +173,29 @@ function App() {
   }, [menuOpen])
 
   const goHome = () => {
+    setMenuOpen(false)
+    if (!isRootPath()) {
+      window.location.assign('/')
+      return
+    }
     setView('home')
     if (window.location.hash) {
       history.replaceState(null, '', window.location.pathname + window.location.search)
     }
-    setMenuOpen(false)
   }
 
   const goHash = (hash: View) => {
-    setView(hash)
     const fragment =
-      hash === 'home' ? '' : hash === 'events' ? 'events' : hash
+      hash === 'home' || hash === 'notfound'
+        ? ''
+        : hash === 'events'
+          ? 'events'
+          : hash
+    if (!isRootPath()) {
+      window.location.assign(fragment ? `/#${fragment}` : '/')
+      return
+    }
+    setView(hash)
     if (fragment) window.location.hash = fragment
     else if (window.location.hash) {
       history.replaceState(null, '', window.location.pathname + window.location.search)
@@ -190,7 +212,7 @@ function App() {
   }
 
   const pageClass =
-    view === 'privacy'
+    view === 'privacy' || view === 'notfound'
       ? 'home--page'
       : view === 'cv'
         ? 'home--page home--cv'
@@ -369,6 +391,8 @@ function App() {
           <ClipsPage onBack={goHome} />
         ) : view === 'events' ? (
           <EventsPage onBack={goHome} reduceMotion={reduceMotion} />
+        ) : view === 'notfound' ? (
+          <NotFoundPage onBack={goHome} />
         ) : (
           <div className="content-block">
             <div className="content-block__inner">
@@ -423,7 +447,11 @@ function App() {
 
       {view === 'home' && (
         <div className="slider-wrap">
-          <p className="home-tagline">{SITE.tagline}</p>
+          <p className="home-tagline">
+            {SITE.taglineRole}
+            {' · '}
+            <span className="home-tagline__lock">{SITE.taglineCreds}</span>
+          </p>
           <div className="slider__scale" aria-hidden="true">
             <span>Less Hard Sell</span>
             <span>More Hard Sell</span>
@@ -480,7 +508,7 @@ function CvPage({ onBack }: { onBack: () => void }) {
   return (
     <article className="cv-page">
       <h2 className="sr-only">CV</h2>
-      <p className="cv-lead">{SITE.tagline}</p>
+      <p className="cv-lead">{SITE_TAGLINE}</p>
       <p className="cv-availability">{SITE.availability}</p>
 
       <div className="cv-partners" aria-label="Partners">
@@ -626,7 +654,15 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
   }, [])
 
   useEffect(() => {
-    applyDefaultVolume(videoRef.current)
+    const el = videoRef.current
+    applyDefaultVolume(el)
+    if (!el) return
+    el.setAttribute('controlsList', 'nodownload noremoteplayback')
+    try {
+      el.disablePictureInPicture = true
+    } catch {
+      /* older browsers */
+    }
   }, [index])
 
   useEffect(() => {
@@ -685,11 +721,17 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
             ref={videoRef}
             key={clip.file}
             controls
+            controlsList="nodownload noremoteplayback"
+            disablePictureInPicture
+            disableRemotePlayback
             playsInline
             preload="metadata"
             poster={clipPoster(clip.file)}
             src={clipSrc(clip.file)}
             aria-label={clip.title}
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+            onDragStart={(e) => e.preventDefault()}
             onLoadedMetadata={(e) => applyDefaultVolume(e.currentTarget)}
             onEnded={() => select(index + 1)}
           />
@@ -1005,6 +1047,24 @@ function EventRow({
         </p>
       ) : null}
     </div>
+  )
+}
+
+function NotFoundPage({ onBack }: { onBack: () => void }) {
+  return (
+    <article className="not-found">
+      <p className="not-found__code">404</p>
+      <h2 className="not-found__title">Missed the play.</h2>
+      <p className="not-found__lead">
+        This URL isn&rsquo;t on the broadcast. Prius is observing a different
+        map.
+      </p>
+      <p className="page-back">
+        <button type="button" className="text-btn" onClick={onBack}>
+          ← Back to the pitch
+        </button>
+      </p>
+    </article>
   )
 }
 

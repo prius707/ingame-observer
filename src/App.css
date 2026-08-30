@@ -524,13 +524,16 @@ body.invert #output .red {
 
 .home-tagline {
   margin: 0 0 0.65rem;
-  max-width: 28rem;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.05em;
   line-height: 1.4;
   opacity: 0.72;
   text-transform: uppercase;
+}
+
+.home-tagline__lock {
+  white-space: nowrap;
 }
 
 .site-credit {
@@ -958,6 +961,11 @@ body.invert #slider::-moz-range-thumb {
   height: 100%;
   object-fit: contain;
   background: #000;
+}
+
+.clip-stage video::-internal-media-controls-download-button,
+.clip-stage video::-webkit-media-controls-download-button {
+  display: none !important;
 }
 
 .clip-now {
@@ -1479,6 +1487,41 @@ body.invert .award-emmy--winner,
   margin-top: 2rem;
   text-align: left;
   text-transform: none;
+}
+
+.not-found {
+  max-width: 28rem;
+  padding: 2rem 0 4rem;
+}
+
+.not-found__code {
+  margin: 0 0 0.35rem;
+  font-size: clamp(3.5rem, 12vw, 6rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.not-found__title {
+  margin: 0 0 0.85rem;
+  font-size: clamp(1.35rem, 3.4vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.not-found__lead {
+  margin: 0;
+  max-width: 22rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  opacity: 0.78;
+}
+
+.not-found .page-back {
+  margin-top: 1.75rem;
 }
 
 .page-footer {

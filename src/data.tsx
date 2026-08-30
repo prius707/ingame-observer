@@ -188,10 +188,12 @@ export const PITCHES: Pitch[] = [
 export const DEFAULT_PITCH = 6
 
 export const SITE = {
-  tagline:
-    'Freelance VALORANT & CS2 observer · Sports Emmy winner · Los Angeles',
+  taglineRole: 'Freelance VALORANT & CS2 observer',
+  taglineCreds: 'Sports Emmy winner — Los Angeles, California',
   availability: 'Booking international LANs & league stages · replies within 48h',
 } as const
+
+export const SITE_TAGLINE = `${SITE.taglineRole} · ${SITE.taglineCreds}`
 
 export const PARTNERS = [
   'Riot Games',
@@ -207,6 +209,7 @@ export const PAGE_TITLES = {
   clips: 'Clips · prius',
   events: 'Events · prius',
   privacy: 'Privacy · prius',
+  notfound: '404 · prius',
 } as const
 
 export const SOCIAL = {
@@ -214,7 +217,7 @@ export const SOCIAL = {
   linkedin: 'https://www.linkedin.com/in/david-kuntz-3521847a',
   email: 'dj@ingame.observer',
   mailto: mail,
-  location: 'Los Angeles - USA',
+  location: 'Los Angeles, California',
   liquipedia: liquid,
 } as const
 
