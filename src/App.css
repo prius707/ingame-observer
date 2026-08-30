@@ -190,7 +190,6 @@ a {
   cursor: pointer;
   z-index: 130;
   -webkit-tap-highlight-color: transparent;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4);
 }
 
 .menu-toggle.menu-open {
@@ -1580,17 +1579,18 @@ body.invert .award-emmy--winner,
 .home--cv .menu-toggle.menu-open,
 .home--clips .menu-toggle.menu-open,
 .home--events .menu-toggle.menu-open {
-  background: rgba(20, 20, 20, 0.92);
-  border-color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(0, 0, 0, 0.35);
+  box-shadow: none;
 }
 
 .home--cv .menu-toggle.menu-open::after,
 .home--clips .menu-toggle.menu-open::after,
 .home--events .menu-toggle.menu-open::after {
-  background: #fff;
+  background: #000;
   box-shadow:
-    0 -6px 0 0 #fff,
-    0 6px 0 0 #fff;
+    0 -6px 0 0 #000,
+    0 6px 0 0 #000;
 }
 
 @media (max-width: 720px) {
