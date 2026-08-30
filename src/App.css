@@ -1285,48 +1285,6 @@ body.invert #slider::-moz-range-thumb {
   accent-color: #000;
 }
 
-.events-years {
-  position: sticky;
-  top: calc(4em + var(--safe-top));
-  z-index: 3;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin: 0 0 1.25rem;
-  padding: 0.35rem 0;
-  background: #fff;
-}
-
-/* Keep 2026–2021 on one row; older years start on the next. */
-.events-years__break {
-  flex-basis: 100%;
-  width: 0;
-  height: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  overflow: hidden;
-}
-
-.events-years__btn {
-  flex: 0 0 auto;
-  min-height: 2rem;
-  padding: 0.2rem 0.55rem;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  background: #fff;
-  color: inherit;
-  font: inherit;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-}
-
-.events-years__btn:hover,
-.events-years__btn:focus-visible {
-  border-color: #000;
-}
-
 .events-page .year + .year {
   margin-top: 1.5em;
 }
