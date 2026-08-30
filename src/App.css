@@ -1755,3 +1755,45 @@ body.invert .award-emmy--winner,
     left: 0.25rem;
   }
 }
+
+/* Tablets and small laptops (iPad portrait → ~11" landscape) */
+@media (min-width: 721px) and (max-width: 1100px) {
+  .site-title {
+    left: calc(1.75rem + var(--safe-left));
+  }
+
+  .menu-toggle.menu-open {
+    right: calc(1.25rem + var(--safe-right));
+  }
+
+  .header-contact {
+    right: calc(5.25rem + var(--safe-right));
+  }
+
+  .wrapper {
+    padding-left: calc(2.25rem + var(--safe-left));
+    padding-right: calc(2.25rem + var(--safe-right));
+  }
+
+  .home--clips .wrapper {
+    padding-left: calc(2.25rem + var(--safe-left));
+    padding-right: calc(2.25rem + var(--safe-right));
+  }
+
+  .slider-wrap {
+    padding-left: calc(2.25rem + var(--safe-left));
+    padding-right: calc(2.25rem + var(--safe-right));
+  }
+
+  #output {
+    font-size: clamp(1.05rem, 2.1vw, 1.25rem);
+    line-height: 1.55;
+  }
+}
+
+@media (min-width: 900px) {
+  .clips-viewer {
+    grid-template-columns: minmax(0, 1.45fr) minmax(16rem, 0.7fr);
+    align-items: start;
+  }
+}
