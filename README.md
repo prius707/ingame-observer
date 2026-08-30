@@ -10,8 +10,11 @@ Inspired by [getcoleman.com](https://getcoleman.com/): one page of copy and a **
 
 - Fonts are **self-hosted** (no Google Fonts CDN).
 - No analytics or marketing cookies.
-- Optional `sessionStorage` only for the slider position in the current tab (documented on the Privacy page).
+- Event stills and clip videos are **self-hosted** (no Flickr/Smugmug image requests from visitors).
+- Optional `sessionStorage` only for the slider position and subpage dark-mode preference in the current tab (documented on the Privacy page).
 - Privacy notice available from the menu (`#privacy`).
+- Host: **GitHub Pages**. Custom HTTP header files (`public/_headers`) are **not** applied by Pages — use Cloudflare (or similar) for HSTS / framing headers. See [docs/cloudflare-headers.md](docs/cloudflare-headers.md).
+- Security contact: `dj@ingame.observer` · [/.well-known/security.txt](https://ingame.observer/.well-known/security.txt)
 
 ## Dev
 
@@ -35,6 +38,8 @@ Pushes to `main` run `.github/workflows/deploy-pages.yml` and publish `dist/`.
 3. DNS A records: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
 
 This repo must be **public** for free GitHub Pages (or use GitHub Pro on a private repo).
+
+**Optional hardening:** put Cloudflare in front of the custom domain and apply the response headers in `docs/cloudflare-headers.md`.
 
 ## Scripts
 

@@ -1,11 +1,22 @@
 /*
+  NOTE: GitHub Pages ignores this file. It is kept for Cloudflare Pages / Netlify
+  (or a Cloudflare Transform Rule mirroring these values). See docs/cloudflare-headers.md.
+*/
+/*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
-  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://live.staticflickr.com https://*.staticflickr.com https://photos.smugmug.com https://*.smugmug.com https://photos.eslgaming.com; media-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' mailto:; upgrade-insecure-requests
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' mailto:; upgrade-insecure-requests
 
 /clips/*.mp4
   Content-Disposition: inline
   X-Content-Type-Options: nosniff
+
+/event-photos/*
+  Content-Disposition: inline
+  X-Content-Type-Options: nosniff
+  Cache-Control: public, max-age=31536000, immutable

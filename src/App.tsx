@@ -923,11 +923,11 @@ function EventsPage({
 
       <footer className="events-credit">
         <p>
-          International VALORANT photography from{' '}
+          International VALORANT photography credited to{' '}
           <a href={FLICKR_OWNER_URL} target="_blank" rel="noopener noreferrer">
             {FLICKR_CREDIT}
           </a>
-          ; Americas league photography from{' '}
+          ; Americas league photography credited to{' '}
           <a
             href={AMERICAS_FLICKR_OWNER_URL}
             target="_blank"
@@ -936,7 +936,8 @@ function EventsPage({
             {AMERICAS_FLICKR_CREDIT}
           </a>
           . CS and other events use organizer Flickr / ESL FACEIT Group stills
-          where available — see each photo credit.
+          where available — see each photo credit. Stills are self-hosted copies
+          on this site; credit links open the original galleries.
         </p>
         <p className="events-credit-note">{FLICKR_NOTE}</p>
       </footer>
@@ -1044,7 +1045,11 @@ function EventRow({
         {active && event.photo?.imageUrl ? (
           <img
             className={inlinePhoto ? 'award-inline-photo' : undefined}
-            src={event.photo.imageUrl}
+            src={
+              event.photo.imageUrl.startsWith('http')
+                ? event.photo.imageUrl
+                : assetPath(event.photo.imageUrl)
+            }
             alt=""
             decoding="async"
             loading="lazy"
@@ -1135,6 +1140,11 @@ function PrivacyNotice({ onBack }: { onBack: () => void }) {
           <strong>No account / newsletter forms.</strong> The only contact path
           is you choosing to email or message externally.
         </li>
+        <li>
+          <strong>Event stills and clip videos are self-hosted</strong> on this
+          origin. Viewing a photo does not request Flickr, Smugmug, or ESL
+          CDNs from your browser.
+        </li>
       </ul>
 
       <h3>Session storage</h3>
@@ -1160,19 +1170,19 @@ function PrivacyNotice({ onBack }: { onBack: () => void }) {
         their supervisory authority.
       </p>
 
-      <h3>Third-party imagery</h3>
+      <h3>Imagery &amp; attribution</h3>
       <p>
-        The Events page may load a photograph from Flickr or ESL FACEIT Group
-        galleries when you tap or hover an event (Riot Games / VALORANT Champions
-        Tour Photos, VCT Americas, BLAST Esports, and other event
-        photographers). Clip videos on this site are hosted locally for
-        playback; titles link to the original Twitch clips for attribution. The
-        Clips page also shows a curated chat-style ticker with self-hosted 7TV
-        emote images (decorative copies, not a live Twitch chat feed). Your
-        browser requests third-party assets only for the photo you view; each
-        host&rsquo;s privacy notice applies. Photos and clips remain © their
-        respective rights holders unless a Creative Commons license is stated
-        on the source page.
+        Photographs shown on the Events page are <strong>local copies</strong>{' '}
+        served from this site for playback. Titles and credits link to the
+        original Flickr / ESL FACEIT Group / organizer gallery pages for
+        attribution (Riot Games / VALORANT Champions Tour Photos, VCT Americas,
+        BLAST Esports, and other event photographers). Following those links
+        leaves this site and is subject to the destination&rsquo;s privacy
+        notice. Clip videos are hosted locally; titles link to the original
+        Twitch clips. The Clips page also shows a curated chat-style ticker with
+        self-hosted 7TV emote images (decorative copies, not a live Twitch chat
+        feed). Photos and clips remain © their respective rights holders unless
+        a Creative Commons license is stated on the source page.
       </p>
 
       <h3>External links</h3>
@@ -1182,12 +1192,31 @@ function PrivacyNotice({ onBack }: { onBack: () => void }) {
         notices apply once you leave.
       </p>
 
-      <h3>Hosting</h3>
+      <h3>Hosting &amp; security headers</h3>
       <p>
-        Like any website, the host and network path may process technical
-        connection data (e.g. IP address, user agent) in server logs for
-        security and delivery. Retention depends on the host. No additional
-        profiling is configured by this project.
+        This site is published with <strong>GitHub Pages</strong> for{' '}
+        <a href="https://ingame.observer/">ingame.observer</a>. Like any
+        website, the host and network path may process technical connection data
+        (e.g. IP address, user agent) in server logs for security and delivery.
+        Retention is governed by GitHub&rsquo;s policies — see the{' '}
+        <a
+          href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub Privacy Statement
+        </a>
+        . No additional profiling is configured by this project.
+      </p>
+      <p>
+        A Content Security Policy is delivered via an HTML meta tag (scripts,
+        styles, images, and media restricted to this origin). GitHub Pages does
+        not apply custom HTTP response header files; directives that require a
+        real response header (for example framing protection / HSTS) need a CDN
+        such as Cloudflare in front of the domain. Setup notes live in the
+        project docs (<code>docs/cloudflare-headers.md</code>). Security contact:{' '}
+        <a href={`mailto:${CONTROLLER_EMAIL}`}>{CONTROLLER_EMAIL}</a> (also in{' '}
+        <a href="/.well-known/security.txt">/.well-known/security.txt</a>).
       </p>
 
       <p className="privacy-updated">Last updated: 30 August 2026</p>
