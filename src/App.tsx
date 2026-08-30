@@ -270,7 +270,7 @@ function App() {
             aria-controls={drawerId}
             onClick={() => setMenuOpen((open) => !open)}
           >
-            {menuOpen ? 'Close' : 'Menu'}
+            {menuOpen ? '×' : 'Menu'}
           </button>
         </div>
         {menuOpen && (

@@ -214,10 +214,8 @@ a {
   pointer-events: none;
   transition:
     transform 0.2s ease,
-    width 0.2s ease,
-    height 0.2s ease,
-    margin 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 }
 
 /* hamburger bars (closed) */
@@ -235,21 +233,20 @@ a {
   box-shadow: none;
 }
 
-/* X (open) — same button stays put next to Email */
+/* X via glyph so it stays visible on light pages */
+.menu-toggle.menu-open.is-open {
+  font-size: 1.65rem;
+  font-weight: 400;
+  line-height: 1;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .menu-toggle.menu-open.is-open::before,
 .menu-toggle.menu-open.is-open::after {
-  width: 2px;
-  height: 18px;
-  margin: -9px 0 0 -1px;
-  box-shadow: none;
-}
-
-.menu-toggle.menu-open.is-open::before {
-  transform: rotate(45deg);
-}
-
-.menu-toggle.menu-open.is-open::after {
-  transform: rotate(-45deg);
+  opacity: 0;
 }
 
 body.invert .menu-toggle.menu-open {
@@ -266,8 +263,8 @@ body.invert .menu-toggle.menu-open::before {
   box-shadow: 0 12px 0 0 #fff;
 }
 
-body.invert .menu-toggle.menu-open.is-open::before {
-  box-shadow: none;
+body.invert .menu-toggle.menu-open.is-open {
+  color: #fff;
 }
 
 .menu-backdrop {
@@ -1606,8 +1603,8 @@ body.invert .award-emmy--winner,
   box-shadow: 0 12px 0 0 #000;
 }
 
-.home--page:not(.home--dark) .menu-toggle.menu-open.is-open::before {
-  box-shadow: none;
+.home--page:not(.home--dark) .menu-toggle.menu-open.is-open {
+  color: #000;
 }
 
 /* dark mode on non-home pages */
