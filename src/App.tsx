@@ -330,7 +330,7 @@ function App() {
                 >
                   <img
                     className="social-icon"
-                    src={assetPath('icons/icon-liquipedia.svg')}
+                    src={assetPath('icons/icon-liquipedia-mark.svg')}
                     alt="Liquipedia"
                     width={36}
                     height={36}
