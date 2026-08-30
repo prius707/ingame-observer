@@ -923,11 +923,11 @@ function EventsPage({
 
       <footer className="events-credit">
         <p>
-          International VALORANT photography credited to{' '}
+          VALORANT stills credited to{' '}
           <a href={FLICKR_OWNER_URL} target="_blank" rel="noopener noreferrer">
             {FLICKR_CREDIT}
           </a>
-          ; Americas league photography credited to{' '}
+          ; Americas league to{' '}
           <a
             href={AMERICAS_FLICKR_OWNER_URL}
             target="_blank"
@@ -935,9 +935,8 @@ function EventsPage({
           >
             {AMERICAS_FLICKR_CREDIT}
           </a>
-          . CS and other events use organizer Flickr / ESL FACEIT Group stills
-          where available — see each photo credit. Stills are self-hosted copies
-          on this site; credit links open the original galleries.
+          . CS / other events use organizer albums where we have them — check
+          each credit. Files are hosted here; links go to the originals.
         </p>
         <p className="events-credit-note">{FLICKR_NOTE}</p>
       </footer>
@@ -1113,9 +1112,8 @@ function PrivacyNotice({ onBack }: { onBack: () => void }) {
     <article className="privacy">
       <h2>Privacy</h2>
       <p className="privacy-lead">
-        This site is a personal hiring page for David &ldquo;prius&rdquo; Kuntz
-        (observer). It is designed to minimise personal-data processing under
-        the GDPR and similar EU rules.
+        Personal hiring site for David &ldquo;prius&rdquo; Kuntz. I try not to
+        collect anything I don&rsquo;t need.
       </p>
 
       <h3>Who is responsible</h3>
@@ -1128,95 +1126,71 @@ function PrivacyNotice({ onBack }: { onBack: () => void }) {
 
       <h3>What this site does (and does not) do</h3>
       <ul>
+        <li>No analytics, pixels, or marketing cookies.</li>
+        <li>Fonts are self-hosted (no Google Fonts request from your browser).</li>
+        <li>No accounts or newsletter signup — just email / social if you want.</li>
         <li>
-          <strong>No advertising trackers.</strong> No analytics SDKs, pixels,
-          or marketing cookies are loaded.
-        </li>
-        <li>
-          <strong>No Google Fonts CDN.</strong> Typefaces are self-hosted with
-          the site so your IP is not sent to Google to fetch fonts.
-        </li>
-        <li>
-          <strong>No account / newsletter forms.</strong> The only contact path
-          is you choosing to email or message externally.
-        </li>
-        <li>
-          <strong>Event stills and clip videos are self-hosted</strong> on this
-          origin. Viewing a photo does not request Flickr, Smugmug, or ESL
-          CDNs from your browser.
+          Event photos and clip videos are served from this site. Opening an
+          event still does not call Flickr or Smugmug.
         </li>
       </ul>
 
       <h3>Session storage</h3>
       <p>
-        This site may remember two values for the current browser tab in{' '}
-        <code>sessionStorage</code>: the hard-sell slider position (key{' '}
-        <code>{STORAGE_KEY}</code>) and whether subpages use dark mode (key{' '}
-        <code>{PAGE_DARK_KEY}</code>). Those values never leave your device, are
-        not cookies, and are cleared when the tab/session ends. They are used
-        only to keep the UI consistent while you browse — a limited, functional
-        purpose. If storage is blocked, the site still works with defaults.
+        For this browser tab only, the site may store the hard-sell slider
+        position (<code>{STORAGE_KEY}</code>) and whether you turned on dark
+        mode on subpages (<code>{PAGE_DARK_KEY}</code>). That stays on your
+        device, isn&rsquo;t a cookie, and clears when the tab closes. Block
+        storage and everything still works with defaults.
       </p>
 
       <h3>When you contact me</h3>
       <p>
-        If you email <a href={`mailto:${CONTROLLER_EMAIL}`}>{CONTROLLER_EMAIL}</a>{' '}
-        or message via X/Twitter, that service processes your message under
-        their terms. I use inbound messages only to reply about observing /
-        booking. Legal basis: Art. 6(1)(b) GDPR (pre-contractual steps) and/or
-        Art. 6(1)(f) (legitimate interest in answering enquiries). You can ask
-        for access, rectification, erasure, restriction, or objection by
-        emailing the same address. EU residents may also lodge a complaint with
-        their supervisory authority.
+        Email (<a href={`mailto:${CONTROLLER_EMAIL}`}>{CONTROLLER_EMAIL}</a>) or
+        a DM on X goes through that provider under their terms. I only use the
+        message to reply about observing / booking. Legal basis: Art. 6(1)(b)
+        and/or 6(1)(f) GDPR. You can ask for access, correction, deletion, or to
+        object — same address. EU folks can also complain to their supervisory
+        authority.
       </p>
 
-      <h3>Imagery &amp; attribution</h3>
+      <h3>Photos &amp; clips</h3>
       <p>
-        Photographs shown on the Events page are <strong>local copies</strong>{' '}
-        served from this site for playback. Titles and credits link to the
-        original Flickr / ESL FACEIT Group / organizer gallery pages for
-        attribution (Riot Games / VALORANT Champions Tour Photos, VCT Americas,
-        BLAST Esports, and other event photographers). Following those links
-        leaves this site and is subject to the destination&rsquo;s privacy
-        notice. Clip videos are hosted locally; titles link to the original
-        Twitch clips. The Clips page also shows a curated chat-style ticker with
-        self-hosted 7TV emote images (decorative copies, not a live Twitch chat
-        feed). Photos and clips remain © their respective rights holders unless
-        a Creative Commons license is stated on the source page.
+        Events stills are local copies with credit links back to the original
+        Flickr / ESL / organizer albums (Riot / VCT Americas / BLAST / etc.).
+        Clips are local files with links to the Twitch originals. The chat
+        ticker uses self-hosted 7TV emote frames, not a live Twitch feed.
+        Rights stay with the photographers and organizers unless a source page
+        says otherwise.
       </p>
 
       <h3>External links</h3>
       <p>
-        Links to Liquipedia, X/Twitter, LinkedIn, Flickr, Twitch, and mailto open
-        third-party services outside this site&rsquo;s control. Their privacy
-        notices apply once you leave.
+        Liquipedia, X, LinkedIn, Flickr, Twitch, mailto — once you leave, their
+        rules apply.
       </p>
 
-      <h3>Hosting &amp; security headers</h3>
+      <h3>Hosting</h3>
       <p>
-        This site is published with <strong>GitHub Pages</strong> for{' '}
-        <a href="https://ingame.observer/">ingame.observer</a>. Like any
-        website, the host and network path may process technical connection data
-        (e.g. IP address, user agent) in server logs for security and delivery.
-        Retention is governed by GitHub&rsquo;s policies — see the{' '}
+        Served from GitHub Pages for{' '}
+        <a href="https://ingame.observer/">ingame.observer</a>. Hosts see the
+        usual connection fluff (IP, user agent) in logs; that&rsquo;s GitHub&rsquo;s
+        side —{' '}
         <a
           href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement"
           target="_blank"
           rel="noopener noreferrer"
         >
-          GitHub Privacy Statement
+          their privacy statement
         </a>
-        . No additional profiling is configured by this project.
+        . I&rsquo;m not running extra tracking on top.
       </p>
       <p>
-        A Content Security Policy is delivered via an HTML meta tag (scripts,
-        styles, images, and media restricted to this origin). GitHub Pages does
-        not apply custom HTTP response header files; directives that require a
-        real response header (for example framing protection / HSTS) need a CDN
-        such as Cloudflare in front of the domain. Setup notes live in the
-        project docs (<code>docs/cloudflare-headers.md</code>). Security contact:{' '}
-        <a href={`mailto:${CONTROLLER_EMAIL}`}>{CONTROLLER_EMAIL}</a> (also in{' '}
-        <a href="/.well-known/security.txt">/.well-known/security.txt</a>).
+        There&rsquo;s a basic Content Security Policy in the HTML. Spotted
+        something sketchy?{' '}
+        <a href={`mailto:${CONTROLLER_EMAIL}`}>{CONTROLLER_EMAIL}</a>
+        {' · '}
+        <a href="/.well-known/security.txt">security.txt</a>
       </p>
 
       <p className="privacy-updated">Last updated: 30 August 2026</p>

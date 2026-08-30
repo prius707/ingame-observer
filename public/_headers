@@ -1,6 +1,5 @@
 /*
-  NOTE: GitHub Pages ignores this file. It is kept for Cloudflare Pages / Netlify
-  (or a Cloudflare Transform Rule mirroring these values). See docs/cloudflare-headers.md.
+  GitHub Pages ignores _headers. Kept for Cloudflare Pages / Netlify — see docs/cloudflare-headers.md
 */
 /*
   X-Content-Type-Options: nosniff

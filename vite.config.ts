@@ -3,7 +3,7 @@ import path from 'node:path'
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 
-/** GitHub Pages serves 404.html for unknown paths. Copy the SPA shell so React can render the branded 404. */
+/** Copy index → 404.html for GitHub Pages unknown paths. */
 function spaFallback404(): Plugin {
   return {
     name: 'spa-fallback-404',

@@ -6,15 +6,13 @@ Live: **https://ingame.observer/** · Repo: [github.com/prius707/ingame-observer
 
 Inspired by [getcoleman.com](https://getcoleman.com/): one page of copy and a **Less Hard Sell → More Hard Sell** slider that rewrites the pitch from shrug to full scream.
 
-## Privacy / GDPR
+## Privacy
 
-- Fonts are **self-hosted** (no Google Fonts CDN).
-- No analytics or marketing cookies.
-- Event stills and clip videos are **self-hosted** (no Flickr/Smugmug image requests from visitors).
-- Optional `sessionStorage` only for the slider position and subpage dark-mode preference in the current tab (documented on the Privacy page).
-- Privacy notice available from the menu (`#privacy`).
-- Host: **GitHub Pages**. Custom HTTP header files (`public/_headers`) are **not** applied by Pages — use Cloudflare (or similar) for HSTS / framing headers. See [docs/cloudflare-headers.md](docs/cloudflare-headers.md).
-- Security contact: `dj@ingame.observer` · [/.well-known/security.txt](https://ingame.observer/.well-known/security.txt)
+- Self-hosted fonts, no analytics cookies.
+- Event stills + clips live on this origin (credit links still go to Flickr / Twitch / etc.).
+- `sessionStorage` only for slider position + subpage dark mode (see `#privacy`).
+- Hosted on GitHub Pages. `public/_headers` is for Cloudflare/Netlify-style hosts — Pages ignores it. If you put Cloudflare in front, copy the header list from [docs/cloudflare-headers.md](docs/cloudflare-headers.md).
+- Security mail: `dj@ingame.observer` · [security.txt](https://ingame.observer/.well-known/security.txt)
 
 ## Dev
 
@@ -23,31 +21,23 @@ npm ci
 npm run dev
 ```
 
-Open http://localhost:5173/ (Vite uses `/` as the base, same as the custom domain).
+Open http://localhost:5173/
 
-## Deploy (GitHub Pages)
+## Deploy
 
-Live URL: **https://ingame.observer/**
+Pushes to `main` → `.github/workflows/deploy-pages.yml` → GitHub Pages.
 
-Pushes to `main` run `.github/workflows/deploy-pages.yml` and publish `dist/`.
+One-time: Pages source = GitHub Actions, custom domain `ingame.observer`, HTTPS on, DNS A records `185.199.108.153` / `.109` / `.110` / `.111`.
 
-**One-time setup:**
-
-1. Repo **Settings → Pages → Build and deployment → Source:** GitHub Actions
-2. **Settings → Pages → Custom domain:** `ingame.observer` (enforce HTTPS)
-3. DNS A records: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
-
-This repo must be **public** for free GitHub Pages (or use GitHub Pro on a private repo).
-
-**Optional hardening:** put Cloudflare in front of the custom domain and apply the response headers in `docs/cloudflare-headers.md`.
+Repo needs to be public for free Pages (or GitHub Pro).
 
 ## Scripts
 
 | Command | Description |
 | --- | --- |
-| `npm run dev` | Vite dev server |
-| `npm run build` | Type-check + production build |
-| `npm run preview` | Preview production build |
+| `npm run dev` | Vite |
+| `npm run build` | `tsc` + Vite build |
+| `npm run preview` | preview `dist` |
 | `npm run lint` | oxlint |
 
 ## Stack

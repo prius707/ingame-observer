@@ -23,7 +23,7 @@ export type EventEntry = {
 
 export type EventYear = { year: number; events: EventEntry[] }
 
-/** Country flags for travel venues — matched from city/region in the event name. */
+/** City / country flags for event rows (US venues left blank on purpose). */
 const PLACE_FLAGS: ReadonlyArray<{ match: RegExp; flag: string }> = [
   { match: /Toronto/i, flag: '🇨🇦' },
   { match: /Santiago/i, flag: '🇨🇱' },
@@ -48,7 +48,7 @@ const PLACE_FLAGS: ReadonlyArray<{ match: RegExp; flag: string }> = [
   { match: /Sydney/i, flag: '🇦🇺' },
 ]
 
-/** Known venues when the event title has no city (US events intentionally unflagged). */
+/** Fallback when the title has no city. */
 const NAMED_EVENT_FLAGS: ReadonlyArray<{ match: RegExp; flag: string }> = [
   { match: /^IEM World Championship$/i, flag: '🇵🇱' }, // Katowice
   { match: /^VALORANT Champions$/i, flag: '🇩🇪' }, // Berlin 2021
@@ -57,7 +57,7 @@ const NAMED_EVENT_FLAGS: ReadonlyArray<{ match: RegExp; flag: string }> = [
   { match: /^VCT LOCK\/\//i, flag: '🇧🇷' },
 ]
 
-/** BLAST Premier titles without a city — venue by season year. Online events omitted. */
+/** BLAST Premier rows without a city — by year. Skip online seasons. */
 function blastPremierFlag(name: string, year: number): string | null {
   if (!/^BLAST Premier\b/i.test(name)) return null
   if (/Fall Finals?/i.test(name)) {
@@ -70,7 +70,6 @@ function blastPremierFlag(name: string, year: number): string | null {
   return null
 }
 
-/** Flag emoji for where the event was held, or null if unknown / online. */
 export function eventTravelFlag(name: string, year?: number): string | null {
   for (const { match, flag } of PLACE_FLAGS) {
     if (match.test(name)) return flag
@@ -89,7 +88,8 @@ export const FLICKR_CREDIT = "VALORANT Champions Tour Photos / Riot Games" as co
 export const FLICKR_OWNER_URL = "https://www.flickr.com/photos/valorantesports/" as const
 export const AMERICAS_FLICKR_CREDIT = "VCT Americas Photos / Riot Games" as const
 export const AMERICAS_FLICKR_OWNER_URL = "https://www.flickr.com/photos/vctamericas/" as const
-export const FLICKR_NOTE = "International VALORANT photos credited to VALORANT Champions Tour Photos (valorantesports); Americas Kickoff / Stage photos credited to VCT Americas (vctamericas). CS and other event stills credited to organizer galleries where available (BLAST Esports, ESL FACEIT Group, PGL, StarLadder, MTG AB, and event photographers). Stills shown on this site are self-hosted copies; attribution links go to the original albums. Prefer finals / celebration stills when captions mark them. All photos remain \u00a9 their respective rights holders; All Rights Reserved unless otherwise licensed." as const
+export const FLICKR_NOTE =
+  'Stills are local copies with credit links to the original albums (VCT / Americas / BLAST / ESL FACEIT Group / etc.). Prefer finals when we have them. Photos stay © their owners unless the source says otherwise.' as const
 
 export const EVENT_YEARS: EventYear[] = [
   {

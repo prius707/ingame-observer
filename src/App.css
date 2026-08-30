@@ -1602,7 +1602,7 @@ body.invert .award-emmy--winner,
     0 6px 0 0 #000;
 }
 
-/* Subpage dark mode (CV / Clips / Events / Privacy / 404) */
+/* dark mode on non-home pages */
 .home--page.home--dark {
   background: #000;
   color: #fff;
