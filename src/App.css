@@ -204,19 +204,52 @@ a {
   color: transparent;
 }
 
+.menu-toggle.menu-open::before,
 .menu-toggle.menu-open::after {
   content: '';
   position: absolute;
   top: 50%;
   left: 50%;
+  background: #fff;
+  pointer-events: none;
+  transition:
+    transform 0.2s ease,
+    width 0.2s ease,
+    height 0.2s ease,
+    margin 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* hamburger bars (closed) */
+.menu-toggle.menu-open::before {
+  width: 18px;
+  height: 2px;
+  margin: -7px 0 0 -9px;
+  box-shadow: 0 12px 0 0 #fff;
+}
+
+.menu-toggle.menu-open::after {
   width: 18px;
   height: 2px;
   margin: -1px 0 0 -9px;
-  background: #fff;
-  box-shadow:
-    0 -6px 0 0 #fff,
-    0 6px 0 0 #fff;
-  pointer-events: none;
+  box-shadow: none;
+}
+
+/* X (open) — same button stays put next to Email */
+.menu-toggle.menu-open.is-open::before,
+.menu-toggle.menu-open.is-open::after {
+  width: 2px;
+  height: 18px;
+  margin: -9px 0 0 -1px;
+  box-shadow: none;
+}
+
+.menu-toggle.menu-open.is-open::before {
+  transform: rotate(45deg);
+}
+
+.menu-toggle.menu-open.is-open::after {
+  transform: rotate(-45deg);
 }
 
 body.invert .menu-toggle.menu-open {
@@ -224,47 +257,17 @@ body.invert .menu-toggle.menu-open {
   border-color: rgba(255, 255, 255, 0.7);
 }
 
+body.invert .menu-toggle.menu-open::before,
 body.invert .menu-toggle.menu-open::after {
   background: #fff;
-  box-shadow:
-    0 -6px 0 0 #fff,
-    0 6px 0 0 #fff;
 }
 
-.menu-close {
-  position: absolute;
-  top: calc(0.55rem + var(--safe-top));
-  right: calc(1.1rem + var(--safe-right));
-  z-index: 112;
-  width: 44px;
-  height: 44px;
-  text-indent: 0;
-  font-size: 0;
-  color: transparent;
-  background: transparent;
-  border-color: transparent;
+body.invert .menu-toggle.menu-open::before {
+  box-shadow: 0 12px 0 0 #fff;
+}
+
+body.invert .menu-toggle.menu-open.is-open::before {
   box-shadow: none;
-}
-
-.menu-close::before,
-.menu-close::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 2px;
-  height: 18px;
-  margin: -9px 0 0 -1px;
-  background: #000;
-  pointer-events: none;
-}
-
-.menu-close::before {
-  transform: rotate(45deg);
-}
-
-.menu-close::after {
-  transform: rotate(-45deg);
 }
 
 .menu-backdrop {
@@ -301,11 +304,6 @@ body.invert .menu-toggle.menu-open::after {
   transform: translateX(0);
   pointer-events: auto;
   visibility: visible;
-}
-
-.header-main.js--open .menu-toggle.menu-open {
-  visibility: hidden;
-  pointer-events: none;
 }
 
 .menu-drawer[hidden] {
@@ -1599,11 +1597,17 @@ body.invert .award-emmy--winner,
   box-shadow: none;
 }
 
+.home--page:not(.home--dark) .menu-toggle.menu-open::before,
 .home--page:not(.home--dark) .menu-toggle.menu-open::after {
   background: #000;
-  box-shadow:
-    0 -6px 0 0 #000,
-    0 6px 0 0 #000;
+}
+
+.home--page:not(.home--dark) .menu-toggle.menu-open::before {
+  box-shadow: 0 12px 0 0 #000;
+}
+
+.home--page:not(.home--dark) .menu-toggle.menu-open.is-open::before {
+  box-shadow: none;
 }
 
 /* dark mode on non-home pages */
