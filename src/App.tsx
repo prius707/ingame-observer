@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import {
   CONTROLLER_EMAIL,
   CV_SECTIONS,
@@ -831,14 +831,6 @@ function EventsPage({
 }) {
   const [activeId, setActiveId] = useState<string | null>(null)
   const [emmyOnly, setEmmyOnly] = useState(false)
-  const years = EVENT_YEARS.map((g) => g.year)
-
-  const scrollToYear = (year: number) => {
-    document.getElementById(`events-year-${year}`)?.scrollIntoView({
-      behavior: reduceMotion ? 'auto' : 'smooth',
-      block: 'start',
-    })
-  }
 
   return (
     <article className="events-page">
@@ -856,23 +848,6 @@ function EventsPage({
           </label>
         </div>
       </header>
-
-      <nav className="events-years" aria-label="Jump to year">
-        {years.map((year, i) => (
-          <Fragment key={year}>
-            {i === 6 ? (
-              <span className="events-years__break" aria-hidden="true" />
-            ) : null}
-            <button
-              type="button"
-              className="events-years__btn"
-              onClick={() => scrollToYear(year)}
-            >
-              {year}
-            </button>
-          </Fragment>
-        ))}
-      </nav>
 
       {EVENT_YEARS.map((group) => {
         const events = emmyOnly
