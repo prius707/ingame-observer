@@ -146,9 +146,12 @@ a {
 
 .header-contact {
   position: absolute;
-  top: calc(0.55em + var(--safe-top));
+  /* rem (not em): font-size below must not shift vertical align vs .menu-toggle */
+  top: calc(0.55rem + var(--safe-top));
   right: calc(6.75em + var(--safe-right));
   z-index: 121;
+  box-sizing: border-box;
+  height: 44px;
   min-height: 44px;
   padding: 0 0.85em;
   border: 1px solid rgba(255, 255, 255, 0.55);
@@ -158,9 +161,12 @@ a {
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  line-height: 44px;
+  line-height: 1;
   text-decoration: none;
   text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .home--cv .header-contact,
@@ -173,8 +179,10 @@ a {
 
 .menu-toggle {
   position: absolute;
-  top: calc(0.55em + var(--safe-top));
+  /* rem matches .header-contact; menu-open sets font-size:0 so em would be 0 */
+  top: calc(0.55rem + var(--safe-top));
   right: calc(3.25em + var(--safe-right));
+  box-sizing: border-box;
   width: 44px;
   height: 44px;
   padding: 0;
@@ -1292,8 +1300,10 @@ body.invert #slider::-moz-range-thumb {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
+  width: fit-content;
+  max-width: 100%;
   margin: 0 0 1.25rem;
-  padding: 0.35rem 0;
+  padding: 0.35rem;
   background: #fff;
 }
 
