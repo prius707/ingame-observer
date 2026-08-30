@@ -90,8 +90,6 @@ function App() {
   const flashMode = pos === max && !reduceMotion && !narrow
   const sizeGuideRef = useRef<HTMLParagraphElement>(null)
   const drawerId = useId()
-  const openBtnRef = useRef<HTMLButtonElement>(null)
-  const closeBtnRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -173,11 +171,6 @@ function App() {
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', menuOpen)
-    if (menuOpen) {
-      closeBtnRef.current?.focus()
-    } else {
-      openBtnRef.current?.blur()
-    }
   }, [menuOpen])
 
   useEffect(() => {
@@ -270,15 +263,14 @@ function App() {
             Email
           </a>
           <button
-            ref={openBtnRef}
             type="button"
-            className="menu-toggle menu-open"
-            aria-label="Open menu"
+            className={`menu-toggle menu-open${menuOpen ? ' is-open' : ''}`}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
             aria-controls={drawerId}
-            onClick={() => setMenuOpen(true)}
+            onClick={() => setMenuOpen((open) => !open)}
           >
-            Menu
+            {menuOpen ? 'Close' : 'Menu'}
           </button>
         </div>
         {menuOpen && (
@@ -298,15 +290,6 @@ function App() {
           {...(menuOpen ? {} : { hidden: true, inert: true })}
         >
           <div className="menu-drawer_inner">
-            <button
-              ref={closeBtnRef}
-              type="button"
-              className="menu-toggle menu-close"
-              aria-label="Close menu"
-              onClick={() => setMenuOpen(false)}
-            >
-              Close
-            </button>
             <nav className="menu" aria-label="Site">
               <ul>
                 {MENU_LINKS.map((link) => (
