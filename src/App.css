@@ -832,27 +832,11 @@ body.invert #slider::-moz-range-thumb {
 }
 
 .cv-availability {
-  margin: 0 0 1.25rem;
+  margin: 0 0 2rem;
   font-size: 0.75rem;
   letter-spacing: 0.04em;
   opacity: 0.72;
   text-transform: none;
-}
-
-.cv-partners {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem 0.75rem;
-  margin: 0 0 2rem;
-}
-
-.cv-partners__item {
-  padding: 0.35rem 0.55rem;
-  border: 1px solid rgba(0, 0, 0, 0.18);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  line-height: 1.2;
 }
 
 .cv-print {
@@ -1622,7 +1606,6 @@ body.invert .award-emmy--winner,
 }
 
 .home--page.home--dark .events-filter input,
-.home--page.home--dark .cv-partners__item,
 .home--page.home--dark .clip-nav-btn,
 .home--page.home--dark .events-years__btn {
   accent-color: #fff;
@@ -1826,10 +1809,6 @@ body.invert .award-emmy--winner,
 
   .cv-page {
     color: #000;
-  }
-
-  .cv-partners__item {
-    border-color: #999;
   }
 }
 
