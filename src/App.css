@@ -1653,15 +1653,15 @@ body.invert .award-emmy--winner,
 }
 
 .home--page.home--dark .clip-nav-btn {
-  background: #000;
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.55);
+  background: #fff;
+  color: #000;
+  border-color: #fff;
 }
 
 .home--page.home--dark .clip-nav-btn:hover,
 .home--page.home--dark .clip-nav-btn:focus-visible {
   border-color: #fff;
-  background: #141414;
+  background: #e8e8e8;
 }
 
 .home--page.home--dark .award-emmy--winner {
