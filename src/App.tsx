@@ -222,15 +222,17 @@ function App() {
   }
 
   const pageClass =
-    view === 'privacy' || view === 'notfound'
-      ? 'home--page'
-      : view === 'cv'
-        ? 'home--page home--cv'
-        : view === 'clips'
-          ? 'home--page home--clips'
-          : view === 'events'
-            ? 'home--page home--events'
-            : ''
+    view === 'notfound'
+      ? 'home--page home--notfound'
+      : view === 'privacy'
+        ? 'home--page'
+        : view === 'cv'
+          ? 'home--page home--cv'
+          : view === 'clips'
+            ? 'home--page home--clips'
+            : view === 'events'
+              ? 'home--page home--events'
+              : ''
   const showPageTheme = view !== 'home'
   const homeClass = [
     'home',
@@ -1089,29 +1091,31 @@ function NotFoundPage({
         map.
       </p>
       {miss ? (
-        <figure className="not-found__clip">
-          {reduceMotion ? (
-            <img
-              src={assetPath('404/s1mple-1v2.jpg')}
-              alt=""
-              width={420}
-              height={237}
-              decoding="async"
-            />
-          ) : (
-            <img
-              src={assetPath('404/s1mple-1v2.gif')}
-              alt=""
-              width={420}
-              height={237}
-              decoding="async"
-            />
-          )}
-          <figcaption>
-            <p className="not-found__clip-quote">&ldquo;{miss.quote}&rdquo;</p>
-            <p className="not-found__clip-note">{miss.note}</p>
-          </figcaption>
-        </figure>
+        <div className="not-found__viewer">
+          <figure className="not-found__stage">
+            {reduceMotion ? (
+              <img
+                src={assetPath('404/s1mple-1v2.jpg')}
+                alt=""
+                width={640}
+                height={360}
+                decoding="async"
+              />
+            ) : (
+              <img
+                src={assetPath('404/s1mple-1v2.gif')}
+                alt=""
+                width={640}
+                height={360}
+                decoding="async"
+              />
+            )}
+          </figure>
+          <blockquote className="not-found__quote">
+            <p>&ldquo;{miss.quote}&rdquo;</p>
+            <footer className="not-found__clip-note">{miss.note}</footer>
+          </blockquote>
+        </div>
       ) : null}
       <p className="page-back">
         <button type="button" className="text-btn" onClick={onBack}>

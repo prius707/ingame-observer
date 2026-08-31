@@ -461,6 +461,13 @@ body.invert .menu-toggle.menu-open.is-open {
   padding-right: calc(2.75em + var(--safe-right));
 }
 
+.home--notfound .wrapper {
+  max-width: min(88em, 100%);
+  text-align: left;
+  padding-left: calc(2.75em + var(--safe-left));
+  padding-right: calc(2.75em + var(--safe-right));
+}
+
 .content-block {
   display: flex;
   width: 100%;
@@ -1489,7 +1496,6 @@ body.invert .award-emmy--winner,
 }
 
 .not-found {
-  max-width: 28rem;
   padding: 2rem 0 4rem;
 }
 
@@ -1513,35 +1519,47 @@ body.invert .award-emmy--winner,
 
 .not-found__lead {
   margin: 0;
-  max-width: 22rem;
+  max-width: 36rem;
   font-size: 0.95rem;
   line-height: 1.5;
   opacity: 0.78;
 }
 
-.not-found__clip {
-  margin: 1.5rem 0 0;
-  padding: 0;
-  max-width: 22.5rem;
+.not-found__viewer {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
-.not-found__clip img {
+.not-found__stage {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  aspect-ratio: 16 / 9;
+  max-height: min(70vh, 44rem);
+  background: #111;
+  overflow: hidden;
+}
+
+.not-found__stage img {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  background: #111;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
 }
 
-.not-found__clip figcaption {
-  margin-top: 0.75rem;
+.not-found__quote {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
 }
 
-.not-found__clip-quote {
+.not-found__quote p {
   margin: 0;
   font-family: var(--serif);
-  font-size: 0.95rem;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
   font-style: italic;
   font-weight: 400;
   line-height: 1.45;
@@ -1550,7 +1568,7 @@ body.invert .award-emmy--winner,
 }
 
 .not-found__clip-note {
-  margin: 0.4rem 0 0;
+  margin: 0.65rem 0 0;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -1563,7 +1581,7 @@ body.invert .award-emmy--winner,
   margin-top: 1.75rem;
 }
 
-.home--page.home--dark .not-found__clip img {
+.home--page.home--dark .not-found__stage {
   background: #000;
 }
 
@@ -1912,6 +1930,11 @@ body.invert .award-emmy--winner,
     padding-right: calc(2.25rem + var(--safe-right));
   }
 
+  .home--notfound .wrapper {
+    padding-left: calc(2.25rem + var(--safe-left));
+    padding-right: calc(2.25rem + var(--safe-right));
+  }
+
   .slider-wrap {
     padding-left: calc(2.25rem + var(--safe-left));
     padding-right: calc(2.25rem + var(--safe-right));
@@ -1927,5 +1950,21 @@ body.invert .award-emmy--winner,
   .clips-viewer {
     grid-template-columns: minmax(0, 1.45fr) minmax(16rem, 0.7fr);
     align-items: start;
+  }
+
+  .not-found__viewer {
+    grid-template-columns: minmax(0, 1.45fr) minmax(16rem, 0.7fr);
+    gap: 1.25rem 1.75rem;
+    align-items: start;
+  }
+
+  .not-found__stage {
+    max-height: min(78vh, 54rem);
+  }
+
+  .not-found__quote {
+    position: sticky;
+    top: calc(4.5rem + var(--safe-top));
+    padding-top: 0.15rem;
   }
 }
