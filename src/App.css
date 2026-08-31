@@ -1548,22 +1548,16 @@ body.invert .award-emmy--winner,
 
 .not-found__clip img {
   display: block;
-  width: 100%;
+  width: auto;
   max-width: 100%;
   height: auto;
   max-height: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: contain;
-  background: #111;
+  margin-inline: auto;
 }
 
 .not-found .page-back {
   flex: 0 0 auto;
   margin: 0.4rem 0 0;
-}
-
-.home--page.home--dark .not-found__clip img {
-  background: #000;
 }
 
 .page-footer {

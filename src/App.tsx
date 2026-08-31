@@ -1097,8 +1097,8 @@ function NotFoundPage({
               : assetPath('404/s1mple-1v2.gif')
           }
           alt=""
-          width={960}
-          height={540}
+          width={420}
+          height={237}
           decoding="async"
         />
       </figure>
