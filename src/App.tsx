@@ -237,7 +237,7 @@ function App() {
   const homeClass = [
     'home',
     pageClass,
-    showPageTheme && pageDark ? 'home--dark' : '',
+    showPageTheme && (pageDark || view === 'notfound') ? 'home--dark' : '',
   ]
     .filter(Boolean)
     .join(' ')
@@ -1083,30 +1083,43 @@ function NotFoundPage({
 }) {
   return (
     <article className="not-found">
-      <p className="not-found__code">404</p>
-      <h2 className="not-found__title">Missed the play.</h2>
-      <p className="not-found__lead">
-        This URL isn&rsquo;t on the broadcast. Prius is observing a different
-        map.
-      </p>
-      <figure className="not-found__clip">
+      <div className="not-found__stage">
         <img
           src={
             reduceMotion
               ? assetPath('404/s1mple-1v2.jpg')
               : assetPath('404/s1mple-1v2.gif')
           }
-          alt=""
+          alt="s1mple winning a 1v2 clutch"
           width={420}
           height={237}
           decoding="async"
+          fetchPriority="high"
+          draggable={false}
         />
-      </figure>
-      <p className="page-back">
-        <button type="button" className="text-btn" onClick={onBack}>
-          ← Back to the pitch
-        </button>
-      </p>
+      </div>
+      <div className="not-found__shade" aria-hidden="true" />
+      <div className="not-found__hud">
+        <p className="not-found__code" aria-hidden="true">
+          404
+        </p>
+        <div className="not-found__copy">
+          <p className="not-found__meta">Observer cam</p>
+          <h2 className="not-found__title">
+            <span className="sr-only">404. </span>
+            Missed the play.
+          </h2>
+          <p className="not-found__lead">
+            This URL isn&rsquo;t on the broadcast. Prius is observing a
+            different map.
+          </p>
+        </div>
+        <p className="not-found__actions">
+          <button type="button" className="not-found__back" onClick={onBack}>
+            ← Back to the pitch
+          </button>
+        </p>
+      </div>
     </article>
   )
 }
