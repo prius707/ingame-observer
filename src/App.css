@@ -1505,13 +1505,13 @@ body.invert .award-emmy--winner,
   max-height: calc(
     100dvh - 7em - var(--safe-top) - 3em - var(--safe-bottom)
   );
-  padding: 0.75rem 0 0.5rem;
+  padding: 0.35rem 0 0.25rem;
   overflow: hidden;
 }
 
 .not-found__code {
-  margin: 0 0 0.25rem;
-  font-size: clamp(2.75rem, 9vw, 4.75rem);
+  margin: 0 0 0.15rem;
+  font-size: clamp(2.35rem, 7.5vw, 3.75rem);
   font-weight: 800;
   letter-spacing: 0.04em;
   line-height: 0.9;
@@ -1519,29 +1519,29 @@ body.invert .award-emmy--winner,
 }
 
 .not-found__title {
-  margin: 0 0 0.5rem;
-  font-size: clamp(1.15rem, 2.8vw, 1.55rem);
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
   font-weight: 700;
   letter-spacing: 0.02em;
-  line-height: 1.2;
+  line-height: 1.15;
   text-transform: uppercase;
 }
 
 .not-found__lead {
   margin: 0;
   max-width: 36rem;
-  font-size: 0.9rem;
-  line-height: 1.4;
+  font-size: 0.85rem;
+  line-height: 1.35;
   opacity: 0.78;
 }
 
 .not-found__clip {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 0;
-  margin: 0.65rem 0 0;
+  margin: 0.4rem 0 0;
   padding: 0;
   width: 100%;
 }
@@ -1549,7 +1549,7 @@ body.invert .award-emmy--winner,
 .not-found__clip img {
   display: block;
   width: 100%;
-  max-width: min(100%, 44rem);
+  max-width: 100%;
   height: auto;
   max-height: 100%;
   aspect-ratio: 16 / 9;
@@ -1559,7 +1559,7 @@ body.invert .award-emmy--winner,
 
 .not-found .page-back {
   flex: 0 0 auto;
-  margin: 0.65rem 0 0;
+  margin: 0.4rem 0 0;
 }
 
 .home--page.home--dark .not-found__clip img {
