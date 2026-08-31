@@ -455,7 +455,7 @@ body.invert .menu-toggle.menu-open.is-open {
 }
 
 .home--clips .wrapper {
-  max-width: min(88em, 100%);
+  max-width: min(72em, 100%);
   text-align: left;
   padding-left: calc(2.75em + var(--safe-left));
   padding-right: calc(2.75em + var(--safe-right));
@@ -990,7 +990,6 @@ body.invert #slider::-moz-range-thumb {
 
 .clip-stage {
   width: 100%;
-  min-width: 0;
   aspect-ratio: 16 / 9;
   max-height: min(70vh, 44rem);
   margin-inline: auto;
@@ -1012,7 +1011,7 @@ body.invert #slider::-moz-range-thumb {
 }
 
 .clip-now {
-  min-width: 0;
+  max-width: 48rem;
 }
 
 .clip-now__top {
@@ -1917,34 +1916,7 @@ body.invert .award-emmy--winner,
 
 @media (min-width: 900px) {
   .clips-viewer {
-    grid-template-columns: minmax(11rem, 16.5rem) minmax(0, 1fr);
-    gap: 1.25rem 1.75rem;
+    grid-template-columns: minmax(0, 1.45fr) minmax(16rem, 0.7fr);
     align-items: start;
-  }
-
-  .clip-stage {
-    grid-column: 2;
-    grid-row: 1;
-    width: 100%;
-    max-width: 100%;
-    max-height: min(78vh, 54rem);
-    margin-inline: 0;
-    justify-self: stretch;
-  }
-
-  .clip-now {
-    grid-column: 1;
-    grid-row: 1;
-    position: sticky;
-    top: calc(4.5rem + var(--safe-top));
-    padding-top: 0.15rem;
-  }
-
-  .clip-quote {
-    margin-top: 0.55rem;
-  }
-
-  .clip-quote p {
-    font-size: clamp(0.88rem, 1.35vw, 1rem);
   }
 }
