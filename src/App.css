@@ -1496,12 +1496,22 @@ body.invert .award-emmy--winner,
 }
 
 .not-found {
-  padding: 2rem 0 4rem;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: calc(
+    100dvh - 7em - var(--safe-top) - 3em - var(--safe-bottom)
+  );
+  max-height: calc(
+    100dvh - 7em - var(--safe-top) - 3em - var(--safe-bottom)
+  );
+  padding: 0.75rem 0 0.5rem;
+  overflow: hidden;
 }
 
 .not-found__code {
-  margin: 0 0 0.35rem;
-  font-size: clamp(3.5rem, 12vw, 6rem);
+  margin: 0 0 0.25rem;
+  font-size: clamp(2.75rem, 9vw, 4.75rem);
   font-weight: 800;
   letter-spacing: 0.04em;
   line-height: 0.9;
@@ -1509,8 +1519,8 @@ body.invert .award-emmy--winner,
 }
 
 .not-found__title {
-  margin: 0 0 0.85rem;
-  font-size: clamp(1.35rem, 3.4vw, 1.85rem);
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.15rem, 2.8vw, 1.55rem);
   font-weight: 700;
   letter-spacing: 0.02em;
   line-height: 1.2;
@@ -1520,13 +1530,18 @@ body.invert .award-emmy--winner,
 .not-found__lead {
   margin: 0;
   max-width: 36rem;
-  font-size: 0.95rem;
-  line-height: 1.5;
+  font-size: 0.9rem;
+  line-height: 1.4;
   opacity: 0.78;
 }
 
 .not-found__clip {
-  margin: 1.5rem 0 0;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  margin: 0.65rem 0 0;
   padding: 0;
   width: 100%;
 }
@@ -1534,15 +1549,17 @@ body.invert .award-emmy--winner,
 .not-found__clip img {
   display: block;
   width: 100%;
+  max-width: min(100%, 44rem);
   height: auto;
+  max-height: 100%;
   aspect-ratio: 16 / 9;
-  max-height: min(78vh, 54rem);
   object-fit: contain;
   background: #111;
 }
 
 .not-found .page-back {
-  margin-top: 1.75rem;
+  flex: 0 0 auto;
+  margin: 0.65rem 0 0;
 }
 
 .home--page.home--dark .not-found__clip img {
@@ -1706,6 +1723,15 @@ body.invert .award-emmy--winner,
   .home--clips .wrapper {
     padding-left: calc(1.25rem + var(--safe-left));
     padding-right: calc(1.25rem + var(--safe-right));
+  }
+
+  .not-found {
+    min-height: calc(
+      100dvh - 5.25rem - var(--safe-top) - 3em - var(--safe-bottom)
+    );
+    max-height: calc(
+      100dvh - 5.25rem - var(--safe-top) - 3em - var(--safe-bottom)
+    );
   }
 
   .clip-stage {
@@ -1914,9 +1940,5 @@ body.invert .award-emmy--winner,
   .clips-viewer {
     grid-template-columns: minmax(0, 1.45fr) minmax(16rem, 0.7fr);
     align-items: start;
-  }
-
-  .not-found__clip img {
-    max-height: min(82vh, 56rem);
   }
 }
