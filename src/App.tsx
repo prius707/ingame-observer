@@ -26,7 +26,6 @@ import {
   CLIPS,
   clipHash,
   clipIndexFromSlug,
-  clipGif,
   clipPageUrl,
   clipPoster,
   clipSrc,
@@ -1093,18 +1092,18 @@ function NotFoundPage({
         <figure className="not-found__clip">
           {reduceMotion ? (
             <img
-              src={clipPoster(miss.file)}
+              src={assetPath('404/s1mple-1v2.jpg')}
               alt=""
-              width={360}
-              height={203}
+              width={420}
+              height={237}
               decoding="async"
             />
           ) : (
             <img
-              src={clipGif(miss.file)}
+              src={assetPath('404/s1mple-1v2.gif')}
               alt=""
-              width={360}
-              height={203}
+              width={420}
+              height={237}
               decoding="async"
             />
           )}

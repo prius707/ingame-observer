@@ -86,9 +86,6 @@ export function clipPoster(file: string) {
   return assetPath(`clips/${file}.jpg`)
 }
 
-export function clipGif(file: string) {
-  return assetPath(`clips/${file}.gif`)
-}
 
 export function clipPageUrl(slug: string) {
   return `https://clips.twitch.tv/${slug}`
