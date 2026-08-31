@@ -26,6 +26,7 @@ import {
   CLIPS,
   clipHash,
   clipIndexFromSlug,
+  clipGif,
   clipPageUrl,
   clipPoster,
   clipSrc,
@@ -417,7 +418,7 @@ function App() {
         ) : view === 'events' ? (
           <EventsPage onBack={goHome} reduceMotion={reduceMotion} />
         ) : view === 'notfound' ? (
-          <NotFoundPage onBack={goHome} />
+          <NotFoundPage onBack={goHome} reduceMotion={reduceMotion} />
         ) : (
           <div className="content-block">
             <div className="content-block__inner">
@@ -1072,7 +1073,14 @@ function EventRow({
   )
 }
 
-function NotFoundPage({ onBack }: { onBack: () => void }) {
+function NotFoundPage({
+  onBack,
+  reduceMotion,
+}: {
+  onBack: () => void
+  reduceMotion: boolean
+}) {
+  const miss = CLIPS.find((c) => c.file === 's1mple-1v2')
   return (
     <article className="not-found">
       <p className="not-found__code">404</p>
@@ -1081,6 +1089,31 @@ function NotFoundPage({ onBack }: { onBack: () => void }) {
         This URL isn&rsquo;t on the broadcast. Prius is observing a different
         map.
       </p>
+      {miss ? (
+        <figure className="not-found__clip">
+          {reduceMotion ? (
+            <img
+              src={clipPoster(miss.file)}
+              alt=""
+              width={360}
+              height={203}
+              decoding="async"
+            />
+          ) : (
+            <img
+              src={clipGif(miss.file)}
+              alt=""
+              width={360}
+              height={203}
+              decoding="async"
+            />
+          )}
+          <figcaption>
+            <p className="not-found__clip-quote">&ldquo;{miss.quote}&rdquo;</p>
+            <p className="not-found__clip-note">{miss.note}</p>
+          </figcaption>
+        </figure>
+      ) : null}
       <p className="page-back">
         <button type="button" className="text-btn" onClick={onBack}>
           ← Back to the pitch
