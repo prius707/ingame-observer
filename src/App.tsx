@@ -182,6 +182,30 @@ function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [menuOpen])
 
+  useEffect(() => {
+    if (view !== 'home' || menuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return
+      const t = e.target
+      if (
+        t instanceof HTMLElement &&
+        (t.closest('input, textarea, select, [contenteditable="true"]') ||
+          t.isContentEditable)
+      ) {
+        return
+      }
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault()
+        setPos((p) => Math.min(p + 1, max))
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault()
+        setPos((p) => Math.max(p - 1, 0))
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [view, menuOpen, max])
+
   const goHome = () => {
     setMenuOpen(false)
     if (!isRootPath()) {
@@ -470,6 +494,15 @@ function App() {
         </div>
       ) : null}
 
+      {view === 'home' &&
+      pos === max - 1 &&
+      !reduceMotion &&
+      !narrow ? (
+        <p className="epilepsy-warn" role="status">
+          Photosensitivity warning: the next step flashes black &amp; white.
+        </p>
+      ) : null}
+
       {view === 'home' && (
         <div className="slider-wrap">
           <p className="home-tagline">
@@ -706,19 +739,27 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return
+      const t = e.target
+      if (
+        t instanceof HTMLElement &&
+        (t.closest('input, textarea, select, [contenteditable="true"]') ||
+          t.isContentEditable)
+      ) {
+        return
+      }
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         e.preventDefault()
-        setIndex((i) => (i + 1) % total)
-        setShouldPlay(true)
+        select(index + 1)
       } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
         e.preventDefault()
-        setIndex((i) => (i - 1 + total) % total)
-        setShouldPlay(true)
+        select(index - 1)
       }
     }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [total])
+    // Capture so ←/→ still change clips when the video is focused (not seek).
+    window.addEventListener('keydown', onKey, true)
+    return () => window.removeEventListener('keydown', onKey, true)
+  }, [index, total])
 
   return (
     <article className="clips-page">
@@ -729,7 +770,7 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
           observing is a live craft.
         </p>
         <p className="clips-keys">
-          <span className="clips-keys__hint">← → to change clip</span>
+          <span className="clips-keys__hint">← → or ↑ ↓ to change clip</span>
           <button
             type="button"
             className="text-btn clips-keys__random"
