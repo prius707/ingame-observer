@@ -1525,63 +1525,27 @@ body.invert .award-emmy--winner,
   opacity: 0.78;
 }
 
-.not-found__viewer {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.not-found__stage {
+.not-found__clip {
+  margin: 1.5rem 0 0;
+  padding: 0;
   width: 100%;
-  min-width: 0;
-  margin: 0;
-  aspect-ratio: 16 / 9;
-  max-height: min(70vh, 44rem);
-  background: #111;
-  overflow: hidden;
 }
 
-.not-found__stage img {
+.not-found__clip img {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  max-height: min(78vh, 54rem);
   object-fit: contain;
-  background: #000;
-}
-
-.not-found__quote {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  min-width: 0;
-}
-
-.not-found__quote p {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: clamp(0.95rem, 2vw, 1.1rem);
-  font-style: italic;
-  font-weight: 400;
-  line-height: 1.45;
-  text-transform: none;
-  letter-spacing: 0;
-}
-
-.not-found__clip-note {
-  margin: 0.65rem 0 0;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  line-height: 1.35;
-  text-transform: uppercase;
-  opacity: 0.62;
+  background: #111;
 }
 
 .not-found .page-back {
   margin-top: 1.75rem;
 }
 
-.home--page.home--dark .not-found__stage {
+.home--page.home--dark .not-found__clip img {
   background: #000;
 }
 
@@ -1952,19 +1916,7 @@ body.invert .award-emmy--winner,
     align-items: start;
   }
 
-  .not-found__viewer {
-    grid-template-columns: minmax(0, 1.45fr) minmax(16rem, 0.7fr);
-    gap: 1.25rem 1.75rem;
-    align-items: start;
-  }
-
-  .not-found__stage {
-    max-height: min(78vh, 54rem);
-  }
-
-  .not-found__quote {
-    position: sticky;
-    top: calc(4.5rem + var(--safe-top));
-    padding-top: 0.15rem;
+  .not-found__clip img {
+    max-height: min(82vh, 56rem);
   }
 }

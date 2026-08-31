@@ -1081,7 +1081,6 @@ function NotFoundPage({
   onBack: () => void
   reduceMotion: boolean
 }) {
-  const miss = CLIPS.find((c) => c.file === 's1mple-1v2')
   return (
     <article className="not-found">
       <p className="not-found__code">404</p>
@@ -1090,33 +1089,19 @@ function NotFoundPage({
         This URL isn&rsquo;t on the broadcast. Prius is observing a different
         map.
       </p>
-      {miss ? (
-        <div className="not-found__viewer">
-          <figure className="not-found__stage">
-            {reduceMotion ? (
-              <img
-                src={assetPath('404/s1mple-1v2.jpg')}
-                alt=""
-                width={640}
-                height={360}
-                decoding="async"
-              />
-            ) : (
-              <img
-                src={assetPath('404/s1mple-1v2.gif')}
-                alt=""
-                width={640}
-                height={360}
-                decoding="async"
-              />
-            )}
-          </figure>
-          <blockquote className="not-found__quote">
-            <p>&ldquo;{miss.quote}&rdquo;</p>
-            <footer className="not-found__clip-note">{miss.note}</footer>
-          </blockquote>
-        </div>
-      ) : null}
+      <figure className="not-found__clip">
+        <img
+          src={
+            reduceMotion
+              ? assetPath('404/s1mple-1v2.jpg')
+              : assetPath('404/s1mple-1v2.gif')
+          }
+          alt=""
+          width={960}
+          height={540}
+          decoding="async"
+        />
+      </figure>
       <p className="page-back">
         <button type="button" className="text-btn" onClick={onBack}>
           ← Back to the pitch
