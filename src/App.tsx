@@ -1,11 +1,10 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import {
   CONTROLLER_EMAIL,
   CV_SECTIONS,
   DEFAULT_PITCH,
   MENU_LINKS,
   PAGE_TITLES,
-  PARTNERS,
   PITCHES,
   SITE,
   SITE_TAGLINE,
@@ -28,6 +27,7 @@ import {
   clipIndexFromSlug,
   clipPageUrl,
   clipPoster,
+  clipQuoteRepeatsTitle,
   clipSrc,
   parseClipSlugFromLocation,
 } from './clips'
@@ -182,6 +182,30 @@ function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [menuOpen])
 
+  useEffect(() => {
+    if (view !== 'home' || menuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return
+      const t = e.target
+      if (
+        t instanceof HTMLElement &&
+        (t.closest('input, textarea, select, [contenteditable="true"]') ||
+          t.isContentEditable)
+      ) {
+        return
+      }
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault()
+        setPos((p) => Math.min(p + 1, max))
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault()
+        setPos((p) => Math.max(p - 1, 0))
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [view, menuOpen, max])
+
   const goHome = () => {
     setMenuOpen(false)
     if (!isRootPath()) {
@@ -222,15 +246,17 @@ function App() {
   }
 
   const pageClass =
-    view === 'privacy' || view === 'notfound'
-      ? 'home--page'
-      : view === 'cv'
-        ? 'home--page home--cv'
-        : view === 'clips'
-          ? 'home--page home--clips'
-          : view === 'events'
-            ? 'home--page home--events'
-            : ''
+    view === 'notfound'
+      ? 'home--page home--notfound'
+      : view === 'privacy'
+        ? 'home--page'
+        : view === 'cv'
+          ? 'home--page home--cv'
+          : view === 'clips'
+            ? 'home--page home--clips'
+            : view === 'events'
+              ? 'home--page home--events'
+              : ''
   const showPageTheme = view !== 'home'
   const homeClass = [
     'home',
@@ -417,7 +443,7 @@ function App() {
         ) : view === 'events' ? (
           <EventsPage onBack={goHome} reduceMotion={reduceMotion} />
         ) : view === 'notfound' ? (
-          <NotFoundPage onBack={goHome} />
+          <NotFoundPage onBack={goHome} reduceMotion={reduceMotion} />
         ) : (
           <div className="content-block">
             <div className="content-block__inner">
@@ -468,6 +494,15 @@ function App() {
             />
           </picture>
         </div>
+      ) : null}
+
+      {view === 'home' &&
+      pos === max - 1 &&
+      !reduceMotion &&
+      !narrow ? (
+        <p className="epilepsy-warn" role="status">
+          Photosensitivity warning: the next step flashes black &amp; white.
+        </p>
       ) : null}
 
       {view === 'home' && (
@@ -535,14 +570,6 @@ function CvPage({ onBack }: { onBack: () => void }) {
       <h2 className="sr-only">CV</h2>
       <p className="cv-lead">{SITE_TAGLINE}</p>
       <p className="cv-availability">{SITE.availability}</p>
-
-      <div className="cv-partners" aria-label="Partners">
-        {PARTNERS.map((name) => (
-          <span key={name} className="cv-partners__item">
-            {name}
-          </span>
-        ))}
-      </div>
 
       <div className="cv-quotes">
         {CV_QUOTES.map((q) => (
@@ -634,7 +661,7 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
   const clip = CLIPS[index]
   const total = CLIPS.length
 
-  const select = (i: number, play = true) => {
+  const select = useCallback((i: number, play = true) => {
     const next = ((i % total) + total) % total
     setIndex(next)
     setShouldPlay(play)
@@ -643,7 +670,7 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
     if (window.location.hash !== nextHash) {
       history.replaceState(null, '', nextHash)
     }
-  }
+  }, [total])
 
   const pickRandom = () => {
     if (total <= 1) return
@@ -706,20 +733,28 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (document.body.classList.contains('menu-open')) return
+      if (e.metaKey || e.ctrlKey || e.altKey) return
+      const target = e.target
+      if (
+        target instanceof HTMLElement &&
+        (target.closest('input, textarea, select, [contenteditable="true"]') ||
+          target.isContentEditable)
+      ) {
+        return
+      }
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         e.preventDefault()
-        setIndex((i) => (i + 1) % total)
-        setShouldPlay(true)
+        select(index + 1)
       } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
         e.preventDefault()
-        setIndex((i) => (i - 1 + total) % total)
-        setShouldPlay(true)
+        select(index - 1)
       }
     }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [total])
-
+    // Capture so ←/→ still change clips when the video is focused (not seek).
+    window.addEventListener('keydown', onKey, true)
+    return () => window.removeEventListener('keydown', onKey, true)
+  }, [index, select])
   return (
     <article className="clips-page">
       <header className="clips-header">
@@ -729,7 +764,7 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
           observing is a live craft.
         </p>
         <p className="clips-keys">
-          <span className="clips-keys__hint">← → to change clip</span>
+          <span className="clips-keys__hint">← → or ↑ ↓ to change clip</span>
           <button
             type="button"
             className="text-btn clips-keys__random"
@@ -788,9 +823,11 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
           </div>
           <h3 className="clip-now__title">{clip.title}</h3>
           <p className="clip-note">{clip.note}</p>
-          <blockquote className="clip-quote">
-            <p>&ldquo;{clip.quote}&rdquo;</p>
-          </blockquote>
+          {clipQuoteRepeatsTitle(clip) ? null : (
+            <blockquote className="clip-quote">
+              <p>&ldquo;{clip.quote}&rdquo;</p>
+            </blockquote>
+          )}
           <p className="clip-original">
             <a
               href={clipPageUrl(clip.slug)}
@@ -1072,15 +1109,38 @@ function EventRow({
   )
 }
 
-function NotFoundPage({ onBack }: { onBack: () => void }) {
+function NotFoundPage({
+  onBack,
+  reduceMotion,
+}: {
+  onBack: () => void
+  reduceMotion: boolean
+}) {
   return (
     <article className="not-found">
-      <p className="not-found__code">404</p>
-      <h2 className="not-found__title">Missed the play.</h2>
-      <p className="not-found__lead">
-        This URL isn&rsquo;t on the broadcast. Prius is observing a different
-        map.
-      </p>
+      <header className="not-found__intro">
+        <p className="not-found__code">404</p>
+        <h2 className="not-found__title">Missed the play.</h2>
+        <p className="not-found__lead">
+          This URL isn&rsquo;t on the broadcast. Prius is observing a different
+          map.
+        </p>
+      </header>
+      <figure className="not-found__clip">
+        <img
+          src={
+            reduceMotion
+              ? assetPath('404/s1mple-1v2.jpg')
+              : assetPath('404/s1mple-1v2.gif')
+          }
+          alt="s1mple winning a 1v2 clutch"
+          width={420}
+          height={237}
+          decoding="async"
+          fetchPriority="high"
+          draggable={false}
+        />
+      </figure>
       <p className="page-back">
         <button type="button" className="text-btn" onClick={onBack}>
           ← Back to the pitch

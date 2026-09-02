@@ -195,14 +195,6 @@ export const SITE = {
 
 export const SITE_TAGLINE = `${SITE.taglineRole} · ${SITE.taglineCreds}`
 
-export const PARTNERS = [
-  'Riot Games',
-  'ESL FACEIT Group',
-  'BLAST',
-  'Turner Sports',
-  'Raidiant',
-] as const
-
 export const PAGE_TITLES = {
   home: 'prius',
   cv: 'CV · prius',

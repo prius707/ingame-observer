@@ -86,6 +86,7 @@ export function clipPoster(file: string) {
   return assetPath(`clips/${file}.jpg`)
 }
 
+
 export function clipPageUrl(slug: string) {
   return `https://clips.twitch.tv/${slug}`
 }
@@ -103,4 +104,10 @@ export function parseClipSlugFromLocation(loc = window.location) {
 
 export function clipHash(slug: string) {
   return `#clips/${slug}`
+}
+
+/** True when the quote is the title again (punctuation / case ignored). */
+export function clipQuoteRepeatsTitle(clip: Clip) {
+  const key = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '')
+  return key(clip.quote) === key(clip.title)
 }
