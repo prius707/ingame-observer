@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import {
   CONTROLLER_EMAIL,
   CV_SECTIONS,
@@ -221,20 +221,22 @@ function App() {
   }
 
   const pageClass =
-    view === 'privacy' || view === 'notfound'
-      ? 'home--page'
-      : view === 'cv'
-        ? 'home--page home--cv'
-        : view === 'clips'
-          ? 'home--page home--clips'
-          : view === 'events'
-            ? 'home--page home--events'
-            : ''
+    view === 'notfound'
+      ? 'home--page home--notfound'
+      : view === 'privacy'
+        ? 'home--page'
+        : view === 'cv'
+          ? 'home--page home--cv'
+          : view === 'clips'
+            ? 'home--page home--clips'
+            : view === 'events'
+              ? 'home--page home--events'
+              : ''
   const showPageTheme = view !== 'home'
   const homeClass = [
     'home',
     pageClass,
-    showPageTheme && pageDark ? 'home--dark' : '',
+    showPageTheme && (pageDark || view === 'notfound') ? 'home--dark' : '',
   ]
     .filter(Boolean)
     .join(' ')
@@ -416,7 +418,7 @@ function App() {
         ) : view === 'events' ? (
           <EventsPage onBack={goHome} reduceMotion={reduceMotion} />
         ) : view === 'notfound' ? (
-          <NotFoundPage onBack={goHome} />
+          <NotFoundPage onBack={goHome} reduceMotion={reduceMotion} />
         ) : (
           <div className="content-block">
             <div className="content-block__inner">
@@ -625,7 +627,7 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
   const clip = CLIPS[index]
   const total = CLIPS.length
 
-  const select = (i: number, play = true) => {
+  const select = useCallback((i: number, play = true) => {
     const next = ((i % total) + total) % total
     setIndex(next)
     setShouldPlay(play)
@@ -634,7 +636,7 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
     if (window.location.hash !== nextHash) {
       history.replaceState(null, '', nextHash)
     }
-  }
+  }, [total])
 
   const pickRandom = () => {
     if (total <= 1) return
@@ -697,19 +699,25 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (document.body.classList.contains('menu-open')) return
+      const target = e.target
+      if (
+        target instanceof HTMLElement &&
+        target.closest('input, textarea, select, video, [contenteditable="true"]')
+      ) {
+        return
+      }
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         e.preventDefault()
-        setIndex((i) => (i + 1) % total)
-        setShouldPlay(true)
+        select(index + 1)
       } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
         e.preventDefault()
-        setIndex((i) => (i - 1 + total) % total)
-        setShouldPlay(true)
+        select(index - 1)
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [total])
+  }, [index, select])
 
   return (
     <article className="clips-page">
@@ -1063,20 +1071,52 @@ function EventRow({
   )
 }
 
-function NotFoundPage({ onBack }: { onBack: () => void }) {
+function NotFoundPage({
+  onBack,
+  reduceMotion,
+}: {
+  onBack: () => void
+  reduceMotion: boolean
+}) {
   return (
     <article className="not-found">
-      <p className="not-found__code">404</p>
-      <h2 className="not-found__title">Missed the play.</h2>
-      <p className="not-found__lead">
-        This URL isn&rsquo;t on the broadcast. Prius is observing a different
-        map.
-      </p>
-      <p className="page-back">
-        <button type="button" className="text-btn" onClick={onBack}>
-          ← Back to the pitch
-        </button>
-      </p>
+      <div className="not-found__stage">
+        <img
+          src={
+            reduceMotion
+              ? assetPath('404/s1mple-1v2.jpg')
+              : assetPath('404/s1mple-1v2.gif')
+          }
+          alt="s1mple winning a 1v2 clutch"
+          width={420}
+          height={237}
+          decoding="async"
+          fetchPriority="high"
+          draggable={false}
+        />
+      </div>
+      <div className="not-found__shade" aria-hidden="true" />
+      <div className="not-found__hud">
+        <p className="not-found__code" aria-hidden="true">
+          404
+        </p>
+        <div className="not-found__copy">
+          <p className="not-found__meta">Observer cam</p>
+          <h2 className="not-found__title">
+            <span className="sr-only">404. </span>
+            Missed the play.
+          </h2>
+          <p className="not-found__lead">
+            This URL isn&rsquo;t on the broadcast. Prius is observing a
+            different map.
+          </p>
+        </div>
+        <p className="not-found__actions">
+          <button type="button" className="not-found__back" onClick={onBack}>
+            ← Back to the pitch
+          </button>
+        </p>
+      </div>
     </article>
   )
 }
