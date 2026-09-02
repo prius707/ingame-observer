@@ -261,7 +261,7 @@ function App() {
   const homeClass = [
     'home',
     pageClass,
-    showPageTheme && (pageDark || view === 'notfound') ? 'home--dark' : '',
+    showPageTheme && pageDark ? 'home--dark' : '',
   ]
     .filter(Boolean)
     .join(' ')
@@ -443,7 +443,7 @@ function App() {
         ) : view === 'events' ? (
           <EventsPage onBack={goHome} reduceMotion={reduceMotion} />
         ) : view === 'notfound' ? (
-          <NotFoundPage onBack={goHome} reduceMotion={reduceMotion} />
+          <NotFoundPage onBack={goHome} />
         ) : (
           <div className="content-block">
             <div className="content-block__inner">
@@ -1109,81 +1109,20 @@ function EventRow({
   )
 }
 
-function NotFoundPage({
-  onBack,
-  reduceMotion,
-}: {
-  onBack: () => void
-  reduceMotion: boolean
-}) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-
-  useEffect(() => {
-    if (reduceMotion) return
-    const el = videoRef.current
-    if (!el) return
-    el.muted = true
-    el.defaultMuted = true
-    void el.play().catch(() => {
-      /* autoplay blocked — poster still shows */
-    })
-  }, [reduceMotion])
-
+function NotFoundPage({ onBack }: { onBack: () => void }) {
   return (
     <article className="not-found">
-      <div className="not-found__stage">
-        {reduceMotion ? (
-          <img
-            src={assetPath('clips/s1mple-1v2.jpg')}
-            alt="s1mple winning a 1v2 clutch"
-            width={960}
-            height={540}
-            decoding="async"
-            fetchPriority="high"
-            draggable={false}
-          />
-        ) : (
-          <video
-            ref={videoRef}
-            className="not-found__video"
-            src={assetPath('clips/s1mple-1v2.mp4')}
-            poster={assetPath('clips/s1mple-1v2.jpg')}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            controls={false}
-            disablePictureInPicture
-            disableRemotePlayback
-            aria-label="s1mple winning a 1v2 clutch"
-            draggable={false}
-            onContextMenu={(e) => e.preventDefault()}
-          />
-        )}
-      </div>
-      <div className="not-found__shade" aria-hidden="true" />
-      <div className="not-found__hud">
-        <p className="not-found__code" aria-hidden="true">
-          404
-        </p>
-        <div className="not-found__copy">
-          <p className="not-found__meta">Observer cam</p>
-          <h2 className="not-found__title">
-            <span className="sr-only">404. </span>
-            Missed the play.
-          </h2>
-          <p className="not-found__lead">
-            This URL isn&rsquo;t on the broadcast. Prius is observing a
-            different map.
-          </p>
-        </div>
-        <p className="not-found__actions">
-          <button type="button" className="not-found__back" onClick={onBack}>
-            ← Back to the pitch
-          </button>
-        </p>
-      </div>
+      <p className="not-found__code">404</p>
+      <h2 className="not-found__title">Missed the play.</h2>
+      <p className="not-found__lead">
+        This URL isn&rsquo;t on the broadcast. Prius is observing a different
+        map.
+      </p>
+      <p className="page-back">
+        <button type="button" className="text-btn" onClick={onBack}>
+          ← Back to the pitch
+        </button>
+      </p>
     </article>
   )
 }
