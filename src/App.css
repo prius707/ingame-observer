@@ -1525,7 +1525,8 @@ body.invert .award-emmy--winner,
   background: #000;
 }
 
-.not-found__stage img {
+.not-found__stage img,
+.not-found__stage video {
   display: block;
   width: 100%;
   height: 100%;
@@ -1533,6 +1534,10 @@ body.invert .award-emmy--winner,
   object-position: center;
   pointer-events: none;
   user-select: none;
+}
+
+.not-found__stage video {
+  background: #000;
 }
 
 .not-found__shade {

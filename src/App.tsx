@@ -1116,22 +1116,51 @@ function NotFoundPage({
   onBack: () => void
   reduceMotion: boolean
 }) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    if (reduceMotion) return
+    const el = videoRef.current
+    if (!el) return
+    el.muted = true
+    el.defaultMuted = true
+    void el.play().catch(() => {
+      /* autoplay blocked — poster still shows */
+    })
+  }, [reduceMotion])
+
   return (
     <article className="not-found">
       <div className="not-found__stage">
-        <img
-          src={
-            reduceMotion
-              ? assetPath('404/s1mple-1v2.jpg')
-              : assetPath('404/s1mple-1v2.gif')
-          }
-          alt="s1mple winning a 1v2 clutch"
-          width={420}
-          height={237}
-          decoding="async"
-          fetchPriority="high"
-          draggable={false}
-        />
+        {reduceMotion ? (
+          <img
+            src={assetPath('clips/s1mple-1v2.jpg')}
+            alt="s1mple winning a 1v2 clutch"
+            width={960}
+            height={540}
+            decoding="async"
+            fetchPriority="high"
+            draggable={false}
+          />
+        ) : (
+          <video
+            ref={videoRef}
+            className="not-found__video"
+            src={assetPath('clips/s1mple-1v2.mp4')}
+            poster={assetPath('clips/s1mple-1v2.jpg')}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            controls={false}
+            disablePictureInPicture
+            disableRemotePlayback
+            aria-label="s1mple winning a 1v2 clutch"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+          />
+        )}
       </div>
       <div className="not-found__shade" aria-hidden="true" />
       <div className="not-found__hud">
