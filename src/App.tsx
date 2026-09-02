@@ -5,7 +5,6 @@ import {
   DEFAULT_PITCH,
   MENU_LINKS,
   PAGE_TITLES,
-  PARTNERS,
   PITCHES,
   SITE,
   SITE_TAGLINE,
@@ -535,14 +534,6 @@ function CvPage({ onBack }: { onBack: () => void }) {
       <h2 className="sr-only">CV</h2>
       <p className="cv-lead">{SITE_TAGLINE}</p>
       <p className="cv-availability">{SITE.availability}</p>
-
-      <div className="cv-partners" aria-label="Partners">
-        {PARTNERS.map((name) => (
-          <span key={name} className="cv-partners__item">
-            {name}
-          </span>
-        ))}
-      </div>
 
       <div className="cv-quotes">
         {CV_QUOTES.map((q) => (
