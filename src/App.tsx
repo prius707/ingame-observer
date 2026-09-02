@@ -27,6 +27,7 @@ import {
   clipIndexFromSlug,
   clipPageUrl,
   clipPoster,
+  clipQuoteRepeatsTitle,
   clipSrc,
   parseClipSlugFromLocation,
 } from './clips'
@@ -822,9 +823,11 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
           </div>
           <h3 className="clip-now__title">{clip.title}</h3>
           <p className="clip-note">{clip.note}</p>
-          <blockquote className="clip-quote">
-            <p>&ldquo;{clip.quote}&rdquo;</p>
-          </blockquote>
+          {clipQuoteRepeatsTitle(clip) ? null : (
+            <blockquote className="clip-quote">
+              <p>&ldquo;{clip.quote}&rdquo;</p>
+            </blockquote>
+          )}
           <p className="clip-original">
             <a
               href={clipPageUrl(clip.slug)}
