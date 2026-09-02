@@ -9,6 +9,9 @@ import '@fontsource/libre-caslon-text/400-italic.css'
 import '@fontsource/libre-caslon-text/700.css'
 import './index.css'
 import App from './App.tsx'
+import { startFaviconAnimation } from './faviconAnim'
+
+startFaviconAnimation()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
