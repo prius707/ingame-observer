@@ -476,6 +476,8 @@ body.invert .menu-toggle.menu-open.is-open {
 #output {
   position: relative;
   width: 100%;
+  font-size: 1.0625rem;
+  line-height: 1.55;
   text-align: justify;
   hyphens: auto;
   overflow-wrap: anywhere;
@@ -1695,7 +1697,7 @@ body.invert .award-emmy--winner,
   #output {
     text-align: left;
     hyphens: manual;
-    font-size: 1.02rem;
+    font-size: 1.08rem;
     line-height: 1.55;
   }
 
@@ -1874,7 +1876,7 @@ body.invert .award-emmy--winner,
   }
 
   #output {
-    font-size: clamp(1.05rem, 2.1vw, 1.25rem);
+    font-size: clamp(1.12rem, 2.25vw, 1.32rem);
     line-height: 1.55;
   }
 }
