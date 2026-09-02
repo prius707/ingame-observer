@@ -553,6 +553,30 @@ body.invert #output .red {
   touch-action: none;
 }
 
+.epilepsy-warn {
+  position: fixed;
+  right: calc(1.25rem + var(--safe-right));
+  bottom: calc(var(--slider-h) + 0.85rem + var(--safe-bottom));
+  z-index: 21;
+  margin: 0;
+  max-width: min(16rem, calc(100vw - 2.5rem));
+  padding: 0.45rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--fg) 28%, transparent);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  color: var(--fg);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  text-align: right;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+body.invert .epilepsy-warn {
+  border-color: color-mix(in srgb, var(--fg) 40%, transparent);
+}
+
 .home-tagline {
   margin: 0 0 0.65rem;
   font-size: 0.72rem;
