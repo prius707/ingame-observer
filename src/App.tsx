@@ -443,7 +443,7 @@ function App() {
         ) : view === 'events' ? (
           <EventsPage onBack={goHome} reduceMotion={reduceMotion} />
         ) : view === 'notfound' ? (
-          <NotFoundPage onBack={goHome} />
+          <NotFoundPage onBack={goHome} reduceMotion={reduceMotion} />
         ) : (
           <div className="content-block">
             <div className="content-block__inner">
@@ -1109,15 +1109,38 @@ function EventRow({
   )
 }
 
-function NotFoundPage({ onBack }: { onBack: () => void }) {
+function NotFoundPage({
+  onBack,
+  reduceMotion,
+}: {
+  onBack: () => void
+  reduceMotion: boolean
+}) {
   return (
     <article className="not-found">
-      <p className="not-found__code">404</p>
-      <h2 className="not-found__title">Missed the play.</h2>
-      <p className="not-found__lead">
-        This URL isn&rsquo;t on the broadcast. Prius is observing a different
-        map.
-      </p>
+      <header className="not-found__intro">
+        <p className="not-found__code">404</p>
+        <h2 className="not-found__title">Missed the play.</h2>
+        <p className="not-found__lead">
+          This URL isn&rsquo;t on the broadcast. Prius is observing a different
+          map.
+        </p>
+      </header>
+      <figure className="not-found__clip">
+        <img
+          src={
+            reduceMotion
+              ? assetPath('404/s1mple-1v2.jpg')
+              : assetPath('404/s1mple-1v2.gif')
+          }
+          alt="s1mple winning a 1v2 clutch"
+          width={420}
+          height={237}
+          decoding="async"
+          fetchPriority="high"
+          draggable={false}
+        />
+      </figure>
       <p className="page-back">
         <button type="button" className="text-btn" onClick={onBack}>
           ← Back to the pitch
