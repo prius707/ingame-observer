@@ -10,11 +10,11 @@ const mail = 'mailto:dj@ingame.observer'
 const x = 'https://x.com/priusOBS'
 const liquid = 'https://liquipedia.net/valorant/Prius'
 
-/** Soft → hard sell. Index DEFAULT_PITCH is the balanced middle. */
+/** Soft to hard sell. Index DEFAULT_PITCH is the balanced middle. */
 export const PITCHES: Pitch[] = [
   {
     weight: 48,
-    content: <>So, yeah, I’m an esports observer. What of it?</>,
+    content: <>So, yeah, I'm an esports observer. What of it?</>,
   },
   {
     weight: 72,
@@ -26,9 +26,9 @@ export const PITCHES: Pitch[] = [
     weight: 220,
     content: (
       <>
-        Feel free to ignore this, but if you need a freelance observer, I might
-        be worth a try. I think my observing is pretty decent, but it might not
-        be your sort of thing. See what you think.
+        I'm a freelance observer. I might be worth a try if you need one. My
+        work is pretty clean but it might not be your thing. Have a look and see
+        what you think.
       </>
     ),
   },
@@ -36,9 +36,9 @@ export const PITCHES: Pitch[] = [
     weight: 210,
     content: (
       <>
-        If you need an experienced freelance observer, I might be worth a try.
-        My observing is pretty clean and I’ve picked up a few big stages. I can
-        also handle most things from online cups to Masters weeks.
+        I'm a freelance observer with some decent stage time under my belt. I
+        can handle most things from online cups to Masters weeks. Drop me a line
+        if you want to talk.
       </>
     ),
   },
@@ -46,12 +46,12 @@ export const PITCHES: Pitch[] = [
     weight: 280,
     content: (
       <>
-        Hello. I’m prius. I’m a freelance esports observer. I frame the fight so
-        casters can cook and viewers never miss the swing. I’ve got{' '}
+        I'm prius. Freelance esports observer. I frame the fight so casters can
+        cook and viewers don't miss the swing.{' '}
         <a href={liquid} target="_blank" rel="noopener noreferrer">
-          over 15 years of experience
-        </a>{' '}
-        and can handle most things from Challengers to Champions.
+          15+ years in
+        </a>
+        , Challengers through Champions.
       </>
     ),
   },
@@ -59,11 +59,10 @@ export const PITCHES: Pitch[] = [
     weight: 340,
     content: (
       <>
-        Hello. I’m prius. I’m a freelance esports observer. I come up with
-        camera work that helps your cast land and your broadcast feel sharp.
-        I’ve been in the business for 15+ years, observed CS Majors and
-        VALORANT’s biggest stages — including Emmy-winning Champions coverage —
-        and I can tackle everything from Challengers to international LANs.
+        I'm prius. Freelance esports observer. I do the camera work that makes
+        your cast land and your broadcast feel sharp. 15+ years, CS Majors,
+        VALORANT's biggest stages, Emmy-winning Champions coverage. Challengers
+        to international LANs.
       </>
     ),
   },
@@ -71,13 +70,11 @@ export const PITCHES: Pitch[] = [
     weight: 420,
     content: (
       <>
-        Hello. I’m prius. I’m a freelance esports observer. I come up with
-        camera work that wins the spectator experience. I’ve been in the
-        business for 15+ years across CS:GO, CS2, and VALORANT, with Majors,
-        Masters, and Champions on the résumé — including a Sports Emmy win for
-        Champions coverage after four nominations. I’ve consulted for Riot
-        Games, and I work with partners like ESL FACEIT Group, BLAST, Turner
-        Sports (TBS), and Raidiant.
+        I'm prius. Freelance esports observer. 15+ years across CS:GO, CS2, and
+        VALORANT. Majors, Masters, and Champions on the resume, including a
+        Sports Emmy win for Champions coverage after four nominations. Consulted
+        for Riot Games. Partners include ESL FACEIT Group, BLAST, Turner Sports
+        (TBS), and Raidiant.
       </>
     ),
   },
@@ -87,12 +84,10 @@ export const PITCHES: Pitch[] = [
       <>
         <strong>Broadcast-ready observing for VALORANT and CS2.</strong>
         <br />
-        Hello. I’m a freelance esports observer who can help your production
-        feel sharp. I’ve got 15+ years in the chair. My work spans Majors,
-        Masters, and Champions — including a Sports Emmy win for Champions
-        coverage (four nominations, one win). I’ve consulted for Riot Games, and
-        partners like ESL FACEIT Group, BLAST, Turner Sports (TBS), and Raidiant
-        keep booking me.
+        I'm a freelance observer. 15+ years in the chair. Majors, Masters,
+        Champions. Sports Emmy win for Champions coverage, four nominations
+        total. Consulted for Riot Games. ESL FACEIT Group, BLAST, Turner Sports,
+        and Raidiant keep booking me.
       </>
     ),
   },
@@ -100,13 +95,12 @@ export const PITCHES: Pitch[] = [
     weight: 400,
     content: (
       <>
-        Want a broadcast that never misses the swing?
+        Want a broadcast that doesn't miss the swing?
         <br />
-        Of course you do. So get in touch now and get 15+ years of big-stage
-        observing on your side. Majors, Masters, Champions. Four Sports Emmy
-        nominations. One Sports Emmy win for Champions coverage. I’ve consulted
-        for Riot, and partners like ESL FACEIT Group, BLAST, Turner Sports
-        (TBS), and Raidiant keep booking me.
+        15+ years of big-stage observing. Majors, Masters, Champions. Four
+        Sports Emmy nominations, one win for Champions coverage. Consulted for
+        Riot. ESL FACEIT Group, BLAST, Turner Sports, and Raidiant keep coming
+        back. Get in touch.
       </>
     ),
   },
@@ -116,9 +110,9 @@ export const PITCHES: Pitch[] = [
       <>
         <strong>Book me. Before the other production does.</strong>
         <br />
-        Get in touch now and get big-stage observing on your side. 15+ years.
-        Four Sports Emmy nominations. One Emmy win — Champions coverage. CS
-        Majors. VCT Masters. Riot consulting. <strong>Email me NOW.</strong>
+        15+ years. Four Sports Emmy nominations. One Emmy win for Champions
+        coverage. CS Majors. VCT Masters. Riot consulting.{' '}
+        <strong>Email me.</strong>
       </>
     ),
   },
@@ -127,15 +121,14 @@ export const PITCHES: Pitch[] = [
     content: (
       <>
         <strong className="red">
-          The production you’re pitching against could book me.
+          The production you're pitching against could book me.
           <br />
-          Dare you take that risk?
+          You want to take that risk?
         </strong>
         <br />
-        <strong>GET IN TOUCH NOW</strong> and get big-stage observing on your
-        side. Proven 15+ years. Proven on Majors, Masters, and Champions. Proven
-        across four Sports Emmy nominations and an Emmy win. Proven consulting
-        for Riot. Proven across VALORANT and CS2.
+        <strong>GET IN TOUCH.</strong> 15+ years of big-stage observing. Majors,
+        Masters, Champions. Four Sports Emmy nominations. One Emmy win.
+        Consulted for Riot. VALORANT and CS2.
       </>
     ),
   },
@@ -144,17 +137,16 @@ export const PITCHES: Pitch[] = [
     content: (
       <>
         <strong className="red">
-          THE PRODUCTION YOU’RE PITCHING AGAINST COULD BOOK ME.
+          THE PRODUCTION YOU'RE PITCHING AGAINST COULD BOOK ME.
           <br />
-          DARE YOU TAKE THAT RISK?
+          YOU WANT TO TAKE THAT RISK?
         </strong>
         <br />
         <strong>
-          GET IN TOUCH NOW at <a href={mail}>dj@ingame.observer</a>
+          GET IN TOUCH at <a href={mail}>dj@ingame.observer</a>
         </strong>
-        . PROVEN 15+ years. PROVEN across four Sports Emmy nominations. PROVEN
-        to win an Emmy. PROVEN on Majors, Masters, and Champions. PROVEN
-        consulting for Riot. PROVEN across VALORANT and CS2. ACT NOW.
+        . 15+ years. Four Sports Emmy nominations. Emmy winner. Majors,
+        Masters, Champions. Consulted for Riot. VALORANT and CS2. Don't wait.
       </>
     ),
   },
@@ -163,19 +155,18 @@ export const PITCHES: Pitch[] = [
     content: (
       <>
         <strong className="red">
-          THE PRODUCTION YOU’RE PITCHING AGAINST COULD BOOK ME.
+          THE PRODUCTION YOU'RE PITCHING AGAINST COULD BOOK ME.
           <br />
-          DARE YOU TAKE THAT RISK?
+          YOU WANT TO TAKE THAT RISK?
         </strong>
         <br />
         <strong>
-          GET IN TOUCH NOW at <a href={mail}>dj@ingame.observer</a>
+          GET IN TOUCH at <a href={mail}>dj@ingame.observer</a>
         </strong>
-        . PROVEN 15+ years. PROVEN across four Sports Emmy nominations. PROVEN
-        to win an Emmy. PROVEN consulting for Riot. PROVEN on the biggest
-        VALORANT and CS2 stages. ACT NOW and beat your rivals to that booking.{' '}
+        . 15+ years. Four Sports Emmy nominations. Emmy winner. Consulted for
+        Riot. Biggest VALORANT and CS2 stages. Beat your rivals to the booking.{' '}
         <strong className="red">
-          <a href={mail}>Email me</a> NOW or DM{' '}
+          <a href={mail}>Email me</a> or DM{' '}
           <a href={x} target="_blank" rel="noopener noreferrer">
             @priusOBS
           </a>
