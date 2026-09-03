@@ -18,7 +18,10 @@ import {
   FLICKR_NOTE,
   FLICKR_OWNER_URL,
   eventTravelFlag,
+  filterEventYears,
   type EventEntry,
+  type EventGameFilter,
+  type EventRangeFilter,
 } from './events'
 import { CV_QUOTES } from './quotes'
 import {
@@ -32,25 +35,38 @@ import {
   parseClipSlugFromLocation,
 } from './clips'
 import { CHAT_LINES, emoteSrc, parseChatText } from './chatLines'
-import { assetPath } from './paths'
+import {
+  assetPath,
+  canonicalForView,
+  clipPath,
+  pathForView,
+  usesClipHash,
+  viewFromLocation,
+  type View,
+} from './paths'
 import './App.css'
 
 const STORAGE_KEY = 'priusSliderPos'
-
-type View = 'home' | 'privacy' | 'cv' | 'events' | 'clips' | 'notfound'
-
-function isRootPath(pathname = window.location.pathname) {
-  return pathname === '/' || pathname === '' || pathname === '/index.html'
-}
+const SECURITY_TXT = '/.well-known/security.txt'
 
 function readInitialView(): View {
-  if (!isRootPath()) return 'notfound'
-  const h = window.location.hash
-  if (h === '#privacy') return 'privacy'
-  if (h === '#cv') return 'cv'
-  if (h === '#clips' || h.startsWith('#clips/')) return 'clips'
-  if (h === '#events' || h === '#awards') return 'events'
-  return 'home'
+  return viewFromLocation()
+}
+
+function setDocumentMeta(view: View, clipSlug?: string | null) {
+  document.title = PAGE_TITLES[view]
+  const canonical = canonicalForView(view, clipSlug)
+  let link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')
+  if (!link) {
+    link = document.createElement('link')
+    link.rel = 'canonical'
+    document.head.appendChild(link)
+  }
+  link.href = canonical
+  const ogUrl = document.querySelector<HTMLMetaElement>('meta[property="og:url"]')
+  if (ogUrl) ogUrl.setAttribute('content', canonical)
+  const ogTitle = document.querySelector<HTMLMetaElement>('meta[property="og:title"]')
+  if (ogTitle) ogTitle.setAttribute('content', PAGE_TITLES[view])
 }
 
 function App() {
@@ -98,7 +114,8 @@ function App() {
   }, [])
 
   useEffect(() => {
-    document.title = PAGE_TITLES[view]
+    const slug = view === 'clips' ? parseClipSlugFromLocation() : null
+    setDocumentMeta(view, slug)
   }, [view])
 
   useEffect(() => {
@@ -192,41 +209,24 @@ function App() {
 
   const goHome = () => {
     setMenuOpen(false)
-    if (!isRootPath()) {
-      window.location.assign('/')
-      return
-    }
     setView('home')
-    if (window.location.hash) {
-      history.replaceState(null, '', window.location.pathname + window.location.search)
-    }
+    history.pushState(null, '', '/')
   }
 
-  const goHash = (hash: View) => {
-    const fragment =
-      hash === 'home' || hash === 'notfound'
-        ? ''
-        : hash === 'events'
-          ? 'events'
-          : hash
-    if (!isRootPath()) {
-      window.location.assign(fragment ? `/#${fragment}` : '/')
-      return
-    }
-    setView(hash)
-    if (fragment) window.location.hash = fragment
-    else if (window.location.hash) {
-      history.replaceState(null, '', window.location.pathname + window.location.search)
-    }
+  const goView = (next: View) => {
     setMenuOpen(false)
+    if (next === 'notfound') return
+    setView(next)
+    history.pushState(null, '', pathForView(next))
   }
 
   const onMenuNav = (href: string) => {
-    if (href === '#privacy') goHash('privacy')
-    else if (href === '#cv') goHash('cv')
-    else if (href === '#clips') goHash('clips')
-    else if (href === '#awards' || href === '#events') goHash('events')
-    else setMenuOpen(false)
+    if (href === '/privacy' || href === '#privacy') goView('privacy')
+    else if (href === '/cv' || href === '#cv') goView('cv')
+    else if (href === '/clips' || href === '#clips') goView('clips')
+    else if (href === '/events' || href === '#events' || href === '#awards') {
+      goView('events')
+    } else setMenuOpen(false)
   }
 
   const pageClass =
@@ -262,6 +262,7 @@ function App() {
           </a>
         </h1>
         <div className="header-actions">
+          <p className="header-booking">Replies within 48h</p>
           <a className="header-contact" href={SOCIAL.mailto}>
             Email
           </a>
@@ -301,14 +302,17 @@ function App() {
                       <a href={link.href} onClick={() => setMenuOpen(false)}>
                         {link.label}
                       </a>
-                    ) : link.href.startsWith('#') ? (
-                      <button
-                        type="button"
+                    ) : link.href.startsWith('/') || link.href.startsWith('#') ? (
+                      <a
+                        href={link.href}
                         className="menu-link-btn"
-                        onClick={() => onMenuNav(link.href)}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          onMenuNav(link.href)
+                        }}
                       >
                         {link.label}
-                      </button>
+                      </a>
                     ) : (
                       <a
                         href={link.href}
@@ -338,7 +342,7 @@ function App() {
                   <img
                     className="social-icon"
                     src={assetPath('icons/icon-twitter.svg')}
-                    alt="Twitter / X"
+                    alt="X"
                     width={36}
                     height={36}
                   />
@@ -379,17 +383,17 @@ function App() {
               </address>
             </div>
 
-            <p className="menu-credit">
-              Inspiration taken from getcoleman.com.
-            </p>
             <p className="menu-legal">
-              <button
-                type="button"
+              <a
                 className="menu-privacy-link"
-                onClick={() => onMenuNav('#privacy')}
+                href="/privacy"
+                onClick={(e) => {
+                  e.preventDefault()
+                  onMenuNav('/privacy')
+                }}
               >
                 Privacy
-              </button>
+              </a>
             </p>
           </div>
         </div>
@@ -405,7 +409,7 @@ function App() {
         ) : view === 'events' ? (
           <EventsPage onBack={goHome} reduceMotion={reduceMotion} />
         ) : view === 'notfound' ? (
-          <NotFoundPage onBack={goHome} reduceMotion={reduceMotion} />
+          <NotFoundPage onBack={goHome} />
         ) : (
           <div className="content-block">
             <div className="content-block__inner">
@@ -444,17 +448,14 @@ function App() {
 
       {view === 'home' && heat > 0.78 && !reduceMotion ? (
         <div className="tactibear" aria-hidden="true">
-          <picture>
-            <source srcSet={assetPath('mascot/tactibear.webp')} type="image/webp" />
-            <img
-              key={heat > 0.78 ? 'squish-on' : 'squish-off'}
-              src={assetPath('mascot/tactibear.gif')}
-              alt=""
-              width={220}
-              height={207}
-              decoding="async"
-            />
-          </picture>
+          <img
+            key={heat > 0.78 ? 'squish-on' : 'squish-off'}
+            src={assetPath('mascot/tactibear.webp')}
+            alt=""
+            width={220}
+            height={207}
+            decoding="async"
+          />
         </div>
       ) : null}
 
@@ -474,6 +475,8 @@ function App() {
             {' · '}
             <span className="home-tagline__lock">{SITE.taglineCreds}</span>
           </p>
+          <p className="home-positioning">{SITE.positioning}</p>
+          <p className="home-booking">{SITE.availability}</p>
           <div className="slider__scale" aria-hidden="true">
             <span>Less Hard Sell</span>
             <span>More Hard Sell</span>
@@ -510,6 +513,7 @@ function App() {
 function PageFooter() {
   return (
     <footer className="page-footer">
+      <p className="page-footer__name">{SITE.legalName}</p>
       <p className="page-footer__availability">{SITE.availability}</p>
       <p className="page-footer__contact">
         <a href={SOCIAL.mailto}>{SOCIAL.email}</a>
@@ -521,6 +525,8 @@ function PageFooter() {
         >
           @priusOBS
         </a>
+        {' · '}
+        <a href={SECURITY_TXT}>security.txt</a>
       </p>
     </footer>
   )
@@ -530,7 +536,9 @@ function CvPage({ onBack }: { onBack: () => void }) {
   return (
     <article className="cv-page">
       <h2 className="sr-only">CV</h2>
+      <p className="cv-name">{SITE.legalName}</p>
       <p className="cv-lead">{SITE_TAGLINE}</p>
+      <p className="cv-positioning">{SITE.positioning}</p>
       <p className="cv-availability">{SITE.availability}</p>
 
       <div className="cv-quotes">
@@ -554,7 +562,11 @@ function CvPage({ onBack }: { onBack: () => void }) {
       </div>
 
       <p className="cv-print">
-        <button type="button" className="text-btn" onClick={() => window.print()}>
+        <button
+          type="button"
+          className="text-btn"
+          onClick={() => window.print()}
+        >
           Print / save as PDF
         </button>
       </p>
@@ -628,9 +640,16 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
     setIndex(next)
     setShouldPlay(play)
     const slug = CLIPS[next].slug
-    const nextHash = clipHash(slug)
-    if (window.location.hash !== nextHash) {
-      history.replaceState(null, '', nextHash)
+    if (usesClipHash()) {
+      const nextHash = clipHash(slug)
+      if (window.location.hash !== nextHash) {
+        history.replaceState(null, '', nextHash)
+      }
+    } else {
+      const nextPath = clipPath(slug)
+      if (window.location.pathname !== nextPath) {
+        history.replaceState(null, '', nextPath)
+      }
     }
   }, [total])
 
@@ -649,8 +668,18 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
   }
 
   useEffect(() => {
-    if (!window.location.hash.startsWith('#clips/')) {
-      history.replaceState(null, '', clipHash(CLIPS[index].slug))
+    const slug = CLIPS[index].slug
+    if (usesClipHash()) {
+      if (!window.location.hash.startsWith('#clips/')) {
+        history.replaceState(null, '', clipHash(slug))
+      }
+      return
+    }
+    if (
+      window.location.pathname === '/clips' ||
+      window.location.pathname === '/clips/'
+    ) {
+      history.replaceState(null, '', clipPath(slug))
     }
   }, [])
 
@@ -664,7 +693,11 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
       }
     }
     window.addEventListener('hashchange', onHash)
-    return () => window.removeEventListener('hashchange', onHash)
+    window.addEventListener('popstate', onHash)
+    return () => {
+      window.removeEventListener('hashchange', onHash)
+      window.removeEventListener('popstate', onHash)
+    }
   }, [])
 
   useEffect(() => {
@@ -822,7 +855,7 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
               >
                 <img
                   src={clipPoster(item.file)}
-                  alt=""
+                  alt={`${item.title} clip poster`}
                   width={160}
                   height={90}
                   loading={i === 0 ? 'eager' : 'lazy'}
@@ -855,6 +888,11 @@ function EventsPage({
 }) {
   const [activeId, setActiveId] = useState<string | null>(null)
   const [emmyOnly, setEmmyOnly] = useState(false)
+  const [game, setGame] = useState<EventGameFilter>('all')
+  const [range, setRange] = useState<EventRangeFilter>('recent')
+
+  const filtered = filterEventYears(EVENT_YEARS, { game, range, emmyOnly })
+  const empty = filtered.length === 0
 
   return (
     <article className="events-page">
@@ -862,6 +900,43 @@ function EventsPage({
         <h2>Events</h2>
         <p className="events-hint">Tap or hover an event to view the still</p>
         <div className="events-toolbar">
+          <div className="events-filters" role="group" aria-label="Game">
+            {(
+              [
+                ['all', 'All games'],
+                ['VALORANT', 'VALORANT'],
+                ['CS', 'Counter-Strike'],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                className={`events-chip${game === value ? ' is-on' : ''}`}
+                aria-pressed={game === value}
+                onClick={() => setGame(value)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <div className="events-filters" role="group" aria-label="Years">
+            <button
+              type="button"
+              className={`events-chip${range === 'recent' ? ' is-on' : ''}`}
+              aria-pressed={range === 'recent'}
+              onClick={() => setRange('recent')}
+            >
+              Last 24 months
+            </button>
+            <button
+              type="button"
+              className={`events-chip${range === 'all' ? ' is-on' : ''}`}
+              aria-pressed={range === 'all'}
+              onClick={() => setRange('all')}
+            >
+              All years
+            </button>
+          </div>
           <label className="events-filter">
             <input
               type="checkbox"
@@ -873,35 +948,59 @@ function EventsPage({
         </div>
       </header>
 
-      {EVENT_YEARS.map((group) => {
-        const events = emmyOnly
-          ? group.events.filter((e) => e.emmy)
-          : group.events
-        if (!events.length) return null
+      {empty ? (
+        <p className="events-empty">
+          Nothing in this cut.{' '}
+          {range === 'recent' ? (
+            <button
+              type="button"
+              className="text-btn"
+              onClick={() => setRange('all')}
+            >
+              Show all years
+            </button>
+          ) : game !== 'all' ? (
+            <button
+              type="button"
+              className="text-btn"
+              onClick={() => setGame('all')}
+            >
+              Show all games
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="text-btn"
+              onClick={() => setEmmyOnly(false)}
+            >
+              Clear Emmy filter
+            </button>
+          )}
+        </p>
+      ) : null}
 
-        return (
-          <section key={group.year} id={`events-year-${group.year}`} className="year">
-            <h3>{group.year}</h3>
-            {events.map((event) => (
-              <EventRow
-                key={`${group.year}-${event.name}`}
-                event={event}
-                year={group.year}
-                active={activeId === `${group.year}-${event.name}`}
-                inlinePhoto={reduceMotion}
-                onActivate={() =>
-                  setActiveId(`${group.year}-${event.name}`)
-                }
-                onDeactivate={() =>
-                  setActiveId((id) =>
-                    id === `${group.year}-${event.name}` ? null : id,
-                  )
-                }
-              />
-            ))}
-          </section>
-        )
-      })}
+      {filtered.map((group) => (
+        <section key={group.year} id={`events-year-${group.year}`} className="year">
+          <h3>{group.year}</h3>
+          {group.events.map((event) => (
+            <EventRow
+              key={`${group.year}-${event.name}`}
+              event={event}
+              year={group.year}
+              active={activeId === `${group.year}-${event.name}`}
+              inlinePhoto={reduceMotion}
+              onActivate={() =>
+                setActiveId(`${group.year}-${event.name}`)
+              }
+              onDeactivate={() =>
+                setActiveId((id) =>
+                  id === `${group.year}-${event.name}` ? null : id,
+                )
+              }
+            />
+          ))}
+        </section>
+      ))}
 
       <footer className="events-credit">
         <p>
@@ -1071,13 +1170,7 @@ function EventRow({
   )
 }
 
-function NotFoundPage({
-  onBack,
-  reduceMotion,
-}: {
-  onBack: () => void
-  reduceMotion: boolean
-}) {
+function NotFoundPage({ onBack }: { onBack: () => void }) {
   return (
     <article className="not-found">
       <header className="not-found__intro">
@@ -1090,11 +1183,7 @@ function NotFoundPage({
       </header>
       <figure className="not-found__clip">
         <img
-          src={
-            reduceMotion
-              ? assetPath('404/s1mple-1v2.jpg')
-              : assetPath('404/s1mple-1v2.gif')
-          }
+          src={assetPath('404/s1mple-1v2.jpg')}
           alt="s1mple winning a 1v2 clutch"
           width={420}
           height={237}
@@ -1126,7 +1215,7 @@ function PrivacyNotice({ onBack }: { onBack: () => void }) {
         Controller: David Kuntz.
         <br />
         Contact:{' '}
-        <a href={`mailto:${CONTROLLER_EMAIL}`}>{CONTROLLER_EMAIL}</a>
+        <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>
       </p>
 
       <h3>What this site does (and does not) do</h3>
@@ -1150,7 +1239,7 @@ function PrivacyNotice({ onBack }: { onBack: () => void }) {
 
       <h3>When you contact me</h3>
       <p>
-        Email (<a href={`mailto:${CONTROLLER_EMAIL}`}>{CONTROLLER_EMAIL}</a>) or
+        Email (<a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>) or
         a DM on X goes through that provider under their terms. I only use the
         message to reply about observing / booking. Legal basis: Art. 6(1)(b)
         and/or 6(1)(f) GDPR. You can ask for access, correction, deletion, or to
@@ -1192,9 +1281,9 @@ function PrivacyNotice({ onBack }: { onBack: () => void }) {
       <p>
         There&rsquo;s a basic Content Security Policy in the HTML. Spotted
         something sketchy?{' '}
-        <a href={`mailto:${CONTROLLER_EMAIL}`}>{CONTROLLER_EMAIL}</a>
+        <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>
         {' · '}
-        <a href="/.well-known/security.txt">security.txt</a>
+        <a href={SECURITY_TXT}>security.txt</a>
       </p>
 
       <p className="privacy-updated">Last updated: 30 August 2026</p>

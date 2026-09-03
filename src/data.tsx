@@ -6,7 +6,11 @@ export type Pitch = {
   weight: number
 }
 
-const mail = 'mailto:dj@ingame.observer'
+export const CONTROLLER_EMAIL = 'dj@ingame.observer'
+const MAIL_SUBJECT = 'Observer booking'
+const MAIL_BODY = 'Event:\nDates:\n'
+export const MAILTO = `mailto:${CONTROLLER_EMAIL}?subject=${encodeURIComponent(MAIL_SUBJECT)}&body=${encodeURIComponent(MAIL_BODY)}`
+const mail = MAILTO
 const x = 'https://x.com/priusOBS'
 const liquid = 'https://liquipedia.net/valorant/Prius'
 
@@ -186,15 +190,18 @@ export const SITE = {
   taglineRole: 'Freelance VALORANT & Counter-Strike observer',
   taglineCreds: 'Sports Emmy winner — Los Angeles, California',
   availability: 'Booking international LANs & league stages · replies within 48h',
+  positioning:
+    'Observer for series, playoffs, and internationals. Based in LA, travel-ready.',
+  legalName: 'David Kuntz',
 } as const
 
 export const SITE_TAGLINE = `${SITE.taglineRole} · ${SITE.taglineCreds}`
 
 export const PAGE_TITLES = {
-  home: 'prius',
-  cv: 'CV · prius',
-  clips: 'Clips · prius',
-  events: 'Events · prius',
+  home: 'prius · freelance observer, Sports Emmy winner',
+  cv: 'CV · prius · freelance observer, Sports Emmy winner',
+  clips: 'Clips · prius · freelance observer',
+  events: 'Events · prius · freelance observer, Sports Emmy winner',
   privacy: 'Privacy · prius',
   notfound: '404 · prius',
 } as const
@@ -209,13 +216,11 @@ export const SOCIAL = {
 } as const
 
 export const MENU_LINKS = [
-  { label: 'CV', href: '#cv', external: false },
-  { label: 'Clips', href: '#clips', external: false },
-  { label: 'Events', href: '#events', external: false },
+  { label: 'CV', href: '/cv', external: false },
+  { label: 'Clips', href: '/clips', external: false },
+  { label: 'Events', href: '/events', external: false },
   { label: 'Email', href: mail, external: false, mailto: true },
 ] as const
-
-export const CONTROLLER_EMAIL = 'dj@ingame.observer'
 
 export const CV_SECTIONS = [
   {

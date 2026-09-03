@@ -84,6 +84,37 @@ export function eventTravelFlag(name: string, year?: number): string | null {
   return null
 }
 
+export type EventGameFilter = 'all' | 'VALORANT' | 'CS'
+export type EventRangeFilter = 'recent' | 'all'
+
+/** Year-level stand-in for last ~24 months (rows are year-tagged only). */
+export function recentEventYearFrom(now = new Date()): number {
+  return now.getFullYear() - 2
+}
+
+export function filterEventYears(
+  years: EventYear[],
+  opts: {
+    game: EventGameFilter
+    range: EventRangeFilter
+    emmyOnly: boolean
+    now?: Date
+  },
+): EventYear[] {
+  const fromYear = recentEventYearFrom(opts.now)
+  return years
+    .filter((group) => opts.range === 'all' || group.year >= fromYear)
+    .map((group) => ({
+      ...group,
+      events: group.events.filter((event) => {
+        if (opts.game !== 'all' && event.game !== opts.game) return false
+        if (opts.emmyOnly && !event.emmy) return false
+        return true
+      }),
+    }))
+    .filter((group) => group.events.length > 0)
+}
+
 export const FLICKR_CREDIT = "VALORANT Champions Tour Photos / Riot Games" as const
 export const FLICKR_OWNER_URL = "https://www.flickr.com/photos/valorantesports/" as const
 export const AMERICAS_FLICKR_CREDIT = "VCT Americas Photos / Riot Games" as const
