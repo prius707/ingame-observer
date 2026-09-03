@@ -349,9 +349,9 @@ body.menu-open .header-booking {
   padding: 0.08em 0;
   font-family: var(--serif);
   font-size: clamp(2.4rem, 6.5vw, 5rem);
-  font-weight: 700;
+  font-weight: 400;
   font-style: italic;
-  line-height: 0.95;
+  line-height: 1.08;
   letter-spacing: -0.02em;
   text-transform: none;
   text-decoration: none;
@@ -1762,13 +1762,17 @@ body.invert .award-emmy--winner,
   .menu-drawer_inner {
     grid-template-columns: 1fr;
     align-content: end;
-    gap: 2.25rem;
+    gap: 2.75rem;
     padding: calc(5.5rem + var(--safe-top)) calc(1.25rem + var(--safe-right))
       calc(1.75rem + var(--safe-bottom)) calc(1.25rem + var(--safe-left));
   }
 
   .menu-link {
     font-size: clamp(2.1rem, 12vw, 3.1rem);
+  }
+
+  .menu {
+    padding-bottom: 0.35em;
   }
 
   .site-title {
