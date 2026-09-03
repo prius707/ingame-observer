@@ -73,8 +73,8 @@ export const PITCHES: Pitch[] = [
         I'm prius. Freelance esports observer. 15+ years across Counter-Strike
         and VALORANT. Majors, Masters, and Champions on the resume, including a
         Sports Emmy win for Champions coverage after four nominations. Consulted
-        for Riot Games. Partners include ESL FACEIT Group, BLAST, Turner Sports
-        (TBS), and Raidiant.
+        for Riot Games. Currently work with them. Partners include ESL FACEIT
+        Group, BLAST, Turner Sports (TBS), and Raidiant.
       </>
     ),
   },
@@ -86,8 +86,8 @@ export const PITCHES: Pitch[] = [
         <br />
         I'm a freelance observer. 15+ years in the chair. Majors, Masters,
         Champions. Sports Emmy win for Champions coverage, four nominations
-        total. Consulted for Riot Games. ESL FACEIT Group, BLAST, Turner Sports,
-        and Raidiant keep booking me.
+        total. Consulted for Riot Games. Currently work with them. ESL FACEIT
+        Group, BLAST, Turner Sports, and Raidiant keep booking me.
       </>
     ),
   },
@@ -99,8 +99,8 @@ export const PITCHES: Pitch[] = [
         <br />
         15+ years of big-stage observing. Majors, Masters, Champions. Four
         Sports Emmy nominations, one win for Champions coverage. Consulted for
-        Riot. ESL FACEIT Group, BLAST, Turner Sports, and Raidiant keep coming
-        back. Get in touch.
+        Riot. Currently work with them. ESL FACEIT Group, BLAST, Turner Sports,
+        and Raidiant keep coming back. Get in touch.
       </>
     ),
   },
@@ -111,7 +111,8 @@ export const PITCHES: Pitch[] = [
         <strong>Book me. Before the other production does.</strong>
         <br />
         15+ years. Four Sports Emmy nominations. One Emmy win for Champions
-        coverage. Counter-Strike Majors. VCT Masters. Riot consulting.{' '}
+        coverage. Counter-Strike Majors. VCT Masters. Riot consulting — currently
+        work with them.{' '}
         <strong>Email me.</strong>
       </>
     ),
@@ -128,7 +129,8 @@ export const PITCHES: Pitch[] = [
         <br />
         <strong>GET IN TOUCH.</strong> 15+ years of big-stage observing. Majors,
         Masters, Champions. Four Sports Emmy nominations. One Emmy win.
-        Consulted for Riot. VALORANT and Counter-Strike.
+        Consulted for Riot. Currently work with them. VALORANT and
+        Counter-Strike.
       </>
     ),
   },
@@ -146,7 +148,8 @@ export const PITCHES: Pitch[] = [
           GET IN TOUCH at <a href={mail}>dj@ingame.observer</a>
         </strong>
         . 15+ years. Four Sports Emmy nominations. Emmy winner. Majors,
-        Masters, Champions. Consulted for Riot. VALORANT and Counter-Strike. Don't wait.
+        Masters, Champions. Consulted for Riot. Currently work with them.
+        VALORANT and Counter-Strike. Don't wait.
       </>
     ),
   },
@@ -164,7 +167,8 @@ export const PITCHES: Pitch[] = [
           GET IN TOUCH at <a href={mail}>dj@ingame.observer</a>
         </strong>
         . 15+ years. Four Sports Emmy nominations. Emmy winner. Consulted for
-        Riot. Biggest VALORANT and Counter-Strike stages. Beat your rivals to the booking.{' '}
+        Riot. Currently work with them. Biggest VALORANT and Counter-Strike
+        stages. Beat your rivals to the booking.{' '}
         <strong className="red">
           <a href={mail}>Email me</a> or DM{' '}
           <a href={x} target="_blank" rel="noopener noreferrer">
@@ -221,7 +225,7 @@ export const CV_SECTIONS = [
   {
     title: 'Partners',
     lines: [
-      'Riot Games (consulting)',
+      'Riot Games (consulting, current)',
       'ESL FACEIT Group',
       'BLAST',
       'Turner Sports (TBS)',
