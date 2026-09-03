@@ -19,7 +19,7 @@ export const PITCHES: Pitch[] = [
   {
     weight: 72,
     content: (
-      <>If you need a VALORANT or CS2 observer, you could email me. Or not.</>
+      <>If you need a VALORANT or Counter-Strike observer, you could email me. Or not.</>
     ),
   },
   {
@@ -60,7 +60,7 @@ export const PITCHES: Pitch[] = [
     content: (
       <>
         I'm prius. Freelance esports observer. I do the camera work that makes
-        your cast land and your broadcast feel sharp. 15+ years, CS Majors,
+        your cast land and your broadcast feel sharp. 15+ years, Counter-Strike Majors,
         VALORANT's biggest stages, Emmy-winning Champions coverage. Challengers
         to international LANs.
       </>
@@ -70,8 +70,8 @@ export const PITCHES: Pitch[] = [
     weight: 420,
     content: (
       <>
-        I'm prius. Freelance esports observer. 15+ years across CS:GO, CS2, and
-        VALORANT. Majors, Masters, and Champions on the resume, including a
+        I'm prius. Freelance esports observer. 15+ years across Counter-Strike
+        and VALORANT. Majors, Masters, and Champions on the resume, including a
         Sports Emmy win for Champions coverage after four nominations. Consulted
         for Riot Games. Partners include ESL FACEIT Group, BLAST, Turner Sports
         (TBS), and Raidiant.
@@ -82,7 +82,7 @@ export const PITCHES: Pitch[] = [
     weight: 430,
     content: (
       <>
-        <strong>Broadcast-ready observing for VALORANT and CS2.</strong>
+        <strong>Broadcast-ready observing for VALORANT and Counter-Strike.</strong>
         <br />
         I'm a freelance observer. 15+ years in the chair. Majors, Masters,
         Champions. Sports Emmy win for Champions coverage, four nominations
@@ -111,7 +111,7 @@ export const PITCHES: Pitch[] = [
         <strong>Book me. Before the other production does.</strong>
         <br />
         15+ years. Four Sports Emmy nominations. One Emmy win for Champions
-        coverage. CS Majors. VCT Masters. Riot consulting.{' '}
+        coverage. Counter-Strike Majors. VCT Masters. Riot consulting.{' '}
         <strong>Email me.</strong>
       </>
     ),
@@ -128,7 +128,7 @@ export const PITCHES: Pitch[] = [
         <br />
         <strong>GET IN TOUCH.</strong> 15+ years of big-stage observing. Majors,
         Masters, Champions. Four Sports Emmy nominations. One Emmy win.
-        Consulted for Riot. VALORANT and CS2.
+        Consulted for Riot. VALORANT and Counter-Strike.
       </>
     ),
   },
@@ -146,7 +146,7 @@ export const PITCHES: Pitch[] = [
           GET IN TOUCH at <a href={mail}>dj@ingame.observer</a>
         </strong>
         . 15+ years. Four Sports Emmy nominations. Emmy winner. Majors,
-        Masters, Champions. Consulted for Riot. VALORANT and CS2. Don't wait.
+        Masters, Champions. Consulted for Riot. VALORANT and Counter-Strike. Don't wait.
       </>
     ),
   },
@@ -164,7 +164,7 @@ export const PITCHES: Pitch[] = [
           GET IN TOUCH at <a href={mail}>dj@ingame.observer</a>
         </strong>
         . 15+ years. Four Sports Emmy nominations. Emmy winner. Consulted for
-        Riot. Biggest VALORANT and CS2 stages. Beat your rivals to the booking.{' '}
+        Riot. Biggest VALORANT and Counter-Strike stages. Beat your rivals to the booking.{' '}
         <strong className="red">
           <a href={mail}>Email me</a> or DM{' '}
           <a href={x} target="_blank" rel="noopener noreferrer">
@@ -179,7 +179,7 @@ export const PITCHES: Pitch[] = [
 export const DEFAULT_PITCH = 6
 
 export const SITE = {
-  taglineRole: 'Freelance VALORANT & CS2 observer',
+  taglineRole: 'Freelance VALORANT & Counter-Strike observer',
   taglineCreds: 'Sports Emmy winner — Los Angeles, California',
   availability: 'Booking international LANs & league stages · replies within 48h',
 } as const
@@ -216,7 +216,7 @@ export const CONTROLLER_EMAIL = 'dj@ingame.observer'
 export const CV_SECTIONS = [
   {
     title: 'Freelance',
-    lines: ['2010 – Present', 'VALORANT & CS2 observer'],
+    lines: ['2010 – Present', 'VALORANT & Counter-Strike observer'],
   },
   {
     title: 'Partners',
@@ -231,7 +231,7 @@ export const CV_SECTIONS = [
   {
     title: 'Stages',
     lines: [
-      'CS Majors · ESL One · ELEAGUE · IEM · BLAST',
+      'Counter-Strike Majors · ESL One · ELEAGUE · IEM · BLAST',
       'VCT Champions · Masters · LOCK//IN · Americas',
     ],
   },
