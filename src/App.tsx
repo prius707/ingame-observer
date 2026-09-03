@@ -299,13 +299,17 @@ function App() {
                 {MENU_LINKS.map((link) => (
                   <li key={link.label}>
                     {'mailto' in link && link.mailto ? (
-                      <a href={link.href} onClick={() => setMenuOpen(false)}>
+                      <a
+                        className="menu-link menu-link--mail"
+                        href={link.href}
+                        onClick={() => setMenuOpen(false)}
+                      >
                         {link.label}
                       </a>
-                    ) : link.href.startsWith('/') || link.href.startsWith('#') ? (
+                    ) : (
                       <a
                         href={link.href}
-                        className="menu-link-btn"
+                        className="menu-link"
                         onClick={(e) => {
                           e.preventDefault()
                           onMenuNav(link.href)
@@ -313,25 +317,19 @@ function App() {
                       >
                         {link.label}
                       </a>
-                    ) : (
-                      <a
-                        href={link.href}
-                        target={link.external ? '_blank' : undefined}
-                        rel={link.external ? 'noopener noreferrer' : undefined}
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        {link.label}
-                        {link.external ? (
-                          <span className="sr-only"> (opens in a new tab)</span>
-                        ) : null}
-                      </a>
                     )}
                   </li>
                 ))}
               </ul>
             </nav>
 
-            <div className="menu-contact">
+            <div className="menu-meta">
+              <p className="menu-booking">{SITE.availability}</p>
+              <address className="menu-address">
+                {SOCIAL.location}
+                <br />
+                <a href={SOCIAL.mailto}>{SOCIAL.email}</a>
+              </address>
               <div className="menu-socials">
                 <a
                   className="social-link"
@@ -376,25 +374,19 @@ function App() {
                   />
                 </a>
               </div>
-              <address className="menu-address">
-                {SOCIAL.location}
-                <br />
-                <a href={SOCIAL.mailto}>{SOCIAL.email}</a>
-              </address>
+              <p className="menu-legal">
+                <a
+                  className="menu-privacy-link"
+                  href="/privacy"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    onMenuNav('/privacy')
+                  }}
+                >
+                  Privacy
+                </a>
+              </p>
             </div>
-
-            <p className="menu-legal">
-              <a
-                className="menu-privacy-link"
-                href="/privacy"
-                onClick={(e) => {
-                  e.preventDefault()
-                  onMenuNav('/privacy')
-                }}
-              >
-                Privacy
-              </a>
-            </p>
           </div>
         </div>
       </header>
