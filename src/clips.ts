@@ -99,6 +99,9 @@ export function clipIndexFromSlug(slug: string | null | undefined) {
 export function parseClipSlugFromLocation(loc = window.location) {
   const hash = loc.hash
   if (hash.startsWith('#clips/')) return decodeURIComponent(hash.slice('#clips/'.length))
+  const path = loc.pathname.replace(/\/+$/, '')
+  const m = path.match(/^\/clips\/([^/]+)$/)
+  if (m) return decodeURIComponent(m[1])
   return new URLSearchParams(loc.search).get('clip')
 }
 
