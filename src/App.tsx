@@ -36,7 +36,6 @@ import { assetPath } from './paths'
 import './App.css'
 
 const STORAGE_KEY = 'priusSliderPos'
-const PAGE_DARK_KEY = 'priusPageDark'
 
 type View = 'home' | 'privacy' | 'cv' | 'events' | 'clips' | 'notfound'
 
@@ -70,13 +69,6 @@ function App() {
   })
   const [menuOpen, setMenuOpen] = useState(false)
   const [invert, setInvert] = useState(false)
-  const [pageDark, setPageDark] = useState(() => {
-    try {
-      return sessionStorage.getItem(PAGE_DARK_KEY) === '1'
-    } catch {
-      return false
-    }
-  })
   const [reduceMotion, setReduceMotion] = useState(() =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   )
@@ -149,14 +141,6 @@ function App() {
     document.body.classList.toggle('invert', invert)
     return () => document.body.classList.remove('invert')
   }, [invert])
-
-  useEffect(() => {
-    try {
-      sessionStorage.setItem(PAGE_DARK_KEY, pageDark ? '1' : '0')
-    } catch {
-      /* ignore */
-    }
-  }, [pageDark])
 
   useEffect(() => {
     document.body.classList.toggle(
@@ -257,14 +241,7 @@ function App() {
             : view === 'events'
               ? 'home--page home--events'
               : ''
-  const showPageTheme = view !== 'home'
-  const homeClass = [
-    'home',
-    pageClass,
-    showPageTheme && pageDark ? 'home--dark' : '',
-  ]
-    .filter(Boolean)
-    .join(' ')
+  const homeClass = ['home', pageClass].filter(Boolean).join(' ')
 
   return (
     <div className={homeClass}>
@@ -406,21 +383,6 @@ function App() {
               Inspiration taken from getcoleman.com.
             </p>
             <p className="menu-legal">
-              {showPageTheme ? (
-                <>
-                  <button
-                    type="button"
-                    className="menu-theme-link"
-                    aria-pressed={pageDark}
-                    onClick={() => setPageDark((d) => !d)}
-                  >
-                    {pageDark ? 'Light mode' : 'Dark mode'}
-                  </button>
-                  <span className="menu-legal__sep" aria-hidden="true">
-                    ·
-                  </span>
-                </>
-              ) : null}
               <button
                 type="button"
                 className="menu-privacy-link"
@@ -1181,10 +1143,9 @@ function PrivacyNotice({ onBack }: { onBack: () => void }) {
       <h3>Session storage</h3>
       <p>
         For this browser tab only, the site may store the hard-sell slider
-        position (<code>{STORAGE_KEY}</code>) and whether you turned on dark
-        mode on subpages (<code>{PAGE_DARK_KEY}</code>). That stays on your
-        device, isn&rsquo;t a cookie, and clears when the tab closes. Block
-        storage and everything still works with defaults.
+        position (<code>{STORAGE_KEY}</code>). That stays on your device,
+        isn&rsquo;t a cookie, and clears when the tab closes. Block storage
+        and everything still works with defaults.
       </p>
 
       <h3>When you contact me</h3>

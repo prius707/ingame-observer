@@ -174,12 +174,6 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-.home--page:not(.home--dark) .header-contact {
-  color: #000;
-  border-color: rgba(0, 0, 0, 0.35);
-  background: rgba(255, 255, 255, 0.92);
-}
-
 .menu-toggle {
   position: relative;
   top: auto;
@@ -405,13 +399,7 @@ body.invert .menu-toggle.menu-open.is-open {
   text-align: center;
 }
 
-.menu-legal__sep {
-  margin: 0 0.45em;
-  color: #999;
-}
-
-.menu-privacy-link,
-.menu-theme-link {
+.menu-privacy-link {
   display: inline;
   padding: 0;
   border: 0;
@@ -428,9 +416,7 @@ body.invert .menu-toggle.menu-open.is-open {
 }
 
 .menu-privacy-link:hover,
-.menu-privacy-link:focus-visible,
-.menu-theme-link:hover,
-.menu-theme-link:focus-visible {
+.menu-privacy-link:focus-visible {
   color: #666;
 }
 
@@ -1037,7 +1023,7 @@ body.invert #slider::-moz-range-thumb {
   min-width: 2.25rem;
   height: 2rem;
   padding: 0 0.55rem;
-  border: 1px solid #ccc;
+  border: 1px solid #fff;
   border-radius: 0;
   background: #fff;
   color: #000;
@@ -1048,7 +1034,8 @@ body.invert #slider::-moz-range-thumb {
 
 .clip-nav-btn:hover,
 .clip-nav-btn:focus-visible {
-  border-color: #000;
+  border-color: #fff;
+  background: #e8e8e8;
 }
 
 .clip-now__title {
@@ -1267,7 +1254,7 @@ body.invert #slider::-moz-range-thumb {
 
 .clips-strip__item.is-active img {
   opacity: 1;
-  outline-color: #000;
+  outline-color: #fff;
 }
 
 .clips-strip__item.is-active .clips-strip__title {
@@ -1321,7 +1308,7 @@ body.invert #slider::-moz-range-thumb {
 .events-filter input {
   width: 1rem;
   height: 1rem;
-  accent-color: #000;
+  accent-color: #fff;
 }
 
 .events-page .year + .year {
@@ -1393,7 +1380,7 @@ body.invert #slider::-moz-range-thumb {
 
 body.invert .award-emmy--winner,
 .home--events .award-emmy--winner {
-  color: #c40000;
+  color: #ff4d4d;
 }
 
 .award figure img {
@@ -1571,7 +1558,7 @@ body.invert .award-emmy--winner,
 .page-footer {
   margin-top: 2rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
   text-transform: none;
 }
 
@@ -1598,8 +1585,8 @@ body.invert .award-emmy--winner,
 .home--clips,
 .home--events,
 .home--page {
-  background: #fff;
-  color: #000;
+  background: #000;
+  color: #fff;
   isolation: auto;
 }
 
@@ -1607,7 +1594,7 @@ body.invert .award-emmy--winner,
 .home--clips .site-title a,
 .home--events .site-title a,
 .home--page .site-title a {
-  color: #000;
+  color: #fff;
 }
 
 .home--cv .wrapper,
@@ -1617,85 +1604,14 @@ body.invert .award-emmy--winner,
   z-index: 2;
 }
 
-.award figure img {
-  display: none;
-  position: fixed;
-  top: 4em;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  margin: auto;
-  max-width: 85%;
-  max-height: 85%;
-  z-index: 1;
-  opacity: 0.62;
-  pointer-events: none;
-  object-fit: contain;
-}
-
-.home--page:not(.home--dark) .menu-toggle.menu-open {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(0, 0, 0, 0.35);
-  box-shadow: none;
-}
-
-.home--page:not(.home--dark) .menu-toggle.menu-open::before,
-.home--page:not(.home--dark) .menu-toggle.menu-open::after {
-  background: #000;
-}
-
-.home--page:not(.home--dark) .menu-toggle.menu-open::before {
-  box-shadow: 0 12px 0 0 #000;
-}
-
-.home--page:not(.home--dark) .menu-toggle.menu-open.is-open {
-  color: #000;
-}
-
-/* dark mode on non-home pages */
-.home--page.home--dark {
-  background: #000;
-  color: #fff;
-}
-
-.home--page.home--dark .site-title a {
-  color: #fff;
-}
-
-.home--page.home--dark .page-footer {
-  border-top-color: rgba(255, 255, 255, 0.18);
-}
-
-.home--page.home--dark .events-filter input,
-.home--page.home--dark .events-years__btn {
-  accent-color: #fff;
-  border-color: rgba(255, 255, 255, 0.35);
-}
-
-.home--page.home--dark .clip-nav-btn {
-  background: #fff;
-  color: #000;
-  border-color: #fff;
-}
-
-.home--page.home--dark .clip-nav-btn:hover,
-.home--page.home--dark .clip-nav-btn:focus-visible {
-  border-color: #fff;
-  background: #e8e8e8;
-}
-
-.home--page.home--dark .award-emmy--winner {
-  color: #ff4d4d;
-}
-
-.home--page.home--dark .chat-ticker,
-.home--page.home--dark .clip-stage {
+.home--page .chat-ticker,
+.home--page .clip-stage {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-.home--page.home--dark .cv-quote,
-.home--page.home--dark .cv-section,
-.home--page.home--dark .privacy code {
+.home--page .cv-quote,
+.home--page .cv-section,
+.home--page .privacy code {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
