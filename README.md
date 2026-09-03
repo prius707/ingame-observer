@@ -1,6 +1,6 @@
 # prius · ingame.observer
 
-Hiring site for **prius** — Sports Emmy winner (four nominations, one win). VALORANT & CS2 observer.
+Hiring site for **prius** — Sports Emmy winner (four nominations, one win). VALORANT & Counter-Strike observer.
 
 Live: **https://ingame.observer/** · Repo: [github.com/prius707/ingame-observer](https://github.com/prius707/ingame-observer)
 
@@ -39,6 +39,7 @@ Repo needs to be public for free Pages (or GitHub Pro).
 | `npm run build` | `tsc` + Vite build |
 | `npm run preview` | preview `dist` |
 | `npm run lint` | oxlint |
+| `bash scripts/render-og-image.sh` | rebuild `public/og-image.jpg` from `scripts/og-card.html` |
 
 ## Stack
 

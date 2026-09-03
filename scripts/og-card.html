@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>og-image</title>
+    <style>
+      @font-face {
+        font-family: 'Libre Caslon Text';
+        font-style: normal;
+        font-weight: 700;
+        src: url('../node_modules/@fontsource/libre-caslon-text/files/libre-caslon-text-latin-700-normal.woff2')
+          format('woff2');
+      }
+      @font-face {
+        font-family: 'Work Sans';
+        font-style: normal;
+        font-weight: 500;
+        src: url('../node_modules/@fontsource/work-sans/files/work-sans-latin-500-normal.woff2')
+          format('woff2');
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: #000;
+        color: #fff;
+        -webkit-font-smoothing: antialiased;
+      }
+      .card {
+        width: 1200px;
+        height: 630px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 0 72px;
+      }
+      h1 {
+        font-family: 'Libre Caslon Text', 'Times New Roman', serif;
+        font-weight: 700;
+        font-size: 118px;
+        line-height: 0.95;
+        letter-spacing: -0.01em;
+      }
+      p.role {
+        margin-top: 22px;
+        font-family: 'Work Sans', 'Helvetica Neue', sans-serif;
+        font-weight: 500;
+        font-size: 32px;
+        letter-spacing: 0.01em;
+        line-height: 1.25;
+        white-space: nowrap;
+      }
+      p.stages {
+        margin-top: 28px;
+        font-family: 'Work Sans', 'Helvetica Neue', sans-serif;
+        font-weight: 500;
+        font-size: 22px;
+        letter-spacing: 0.12em;
+        text-transform: none;
+        color: #9a9a9a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>prius</h1>
+      <p class="role">Sports Emmy-winning VALORANT &amp; Counter-Strike observer</p>
+      <p class="stages">Majors · Masters · Champions</p>
+    </div>
+  </body>
+</html>
