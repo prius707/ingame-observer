@@ -1386,7 +1386,12 @@ function PrivacyNotice({
       <h3>What this site does not do</h3>
       <ul>
         <li>No accounts, logins, or newsletter signup.</li>
-        <li>No advertising pixels, retargeting tags, or marketing cookies.</li>
+        <li>
+          No analytics, advertising pixels, retargeting tags, or marketing
+          cookies. Cloudflare Web Analytics is disabled on this hostname
+          (confirmed 4 September 2026). Zaraz is off. I do not add a cookie
+          wall because nothing here needs consent for cookies.
+        </li>
         <li>
           Fonts are self-hosted. Your browser does not fetch Google Fonts from
           this site.
@@ -1396,22 +1401,30 @@ function PrivacyNotice({
           event still does not call Flickr or Smugmug.
         </li>
         <li>
-          I do not set first-party analytics cookies. The first-party code only
-          uses tab-scoped <code>sessionStorage</code> for the slider (below).
+          No first-party cookies. The only client storage is tab-scoped{' '}
+          <code>sessionStorage</code> for the slider (below).
         </li>
       </ul>
 
       <h3>Hosting and server logs</h3>
       <p>
-        The site is built to GitHub Pages and reached through a Cloudflare
-        proxy. Those hosts see ordinary connection data: IP address, user
-        agent, referrer, requested URL, and timestamp. I do not run a separate
-        log store. Retention follows each host&rsquo;s defaults.
+        Visitors hit a Cloudflare proxy first. The origin is GitHub Pages,
+        which is served from GitHub&rsquo;s own edge (Fastly). I do not run a
+        separate application server or log store. Those hosts see ordinary
+        connection data: IP address, user agent, referrer, requested URL, and
+        timestamp. Retention follows each host&rsquo;s defaults.
       </p>
       <p>
         Cloudflare may also send Network Error Logging reports (connection
-        failures) to its own endpoints. That is their reliability telemetry,
-        not a marketing pixel I added.
+        failures) to its own endpoints. That is reliability telemetry, not
+        analytics I turned on.
+      </p>
+      <p>
+        Email Address Obfuscation (Cloudflare Scrape Shield) is on. If
+        Cloudflare rewrites an address in HTML it may load a small{' '}
+        <code>/cdn-cgi/</code> decode script. That is scrape protection, not
+        a tracker. First-party pages put the booking address in after
+        JavaScript, so that script often never appears.
       </p>
       <p>
         Provider notices:{' '}
@@ -1431,43 +1444,6 @@ function PrivacyNotice({
           Cloudflare privacy policy
         </a>
         .
-      </p>
-
-      <h3>Cloudflare Web Analytics</h3>
-      <p>
-        If Cloudflare Web Analytics is enabled on the zone (it has been
-        observed injecting{' '}
-        <code>static.cloudflareinsights.com/beacon.min.js</code> on live
-        pages), Cloudflare collects cookieless page-view and performance
-        metrics — URL, referrer, coarse country from IP (they say the IP is
-        not stored for this product), user agent in aggregate, and timing /
-        Core Web Vitals. Beacon data goes to Cloudflare&rsquo;s{' '}
-        <code>/cdn-cgi/rum</code> endpoint. Cloudflare states it does not use
-        cookies or <code>localStorage</code> for this product and does not
-        fingerprint individuals for the dashboard.
-      </p>
-      <p>
-        Purpose: understand whether the hiring site loads and which pages are
-        opened. I do not use it to build advertising profiles.
-      </p>
-      <p>
-        The zone owner can turn this off in Cloudflare (Web Analytics /
-        Automatic Setup). If it is off, that beacon should stop. This notice
-        covers the case where it is still on. See Cloudflare&rsquo;s{' '}
-        <a
-          href="https://developers.cloudflare.com/web-analytics/data-metrics/data-origin-and-collection/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          data collection notes
-        </a>
-        .
-      </p>
-      <p>
-        The HTML Content-Security-Policy meta lists <code>script-src
-        &apos;self&apos;</code>. That is a first-party hint. Cloudflare sits
-        in front of GitHub Pages and can inject its beacon anyway. I am not
-        claiming the meta tag blocks Cloudflare.
       </p>
 
       <h3>Session storage</h3>
@@ -1518,24 +1494,17 @@ function PrivacyNotice({
           Server logs and security: Art. 6(1)(f) — operating and protecting
           the site.
         </li>
-        <li>
-          Cloudflare Web Analytics, if enabled: Art. 6(1)(f) — seeing that
-          the site works. Cookieless; no consent wall for that product as
-          described by Cloudflare. If a non-essential cookie ever appears, I
-          should disclose it or turn it off rather than hide it.
-        </li>
       </ul>
 
       <h3>Retention</h3>
       <ul>
-        <li>Host logs: GitHub&rsquo;s and Cloudflare&rsquo;s defaults.</li>
         <li>
-          Cloudflare Web Analytics beacons: per Cloudflare (they publish short
-          raw retention, then aggregates).
+          Host logs: Cloudflare&rsquo;s, GitHub&rsquo;s, and Fastly&rsquo;s
+          defaults.
         </li>
         <li>
-          Email: kept as long as needed to respond or book work, then
-          according to my mailbox practice.
+          Email: kept as long as needed to reply or book work, then according
+          to my mailbox practice.
         </li>
         <li>
           Slider <code>sessionStorage</code>: until the tab closes.
@@ -1559,24 +1528,20 @@ function PrivacyNotice({
 
       <h3>International transfers</h3>
       <p>
-        GitHub, Cloudflare, and Google/Gmail are US (and global) processors.
-        Using this site or emailing me means data may be processed in the
-        United States and other countries where those providers operate. They
-        publish their own transfer tools (standard contractual clauses and
-        similar terms). I am not listing certificate numbers I do not
-        control.
+        Cloudflare, GitHub/Fastly, and Google/Gmail are US (and global)
+        processors. Using this site or emailing me means data may be processed
+        in the United States and other countries where those providers
+        operate. They publish their own transfer tools (standard contractual
+        clauses and similar terms). I am not listing certificate numbers I do
+        not control.
       </p>
 
       <h3>Cookies and ePrivacy</h3>
       <p>
-        First-party: no cookies. Slider memory is <code>sessionStorage</code>,
-        tab-scoped, strictly necessary for that UI.
-      </p>
-      <p>
-        If the only extra measurement is Cloudflare&rsquo;s cookieless beacon
-        (or it is disabled), there is no cookie wall. I prefer the zone
-        disable Web Analytics if we want zero third-party script. I will not
-        claim &ldquo;no analytics&rdquo; while that beacon is still injecting.
+        No cookies anywhere on this origin. Slider memory is{' '}
+        <code>sessionStorage</code> key <code>{STORAGE_KEY}</code> — tab
+        scoped, not a cookie, strictly necessary for that UI. There is no
+        cookie wall.
       </p>
 
       <h3>Photos &amp; clips</h3>
@@ -1597,8 +1562,8 @@ function PrivacyNotice({
 
       <h3>Security</h3>
       <p>
-        There is a basic CSP in the HTML. It does not stop Cloudflare from
-        adding edge scripts. Spotted something sketchy?{' '}
+        There is a basic CSP in the HTML (<code>script-src &apos;self&apos;</code>
+        ). Keep it. Spotted something sketchy?{' '}
         <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>
         {' · '}
         <a href={SECURITY_TXT}>security.txt</a>
