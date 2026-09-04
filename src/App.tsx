@@ -281,7 +281,6 @@ function App() {
               </a>
             ))}
           </nav>
-          <p className="header-booking">Replies within 48h</p>
           <a className="header-contact" href={SOCIAL.mailto}>
             Email
           </a>
@@ -479,8 +478,6 @@ function App() {
             {' · '}
             <span className="home-tagline__lock">{SITE.taglineCreds}</span>
           </p>
-          <p className="home-positioning">{SITE.positioning}</p>
-          <p className="home-booking">{SITE.availability}</p>
           <div className="slider__scale" aria-hidden="true">
             <span>Less Hard Sell</span>
             <span>More Hard Sell</span>
