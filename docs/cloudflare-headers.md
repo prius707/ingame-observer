@@ -23,3 +23,31 @@ Cross-Origin-Resource-Policy: same-origin
 3. Always HTTPS. HSTS preload later if you want.
 
 `public/_headers` mirrors the same list for Cloudflare Pages / Netlify if the host ever moves.
+
+## prius.observer → ingame.observer (Zone / CoS)
+
+Live check 2026-09-04: Cloudflare returns `301 Location: https://ingame.observer/` for every `prius.observer` path (`/`, `/events`, `/cv`, `/clips?x=1`). Path and query are stripped. This repo has no redirect for that host — `public/CNAME` is `ingame.observer` only.
+
+Fix in the Cloudflare zone (Bulk Redirect, Single Redirect, or Dynamic Redirect), not GitHub Pages:
+
+- Source: `https://prius.observer/*`
+- Target: `https://ingame.observer/${1}` (keep path)
+- Status: 301
+- Preserve query string: on
+
+Dynamic expression equivalent:
+
+```
+http.host eq "prius.observer"
+concat("https://ingame.observer", http.request.uri.path, http.request.uri.query != "" ? "?" : "", http.request.uri.query)
+```
+
+After that, `https://prius.observer/events` should land on `https://ingame.observer/events`.
+
+## Web Analytics (Zone)
+
+Zone confirmed 4 September 2026: Cloudflare Web Analytics is **disabled** on `ingame.observer`. Live HTML no longer injects `cloudflareinsights` / `beacon.min.js`. Zaraz inactive. Bot Fight off.
+
+`/privacy` can say no analytics / pixels / marketing cookies again. If Web Analytics is turned back on, update that page before repeating the claim. Keep HTML CSP `script-src 'self'` — do not add `static.cloudflareinsights.com`.
+
+Email Address Obfuscation (Scrape Shield) remains on. It may inject `/cdn-cgi/` email-decode JS if Cloudflare rewrites an address in HTML — scrape protection, not analytics. `/privacy` discloses it that way.

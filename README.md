@@ -8,10 +8,12 @@ Inspired by [getcoleman.com](https://getcoleman.com/): one page of copy and a **
 
 ## Privacy
 
-- Self-hosted fonts, no analytics cookies.
+- Self-hosted fonts. No first-party cookies. Slider uses tab-scoped `sessionStorage` (`priusSliderPos`) only. No cookie wall.
+- Cloudflare Web Analytics is disabled on the zone (2026-09-04). `/privacy` says no analytics/pixels/marketing cookies. Re-check live HTML if that setting changes.
 - Event stills + clips live on this origin (credit links still go to Flickr / Twitch / etc.).
-- `sessionStorage` only for slider position (see `#privacy`).
-- Hosted on GitHub Pages. `public/_headers` is for Cloudflare/Netlify-style hosts — Pages ignores it. If you put Cloudflare in front, copy the header list from [docs/cloudflare-headers.md](docs/cloudflare-headers.md).
+- `sessionStorage` only for slider position (see `/privacy`).
+- Hosted on GitHub Pages behind Cloudflare. `public/_headers` is for Cloudflare Pages / Netlify — GitHub Pages ignores it. Header list: [docs/cloudflare-headers.md](docs/cloudflare-headers.md).
+- Inbound mail: Cloudflare Email Routing → Gmail (`dj@ingame.observer`).
 - Security mail: `dj@ingame.observer` · [security.txt](https://ingame.observer/.well-known/security.txt)
 
 ## Dev

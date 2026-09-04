@@ -197,14 +197,7 @@ export const SITE = {
 
 export const SITE_TAGLINE = `${SITE.taglineRole} · ${SITE.taglineCreds}`
 
-export const PAGE_TITLES = {
-  home: 'prius - freelance observer',
-  cv: 'CV · prius - freelance observer',
-  clips: 'Clips · prius - freelance observer',
-  events: 'Events · prius - freelance observer',
-  privacy: 'Privacy · prius',
-  notfound: '404 · prius',
-} as const
+export { PAGE_TITLES } from './siteMeta'
 
 export const SOCIAL = {
   twitter: 'https://x.com/priusOBS',

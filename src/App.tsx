@@ -10,6 +10,7 @@ import {
   SITE_TAGLINE,
   SOCIAL,
 } from './data'
+import { BOOKING, PAGE_DESCRIPTIONS } from './siteMeta'
 import {
   AMERICAS_FLICKR_CREDIT,
   AMERICAS_FLICKR_OWNER_URL,
@@ -53,8 +54,19 @@ function readInitialView(): View {
   return viewFromLocation()
 }
 
+function setMeta(
+  selector: string,
+  attr: string,
+  value: string,
+) {
+  const el = document.querySelector<HTMLMetaElement>(selector)
+  if (el) el.setAttribute(attr, value)
+}
+
 function setDocumentMeta(view: View, clipSlug?: string | null) {
-  document.title = PAGE_TITLES[view]
+  const title = PAGE_TITLES[view]
+  const description = PAGE_DESCRIPTIONS[view]
+  document.title = title
   const canonical = canonicalForView(view, clipSlug)
   let link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')
   if (!link) {
@@ -63,10 +75,12 @@ function setDocumentMeta(view: View, clipSlug?: string | null) {
     document.head.appendChild(link)
   }
   link.href = canonical
-  const ogUrl = document.querySelector<HTMLMetaElement>('meta[property="og:url"]')
-  if (ogUrl) ogUrl.setAttribute('content', canonical)
-  const ogTitle = document.querySelector<HTMLMetaElement>('meta[property="og:title"]')
-  if (ogTitle) ogTitle.setAttribute('content', PAGE_TITLES[view])
+  setMeta('meta[name="description"]', 'content', description)
+  setMeta('meta[property="og:url"]', 'content', canonical)
+  setMeta('meta[property="og:title"]', 'content', title)
+  setMeta('meta[property="og:description"]', 'content', description)
+  setMeta('meta[name="twitter:title"]', 'content', title)
+  setMeta('meta[name="twitter:description"]', 'content', description)
 }
 
 function App() {
@@ -97,6 +111,8 @@ function App() {
   const hardMode = heat > 0.85
   const flashMode = pos === max && !reduceMotion && !narrow
   const sizeGuideRef = useRef<HTMLParagraphElement>(null)
+  const menuToggleRef = useRef<HTMLButtonElement>(null)
+  const didNavRef = useRef(false)
   const drawerId = useId()
 
   useEffect(() => {
@@ -137,7 +153,13 @@ function App() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
-    document.getElementById('main')?.scrollTo?.(0, 0)
+    const main = document.getElementById('main')
+    main?.scrollTo?.(0, 0)
+    if (!didNavRef.current) {
+      didNavRef.current = true
+      return
+    }
+    main?.focus()
   }, [view])
 
   useEffect(() => {
@@ -180,12 +202,39 @@ function App() {
 
   useEffect(() => {
     if (!menuOpen) return
+    const drawer = document.getElementById(drawerId)
+    const first = drawer?.querySelector<HTMLElement>('a[href], button')
+    first?.focus()
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setMenuOpen(false)
+      if (e.key === 'Escape') {
+        setMenuOpen(false)
+        return
+      }
+      if (e.key !== 'Tab' || !drawer) return
+      const nodes = [
+        menuToggleRef.current,
+        ...drawer.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled])',
+        ),
+      ].filter((el): el is HTMLElement => Boolean(el))
+      if (nodes.length === 0) return
+      const firstNode = nodes[0]
+      const lastNode = nodes[nodes.length - 1]
+      if (e.shiftKey && document.activeElement === firstNode) {
+        e.preventDefault()
+        lastNode.focus()
+      } else if (!e.shiftKey && document.activeElement === lastNode) {
+        e.preventDefault()
+        firstNode.focus()
+      }
     }
+    const toggle = menuToggleRef.current
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [menuOpen])
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      toggle?.focus()
+    }
+  }, [menuOpen, drawerId])
 
   useEffect(() => {
     if (view !== 'home' || menuOpen) return
@@ -226,6 +275,7 @@ function App() {
 
   const onMenuNav = (href: string) => {
     if (href === '/privacy' || href === '#privacy') goView('privacy')
+    else if (href === '/contact' || href === '#contact') goView('contact')
     else if (href === '/cv' || href === '#cv') goView('cv')
     else if (href === '/clips' || href === '#clips') goView('clips')
     else if (href === '/events' || href === '#events' || href === '#awards') {
@@ -236,7 +286,7 @@ function App() {
   const pageClass =
     view === 'notfound'
       ? 'home--page home--notfound'
-      : view === 'privacy'
+      : view === 'privacy' || view === 'contact'
         ? 'home--page'
         : view === 'cv'
           ? 'home--page home--cv'
@@ -281,10 +331,15 @@ function App() {
               </a>
             ))}
           </nav>
-          <a className="header-contact" href={SOCIAL.mailto}>
-            Email
+          <a
+            className="header-contact"
+            href={SOCIAL.mailto}
+            aria-label={BOOKING.aria}
+          >
+            {BOOKING.label}
           </a>
           <button
+            ref={menuToggleRef}
             type="button"
             className={`menu-toggle menu-open${menuOpen ? ' is-open' : ''}`}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -404,7 +459,9 @@ function App() {
 
       <main id="main" className="wrapper" tabIndex={-1}>
         {view === 'privacy' ? (
-          <PrivacyNotice onBack={goHome} />
+          <PrivacyNotice onBack={goHome} onGo={goView} />
+        ) : view === 'contact' ? (
+          <ContactPage onBack={goHome} />
         ) : view === 'cv' ? (
           <CvPage onBack={goHome} />
         ) : view === 'clips' ? (
@@ -412,7 +469,7 @@ function App() {
         ) : view === 'events' ? (
           <EventsPage onBack={goHome} reduceMotion={reduceMotion} />
         ) : view === 'notfound' ? (
-          <NotFoundPage onBack={goHome} />
+          <NotFoundPage onBack={goHome} onGo={goView} />
         ) : (
           <div className="content-block">
             <div className="content-block__inner">
@@ -478,6 +535,13 @@ function App() {
             {' · '}
             <span className="home-tagline__lock">{SITE.taglineCreds}</span>
           </p>
+          <p className="home-book">
+            <a href={SOCIAL.mailto} aria-label={BOOKING.aria}>
+              {BOOKING.longLabel}
+            </a>
+            <span aria-hidden="true"> · </span>
+            <span>{SITE.availability}</span>
+          </p>
           <div className="slider__scale" aria-hidden="true">
             <span>Less Hard Sell</span>
             <span>More Hard Sell</span>
@@ -516,6 +580,11 @@ function PageFooter() {
     <footer className="page-footer">
       <p className="page-footer__name">{SITE.legalName}</p>
       <p className="page-footer__availability">{SITE.availability}</p>
+      <p className="page-footer__book">
+        <a href={SOCIAL.mailto} aria-label={BOOKING.aria}>
+          {BOOKING.longLabel}
+        </a>
+      </p>
       <p className="page-footer__contact">
         <a href={SOCIAL.mailto}>{SOCIAL.email}</a>
         {' · '}
@@ -526,6 +595,8 @@ function PageFooter() {
         >
           @priusOBS
         </a>
+        {' · '}
+        <a href="/privacy">Privacy</a>
         {' · '}
         <a href={SECURITY_TXT}>security.txt</a>
       </p>
@@ -540,7 +611,13 @@ function CvPage({ onBack }: { onBack: () => void }) {
       <p className="cv-name">{SITE.legalName}</p>
       <p className="cv-lead">{SITE_TAGLINE}</p>
       <p className="cv-positioning">{SITE.positioning}</p>
-      <p className="cv-availability">{SITE.availability}</p>
+      <p className="cv-availability">
+        {SITE.availability}
+        {' · '}
+        <a href={SOCIAL.mailto} aria-label={BOOKING.aria}>
+          {BOOKING.longLabel}
+        </a>
+      </p>
 
       <div className="cv-quotes">
         {CV_QUOTES.map((q) => (
@@ -852,11 +929,10 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
                 className={`clips-strip__item${active ? ' is-active' : ''}`}
                 onClick={() => select(i)}
                 aria-current={active ? 'true' : undefined}
-                aria-label={item.title}
               >
                 <img
                   src={clipPoster(item.file)}
-                  alt={`${item.title} clip poster`}
+                  alt=""
                   width={160}
                   height={90}
                   loading={i === 0 ? 'eager' : 'lazy'}
@@ -1131,7 +1207,7 @@ function EventRow({
                 ? event.photo.imageUrl
                 : assetPath(event.photo.imageUrl)
             }
-            alt=""
+            alt={event.photo.title || `${event.name} still`}
             decoding="async"
             loading="lazy"
             referrerPolicy="no-referrer"
@@ -1171,7 +1247,13 @@ function EventRow({
   )
 }
 
-function NotFoundPage({ onBack }: { onBack: () => void }) {
+function NotFoundPage({
+  onBack,
+  onGo,
+}: {
+  onBack: () => void
+  onGo: (next: Exclude<View, 'notfound'>) => void
+}) {
   return (
     <article className="not-found">
       <header className="not-found__intro">
@@ -1193,6 +1275,38 @@ function NotFoundPage({ onBack }: { onBack: () => void }) {
           draggable={false}
         />
       </figure>
+      <nav className="not-found__recover" aria-label="Still on the site">
+        <a
+          href="/cv"
+          onClick={(e) => {
+            e.preventDefault()
+            onGo('cv')
+          }}
+        >
+          CV
+        </a>
+        <a
+          href="/clips"
+          onClick={(e) => {
+            e.preventDefault()
+            onGo('clips')
+          }}
+        >
+          Clips
+        </a>
+        <a
+          href="/events"
+          onClick={(e) => {
+            e.preventDefault()
+            onGo('events')
+          }}
+        >
+          Events
+        </a>
+        <a href={SOCIAL.mailto} aria-label={BOOKING.aria}>
+          {BOOKING.longLabel}
+        </a>
+      </nav>
       <p className="page-back">
         <button type="button" className="text-btn" onClick={onBack}>
           ← Back to the pitch
@@ -1202,55 +1316,237 @@ function NotFoundPage({ onBack }: { onBack: () => void }) {
   )
 }
 
-function PrivacyNotice({ onBack }: { onBack: () => void }) {
+function ContactPage({ onBack }: { onBack: () => void }) {
+  return (
+    <article className="contact-page">
+      <h2>Book observing</h2>
+      <p className="contact-lead">{SITE.positioning}</p>
+      <p className="contact-availability">{SITE.availability}</p>
+      <p className="contact-place">{SOCIAL.location}</p>
+      <p className="contact-mail">
+        <a href={SOCIAL.mailto} aria-label={BOOKING.aria}>
+          {SOCIAL.email}
+        </a>
+      </p>
+      <p className="contact-hint">
+        The mailto opens with Event and Dates fields. Same address if you write
+        a new message.
+      </p>
+      <p className="contact-socials">
+        <a href={SOCIAL.twitter} target="_blank" rel="noopener noreferrer">
+          @priusOBS
+        </a>
+        {' · '}
+        <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer">
+          LinkedIn
+        </a>
+        {' · '}
+        <a href={SOCIAL.liquipedia} target="_blank" rel="noopener noreferrer">
+          Liquipedia
+        </a>
+      </p>
+      <PageFooter />
+      <p className="page-back">
+        <button type="button" className="text-btn" onClick={onBack}>
+          ← Back to the pitch
+        </button>
+      </p>
+    </article>
+  )
+}
+
+function PrivacyNotice({
+  onBack,
+  onGo,
+}: {
+  onBack: () => void
+  onGo: (next: Exclude<View, 'notfound'>) => void
+}) {
   return (
     <article className="privacy">
       <h2>Privacy</h2>
       <p className="privacy-lead">
-        Personal hiring site for David &ldquo;prius&rdquo; Kuntz. I try not to
-        collect anything I don&rsquo;t need.
+        Personal hiring site for David &ldquo;prius&rdquo; Kuntz. This page
+        describes what actually happens when you use{' '}
+        <a href="https://ingame.observer/">ingame.observer</a>. It is not a
+        GDPR certificate and I am not claiming the site is &ldquo;fully
+        compliant.&rdquo;
       </p>
 
       <h3>Who is responsible</h3>
       <p>
-        Controller: David Kuntz.
+        Controller: David Kuntz (prius).
         <br />
         Contact:{' '}
         <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>
+        <br />
+        Place of business: Los Angeles, California, United States.
       </p>
 
-      <h3>What this site does (and does not) do</h3>
+      <h3>What this site does not do</h3>
       <ul>
-        <li>No analytics, pixels, or marketing cookies.</li>
-        <li>Fonts are self-hosted (no Google Fonts request from your browser).</li>
-        <li>No accounts or newsletter signup — just email / social if you want.</li>
+        <li>No accounts, logins, or newsletter signup.</li>
         <li>
-          Event photos and clip videos are served from this site. Opening an
+          No analytics, pixels, or marketing cookies. Cloudflare Web Analytics
+          and Zaraz are off on this hostname (zone confirmed 4 September
+          2026). Live HTML does not inject a{' '}
+          <code>cloudflareinsights</code> beacon.
+        </li>
+        <li>
+          Fonts are self-hosted. Your browser does not fetch Google Fonts from
+          this site.
+        </li>
+        <li>
+          Event photos and clip videos are served from this origin. Opening an
           event still does not call Flickr or Smugmug.
         </li>
+        <li>
+          No first-party cookies. The only client storage is tab-scoped{' '}
+          <code>sessionStorage</code> for the slider (below).
+        </li>
       </ul>
+
+      <h3>Hosting and server logs</h3>
+      <p>
+        Visitors hit a Cloudflare proxy first. The origin is GitHub Pages,
+        which is served from GitHub&rsquo;s own edge (Fastly). I do not run a
+        separate application server or log store. Those hosts see ordinary
+        connection data: IP address, user agent, referrer, requested URL, and
+        timestamp. Retention follows each host&rsquo;s defaults.
+      </p>
+      <p>
+        Cloudflare may also send Network Error Logging reports (connection
+        failures) to its own endpoints. That is reliability telemetry, not
+        analytics I turned on.
+      </p>
+      <p>
+        Email Address Obfuscation (Cloudflare Scrape Shield) is on. If
+        Cloudflare rewrites an address in HTML it may load a small{' '}
+        <code>/cdn-cgi/</code> decode script. That is scrape protection, not
+        a tracker. First-party pages put the booking address in after
+        JavaScript, so that script often never appears.
+      </p>
+      <p>
+        Provider notices:{' '}
+        <a
+          href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub privacy statement
+        </a>
+        {' · '}
+        <a
+          href="https://www.cloudflare.com/privacypolicy/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Cloudflare privacy policy
+        </a>
+        .
+      </p>
 
       <h3>Session storage</h3>
       <p>
         For this browser tab only, the site may store the hard-sell slider
         position (<code>{STORAGE_KEY}</code>). That stays on your device,
         isn&rsquo;t a cookie, and clears when the tab closes. Block storage
-        and everything still works with defaults.
+        and everything still works with defaults. Strictly necessary for
+        remembering the slider in the current tab.
       </p>
 
       <h3>When you contact me</h3>
       <p>
-        Email (<a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>) or
-        a DM on X goes through that provider under their terms. I only use the
-        message to reply about observing / booking. Legal basis: Art. 6(1)(b)
-        and/or 6(1)(f) GDPR. You can ask for access, correction, deletion, or to
-        object — same address. EU folks can also complain to their supervisory
-        authority.
+        Book / email links use mailto:{' '}
+        <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>. That opens{' '}
+        <em>your</em> mail client. I do not see the message until you send it.
+        Your provider processes the outbound mail under their terms.
+      </p>
+      <p>
+        Inbound mail to that address is handled by Cloudflare Email Routing
+        and delivered to Gmail. I read it to reply about observing / booking
+        (or security). I do not sell it.
+      </p>
+      <p>
+        A DM on X goes through X under their terms. Same use: reply about
+        work.
+      </p>
+      <p>
+        Google&rsquo;s privacy policy:{' '}
+        <a
+          href="https://policies.google.com/privacy"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          policies.google.com/privacy
+        </a>
+        .
+      </p>
+
+      <h3>Legal bases</h3>
+      <ul>
+        <li>
+          Hire inquiries (email / DMs): Art. 6(1)(b) GDPR — steps prior to a
+          contract — and/or Art. 6(1)(f) legitimate interests in answering
+          booking requests.
+        </li>
+        <li>
+          Server logs and security: Art. 6(1)(f) — operating and protecting
+          the site.
+        </li>
+      </ul>
+
+      <h3>Retention</h3>
+      <ul>
+        <li>
+          Host logs: Cloudflare&rsquo;s, GitHub&rsquo;s, and Fastly&rsquo;s
+          defaults.
+        </li>
+        <li>
+          Email: kept as long as needed to reply or book work, then according
+          to my mailbox practice.
+        </li>
+        <li>
+          Slider <code>sessionStorage</code>: until the tab closes.
+        </li>
+      </ul>
+
+      <h3>Your rights</h3>
+      <p>
+        If GDPR or UK GDPR applies to you, you can ask for access,
+        rectification, erasure, restriction, objection, or portability of
+        personal data I hold, and you can withdraw consent if I ever relied
+        on it (I am not using consent for a cookie wall today). Email{' '}
+        <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>. I may need enough
+        detail to find your message.
+      </p>
+      <p>
+        You can also complain to a supervisory authority in your EU/EEA
+        country or, for the UK, the ICO. I do not name a &ldquo;lead&rdquo;
+        authority — I am based in the US.
+      </p>
+
+      <h3>International transfers</h3>
+      <p>
+        Cloudflare, GitHub/Fastly, and Google/Gmail are US (and global)
+        processors. Using this site or emailing me means data may be processed
+        in the United States and other countries where those providers
+        operate. They publish their own transfer tools (standard contractual
+        clauses and similar terms). I am not listing certificate numbers I do
+        not control.
+      </p>
+
+      <h3>Cookies and ePrivacy</h3>
+      <p>
+        No cookies anywhere on this origin. Slider memory is{' '}
+        <code>sessionStorage</code> key <code>{STORAGE_KEY}</code> — tab
+        scoped, not a cookie, strictly necessary for that UI. There is no
+        cookie wall.
       </p>
 
       <h3>Photos &amp; clips</h3>
       <p>
-        Events stills are local copies with credit links back to the original
+        Event stills are local copies with credit links back to the original
         Flickr / ESL / organizer albums (Riot / VCT Americas / BLAST / etc.).
         Clips are local files with links to the Twitch originals. The chat
         ticker uses self-hosted 7TV emote frames, not a live Twitch feed.
@@ -1260,38 +1556,32 @@ function PrivacyNotice({ onBack }: { onBack: () => void }) {
 
       <h3>External links</h3>
       <p>
-        Liquipedia, X, LinkedIn, Flickr, Twitch, mailto — once you leave, their
-        rules apply.
+        Liquipedia, X, LinkedIn, Flickr, Twitch, mailto — once you leave,
+        their rules apply.
       </p>
 
-      <h3>Hosting</h3>
+      <h3>Security</h3>
       <p>
-        Served from GitHub Pages for{' '}
-        <a href="https://ingame.observer/">ingame.observer</a>. Hosts see the
-        usual connection fluff (IP, user agent) in logs; that&rsquo;s GitHub&rsquo;s
-        side —{' '}
-        <a
-          href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          their privacy statement
-        </a>
-        . I&rsquo;m not running extra tracking on top.
-      </p>
-      <p>
-        There&rsquo;s a basic Content Security Policy in the HTML. Spotted
-        something sketchy?{' '}
+        There is a basic CSP in the HTML (<code>script-src &apos;self&apos;</code>
+        ). Keep it. Spotted something sketchy?{' '}
         <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>
         {' · '}
         <a href={SECURITY_TXT}>security.txt</a>
       </p>
 
-      <p className="privacy-updated">Last updated: 30 August 2026</p>
+      <p className="privacy-updated">Last updated: 4 September 2026</p>
 
       <p>
         <button type="button" className="text-btn" onClick={onBack}>
           ← Back to the pitch
+        </button>
+        {' · '}
+        <button
+          type="button"
+          className="text-btn"
+          onClick={() => onGo('contact')}
+        >
+          Book observing
         </button>
       </p>
     </article>
