@@ -9,7 +9,14 @@ export const SITE_ORIGIN = 'https://ingame.observer' as const
 export const SITE_BASE_PATH = base.replace(/\/$/, '') || ''
 export const SITE_URL = `${SITE_ORIGIN}${SITE_BASE_PATH}` as const
 
-export type View = 'home' | 'privacy' | 'cv' | 'events' | 'clips' | 'notfound'
+export type View =
+  | 'home'
+  | 'privacy'
+  | 'cv'
+  | 'events'
+  | 'clips'
+  | 'contact'
+  | 'notfound'
 
 const HASH_VIEWS: Record<string, View> = {
   '#privacy': 'privacy',
@@ -17,6 +24,7 @@ const HASH_VIEWS: Record<string, View> = {
   '#clips': 'clips',
   '#events': 'events',
   '#awards': 'events',
+  '#contact': 'contact',
 }
 
 export function normalizePath(pathname: string): string {
@@ -32,7 +40,8 @@ export function viewFromHash(hash: string): View | null {
 
 export function viewFromPath(pathname: string): View {
   const path = normalizePath(pathname)
-  if (path === '/' || path === '/contact') return 'home'
+  if (path === '/') return 'home'
+  if (path === '/contact') return 'contact'
   if (path === '/privacy') return 'privacy'
   if (path === '/cv') return 'cv'
   if (path === '/events' || path === '/awards') return 'events'

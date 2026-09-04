@@ -10,6 +10,7 @@ import {
   SITE_TAGLINE,
   SOCIAL,
 } from './data'
+import { BOOKING, PAGE_DESCRIPTIONS } from './siteMeta'
 import {
   AMERICAS_FLICKR_CREDIT,
   AMERICAS_FLICKR_OWNER_URL,
@@ -53,8 +54,19 @@ function readInitialView(): View {
   return viewFromLocation()
 }
 
+function setMeta(
+  selector: string,
+  attr: string,
+  value: string,
+) {
+  const el = document.querySelector<HTMLMetaElement>(selector)
+  if (el) el.setAttribute(attr, value)
+}
+
 function setDocumentMeta(view: View, clipSlug?: string | null) {
-  document.title = PAGE_TITLES[view]
+  const title = PAGE_TITLES[view]
+  const description = PAGE_DESCRIPTIONS[view]
+  document.title = title
   const canonical = canonicalForView(view, clipSlug)
   let link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')
   if (!link) {
@@ -63,10 +75,12 @@ function setDocumentMeta(view: View, clipSlug?: string | null) {
     document.head.appendChild(link)
   }
   link.href = canonical
-  const ogUrl = document.querySelector<HTMLMetaElement>('meta[property="og:url"]')
-  if (ogUrl) ogUrl.setAttribute('content', canonical)
-  const ogTitle = document.querySelector<HTMLMetaElement>('meta[property="og:title"]')
-  if (ogTitle) ogTitle.setAttribute('content', PAGE_TITLES[view])
+  setMeta('meta[name="description"]', 'content', description)
+  setMeta('meta[property="og:url"]', 'content', canonical)
+  setMeta('meta[property="og:title"]', 'content', title)
+  setMeta('meta[property="og:description"]', 'content', description)
+  setMeta('meta[name="twitter:title"]', 'content', title)
+  setMeta('meta[name="twitter:description"]', 'content', description)
 }
 
 function App() {
@@ -97,6 +111,8 @@ function App() {
   const hardMode = heat > 0.85
   const flashMode = pos === max && !reduceMotion && !narrow
   const sizeGuideRef = useRef<HTMLParagraphElement>(null)
+  const menuToggleRef = useRef<HTMLButtonElement>(null)
+  const didNavRef = useRef(false)
   const drawerId = useId()
 
   useEffect(() => {
@@ -137,7 +153,13 @@ function App() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
-    document.getElementById('main')?.scrollTo?.(0, 0)
+    const main = document.getElementById('main')
+    main?.scrollTo?.(0, 0)
+    if (!didNavRef.current) {
+      didNavRef.current = true
+      return
+    }
+    main?.focus()
   }, [view])
 
   useEffect(() => {
@@ -180,12 +202,39 @@ function App() {
 
   useEffect(() => {
     if (!menuOpen) return
+    const drawer = document.getElementById(drawerId)
+    const first = drawer?.querySelector<HTMLElement>('a[href], button')
+    first?.focus()
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setMenuOpen(false)
+      if (e.key === 'Escape') {
+        setMenuOpen(false)
+        return
+      }
+      if (e.key !== 'Tab' || !drawer) return
+      const nodes = [
+        menuToggleRef.current,
+        ...drawer.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled])',
+        ),
+      ].filter((el): el is HTMLElement => Boolean(el))
+      if (nodes.length === 0) return
+      const firstNode = nodes[0]
+      const lastNode = nodes[nodes.length - 1]
+      if (e.shiftKey && document.activeElement === firstNode) {
+        e.preventDefault()
+        lastNode.focus()
+      } else if (!e.shiftKey && document.activeElement === lastNode) {
+        e.preventDefault()
+        firstNode.focus()
+      }
     }
+    const toggle = menuToggleRef.current
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [menuOpen])
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      toggle?.focus()
+    }
+  }, [menuOpen, drawerId])
 
   useEffect(() => {
     if (view !== 'home' || menuOpen) return
@@ -226,6 +275,7 @@ function App() {
 
   const onMenuNav = (href: string) => {
     if (href === '/privacy' || href === '#privacy') goView('privacy')
+    else if (href === '/contact' || href === '#contact') goView('contact')
     else if (href === '/cv' || href === '#cv') goView('cv')
     else if (href === '/clips' || href === '#clips') goView('clips')
     else if (href === '/events' || href === '#events' || href === '#awards') {
@@ -236,7 +286,7 @@ function App() {
   const pageClass =
     view === 'notfound'
       ? 'home--page home--notfound'
-      : view === 'privacy'
+      : view === 'privacy' || view === 'contact'
         ? 'home--page'
         : view === 'cv'
           ? 'home--page home--cv'
@@ -281,10 +331,15 @@ function App() {
               </a>
             ))}
           </nav>
-          <a className="header-contact" href={SOCIAL.mailto}>
-            Email
+          <a
+            className="header-contact"
+            href={SOCIAL.mailto}
+            aria-label={BOOKING.aria}
+          >
+            {BOOKING.label}
           </a>
           <button
+            ref={menuToggleRef}
             type="button"
             className={`menu-toggle menu-open${menuOpen ? ' is-open' : ''}`}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -405,6 +460,8 @@ function App() {
       <main id="main" className="wrapper" tabIndex={-1}>
         {view === 'privacy' ? (
           <PrivacyNotice onBack={goHome} />
+        ) : view === 'contact' ? (
+          <ContactPage onBack={goHome} />
         ) : view === 'cv' ? (
           <CvPage onBack={goHome} />
         ) : view === 'clips' ? (
@@ -412,7 +469,7 @@ function App() {
         ) : view === 'events' ? (
           <EventsPage onBack={goHome} reduceMotion={reduceMotion} />
         ) : view === 'notfound' ? (
-          <NotFoundPage onBack={goHome} />
+          <NotFoundPage onBack={goHome} onGo={goView} />
         ) : (
           <div className="content-block">
             <div className="content-block__inner">
@@ -478,6 +535,13 @@ function App() {
             {' · '}
             <span className="home-tagline__lock">{SITE.taglineCreds}</span>
           </p>
+          <p className="home-book">
+            <a href={SOCIAL.mailto} aria-label={BOOKING.aria}>
+              {BOOKING.longLabel}
+            </a>
+            <span aria-hidden="true"> · </span>
+            <span>{SITE.availability}</span>
+          </p>
           <div className="slider__scale" aria-hidden="true">
             <span>Less Hard Sell</span>
             <span>More Hard Sell</span>
@@ -516,6 +580,11 @@ function PageFooter() {
     <footer className="page-footer">
       <p className="page-footer__name">{SITE.legalName}</p>
       <p className="page-footer__availability">{SITE.availability}</p>
+      <p className="page-footer__book">
+        <a href={SOCIAL.mailto} aria-label={BOOKING.aria}>
+          {BOOKING.longLabel}
+        </a>
+      </p>
       <p className="page-footer__contact">
         <a href={SOCIAL.mailto}>{SOCIAL.email}</a>
         {' · '}
@@ -540,7 +609,13 @@ function CvPage({ onBack }: { onBack: () => void }) {
       <p className="cv-name">{SITE.legalName}</p>
       <p className="cv-lead">{SITE_TAGLINE}</p>
       <p className="cv-positioning">{SITE.positioning}</p>
-      <p className="cv-availability">{SITE.availability}</p>
+      <p className="cv-availability">
+        {SITE.availability}
+        {' · '}
+        <a href={SOCIAL.mailto} aria-label={BOOKING.aria}>
+          {BOOKING.longLabel}
+        </a>
+      </p>
 
       <div className="cv-quotes">
         {CV_QUOTES.map((q) => (
@@ -852,11 +927,10 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
                 className={`clips-strip__item${active ? ' is-active' : ''}`}
                 onClick={() => select(i)}
                 aria-current={active ? 'true' : undefined}
-                aria-label={item.title}
               >
                 <img
                   src={clipPoster(item.file)}
-                  alt={`${item.title} clip poster`}
+                  alt=""
                   width={160}
                   height={90}
                   loading={i === 0 ? 'eager' : 'lazy'}
@@ -1131,7 +1205,7 @@ function EventRow({
                 ? event.photo.imageUrl
                 : assetPath(event.photo.imageUrl)
             }
-            alt=""
+            alt={event.photo.title || `${event.name} still`}
             decoding="async"
             loading="lazy"
             referrerPolicy="no-referrer"
@@ -1171,7 +1245,13 @@ function EventRow({
   )
 }
 
-function NotFoundPage({ onBack }: { onBack: () => void }) {
+function NotFoundPage({
+  onBack,
+  onGo,
+}: {
+  onBack: () => void
+  onGo: (next: Exclude<View, 'notfound'>) => void
+}) {
   return (
     <article className="not-found">
       <header className="not-found__intro">
@@ -1193,6 +1273,77 @@ function NotFoundPage({ onBack }: { onBack: () => void }) {
           draggable={false}
         />
       </figure>
+      <nav className="not-found__recover" aria-label="Still on the site">
+        <a
+          href="/cv"
+          onClick={(e) => {
+            e.preventDefault()
+            onGo('cv')
+          }}
+        >
+          CV
+        </a>
+        <a
+          href="/clips"
+          onClick={(e) => {
+            e.preventDefault()
+            onGo('clips')
+          }}
+        >
+          Clips
+        </a>
+        <a
+          href="/events"
+          onClick={(e) => {
+            e.preventDefault()
+            onGo('events')
+          }}
+        >
+          Events
+        </a>
+        <a href={SOCIAL.mailto} aria-label={BOOKING.aria}>
+          {BOOKING.longLabel}
+        </a>
+      </nav>
+      <p className="page-back">
+        <button type="button" className="text-btn" onClick={onBack}>
+          ← Back to the pitch
+        </button>
+      </p>
+    </article>
+  )
+}
+
+function ContactPage({ onBack }: { onBack: () => void }) {
+  return (
+    <article className="contact-page">
+      <h2>Book observing</h2>
+      <p className="contact-lead">{SITE.positioning}</p>
+      <p className="contact-availability">{SITE.availability}</p>
+      <p className="contact-place">{SOCIAL.location}</p>
+      <p className="contact-mail">
+        <a href={SOCIAL.mailto} aria-label={BOOKING.aria}>
+          {SOCIAL.email}
+        </a>
+      </p>
+      <p className="contact-hint">
+        The mailto opens with Event and Dates fields. Same address if you write
+        a new message.
+      </p>
+      <p className="contact-socials">
+        <a href={SOCIAL.twitter} target="_blank" rel="noopener noreferrer">
+          @priusOBS
+        </a>
+        {' · '}
+        <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer">
+          LinkedIn
+        </a>
+        {' · '}
+        <a href={SOCIAL.liquipedia} target="_blank" rel="noopener noreferrer">
+          Liquipedia
+        </a>
+      </p>
+      <PageFooter />
       <p className="page-back">
         <button type="button" className="text-btn" onClick={onBack}>
           ← Back to the pitch
