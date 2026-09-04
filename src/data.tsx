@@ -189,7 +189,7 @@ export const DEFAULT_PITCH = 6
 export const SITE = {
   taglineRole: 'Freelance VALORANT & Counter-Strike observer',
   taglineCreds: 'Sports Emmy winner — Los Angeles, California',
-  availability: 'Booking international LANs & league stages · replies within 48h',
+  availability: 'Booking international LANs & league stages',
   positioning:
     'Observer for series, playoffs, and internationals. Based in LA, travel-ready.',
   legalName: 'David Kuntz',
