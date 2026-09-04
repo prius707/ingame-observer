@@ -46,8 +46,10 @@ After that, `https://prius.observer/events` should land on `https://ingame.obser
 
 ## Web Analytics (Zone)
 
-Zone confirmed 4 September 2026: Cloudflare Web Analytics is **disabled** on `ingame.observer`. Live HTML no longer injects `cloudflareinsights` / `beacon.min.js`. Zaraz inactive. Bot Fight off.
+Sourced audit (2026-09-04): the zone has injected `https://static.cloudflareinsights.com/beacon.min.js` (token prefix `add9042f`). That script is **not** in this repo. First-party CSP is `script-src 'self'`, which blocks the beacon (netlog: no successful insights requests). `/privacy` discloses the injection and does **not** say “no analytics” while the tag can appear.
 
-Email Address Obfuscation (Scrape Shield) remains on. That may inject `/cdn-cgi/` email-decode JS if Cloudflare rewrites an address in HTML — scrape protection, not analytics. `/privacy` discloses it that way.
+To stop the injection: Cloudflare dashboard → `ingame.observer` → Analytics → Web Analytics → disable for this hostname. After a live HTML check shows no `cloudflareinsights` tag, `/privacy` can drop that branch.
 
-If Web Analytics is ever turned back on, update `/privacy` before claiming “no analytics” again. The first-party CSP (`script-src 'self'`) does not list `static.cloudflareinsights.com`; keep CSP as-is.
+Keep the HTML CSP as-is. Do not add `static.cloudflareinsights.com` to `script-src`.
+
+Email Address Obfuscation (Scrape Shield) may inject `/cdn-cgi/` email-decode JS if Cloudflare rewrites an address — scrape protection, not analytics.

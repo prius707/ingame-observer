@@ -1387,10 +1387,10 @@ function PrivacyNotice({
       <ul>
         <li>No accounts, logins, or newsletter signup.</li>
         <li>
-          No analytics, advertising pixels, retargeting tags, or marketing
-          cookies. Cloudflare Web Analytics is disabled on this hostname
-          (confirmed 4 September 2026). Zaraz is off. I do not add a cookie
-          wall because nothing here needs consent for cookies.
+          No advertising pixels, retargeting tags, or marketing cookies. I do
+          not set first-party analytics cookies. I am not writing
+          &ldquo;no analytics&rdquo; as an absolute while Cloudflare can still
+          inject a Web Analytics tag (below).
         </li>
         <li>
           Fonts are self-hosted. Your browser does not fetch Google Fonts from
@@ -1444,6 +1444,26 @@ function PrivacyNotice({
           Cloudflare privacy policy
         </a>
         .
+      </p>
+
+      <h3>Cloudflare Web Analytics</h3>
+      <p>
+        A Cloudflare Web Analytics beacon (
+        <code>static.cloudflareinsights.com/beacon.min.js</code>, insights
+        token prefix <code>add9042f</code>) has been seen injected into the
+        live HTML. This repo does not add that script. The first-party
+        Content-Security-Policy is <code>script-src &apos;self&apos;</code>,
+        which blocks the beacon from actually loading (no successful
+        <code>cloudflareinsights</code> requests in the network log). I still
+        will not claim &ldquo;no analytics&rdquo; while that tag can appear in
+        the HTML. The zone can turn Web Analytics off; until then this
+        paragraph stays.
+      </p>
+      <p>
+        If the script ever ran, Cloudflare describes it as cookieless
+        page-view / performance metrics sent to <code>/cdn-cgi/rum</code> —
+        not an ad pixel I added. Processors for that product are Cloudflare
+        (US / global), same as the proxy.
       </p>
 
       <h3>Session storage</h3>

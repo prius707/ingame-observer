@@ -15,7 +15,7 @@ export const PAGE_DESCRIPTIONS = {
   clips: 'Watch-party clips of prius observing VALORANT and Counter-Strike — casters roasting the camera work.',
   events: 'LAN and league stages prius has observed — VALORANT and Counter-Strike, including Sports Emmy-winning Champions coverage.',
   privacy:
-    'Privacy notice for ingame.observer — controller David Kuntz, Cloudflare + GitHub Pages/Fastly hosting, mailto booking, no analytics cookies.',
+    'Privacy notice for ingame.observer — controller David Kuntz, Cloudflare + GitHub Pages/Fastly hosting, mailto booking, sessionStorage only.',
   notfound: 'This URL is not on the broadcast. Book prius for VALORANT and Counter-Strike observing at dj@ingame.observer.',
   contact:
     'Book prius for VALORANT and Counter-Strike observing. Email dj@ingame.observer — international LANs and league stages.',
