@@ -43,3 +43,15 @@ concat("https://ingame.observer", http.request.uri.path, http.request.uri.query 
 ```
 
 After that, `https://prius.observer/events` should land on `https://ingame.observer/events`.
+
+## Web Analytics (Zone)
+
+Live 2026-09-04: the zone has been seen injecting `https://static.cloudflareinsights.com/beacon.min.js` (Cloudflare Web Analytics). That is **not** in this repo. The first-party CSP meta says `script-src 'self'` and does not authorize that host — the proxy can still inject it.
+
+To turn it off (preferred if you want the privacy page to say the beacon is gone):
+
+1. Cloudflare dashboard → the `ingame.observer` zone → **Analytics & logs** → **Web Analytics**
+2. Disable Automatic / JS beacon for this hostname
+3. Confirm a fresh load of https://ingame.observer/ no longer requests `beacon.min.js`
+
+`/privacy` discloses the beacon **if enabled**. After you confirm it is off, the policy can drop that branch.

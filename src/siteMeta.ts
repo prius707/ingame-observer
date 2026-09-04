@@ -14,7 +14,8 @@ export const PAGE_DESCRIPTIONS = {
   cv: 'CV for David Kuntz (prius) — freelance VALORANT and Counter-Strike observer. Sports Emmy winner. Based in Los Angeles, travel-ready.',
   clips: 'Watch-party clips of prius observing VALORANT and Counter-Strike — casters roasting the camera work.',
   events: 'LAN and league stages prius has observed — VALORANT and Counter-Strike, including Sports Emmy-winning Champions coverage.',
-  privacy: 'Privacy notice for ingame.observer — personal hiring site for David Kuntz. No analytics cookies.',
+  privacy:
+    'Privacy notice for ingame.observer — who is responsible, what GitHub Pages and Cloudflare process, and how to reach David Kuntz.',
   notfound: 'This URL is not on the broadcast. Book prius for VALORANT and Counter-Strike observing at dj@ingame.observer.',
   contact:
     'Book prius for VALORANT and Counter-Strike observing. Email dj@ingame.observer — international LANs and league stages.',

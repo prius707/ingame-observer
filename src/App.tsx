@@ -459,7 +459,7 @@ function App() {
 
       <main id="main" className="wrapper" tabIndex={-1}>
         {view === 'privacy' ? (
-          <PrivacyNotice onBack={goHome} />
+          <PrivacyNotice onBack={goHome} onGo={goView} />
         ) : view === 'contact' ? (
           <ContactPage onBack={goHome} />
         ) : view === 'cv' ? (
@@ -595,6 +595,8 @@ function PageFooter() {
         >
           @priusOBS
         </a>
+        {' · '}
+        <a href="/privacy">Privacy</a>
         {' · '}
         <a href={SECURITY_TXT}>security.txt</a>
       </p>
@@ -1353,55 +1355,233 @@ function ContactPage({ onBack }: { onBack: () => void }) {
   )
 }
 
-function PrivacyNotice({ onBack }: { onBack: () => void }) {
+function PrivacyNotice({
+  onBack,
+  onGo,
+}: {
+  onBack: () => void
+  onGo: (next: Exclude<View, 'notfound'>) => void
+}) {
   return (
     <article className="privacy">
       <h2>Privacy</h2>
       <p className="privacy-lead">
-        Personal hiring site for David &ldquo;prius&rdquo; Kuntz. I try not to
-        collect anything I don&rsquo;t need.
+        Personal hiring site for David &ldquo;prius&rdquo; Kuntz. This page
+        describes what actually happens when you use{' '}
+        <a href="https://ingame.observer/">ingame.observer</a>. It is not a
+        GDPR certificate and I am not claiming the site is &ldquo;fully
+        compliant.&rdquo;
       </p>
 
       <h3>Who is responsible</h3>
       <p>
-        Controller: David Kuntz.
+        Controller: David Kuntz (prius).
         <br />
         Contact:{' '}
         <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>
+        <br />
+        Place of business: Los Angeles, California, United States.
       </p>
 
-      <h3>What this site does (and does not) do</h3>
+      <h3>What this site does not do</h3>
       <ul>
-        <li>No analytics, pixels, or marketing cookies.</li>
-        <li>Fonts are self-hosted (no Google Fonts request from your browser).</li>
-        <li>No accounts or newsletter signup — just email / social if you want.</li>
+        <li>No accounts, logins, or newsletter signup.</li>
+        <li>No advertising pixels, retargeting tags, or marketing cookies.</li>
         <li>
-          Event photos and clip videos are served from this site. Opening an
+          Fonts are self-hosted. Your browser does not fetch Google Fonts from
+          this site.
+        </li>
+        <li>
+          Event photos and clip videos are served from this origin. Opening an
           event still does not call Flickr or Smugmug.
         </li>
+        <li>
+          I do not set first-party analytics cookies. The first-party code only
+          uses tab-scoped <code>sessionStorage</code> for the slider (below).
+        </li>
       </ul>
+
+      <h3>Hosting and server logs</h3>
+      <p>
+        The site is built to GitHub Pages and reached through a Cloudflare
+        proxy. Those hosts see ordinary connection data: IP address, user
+        agent, referrer, requested URL, and timestamp. I do not run a separate
+        log store. Retention follows each host&rsquo;s defaults.
+      </p>
+      <p>
+        Cloudflare may also send Network Error Logging reports (connection
+        failures) to its own endpoints. That is their reliability telemetry,
+        not a marketing pixel I added.
+      </p>
+      <p>
+        Provider notices:{' '}
+        <a
+          href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub privacy statement
+        </a>
+        {' · '}
+        <a
+          href="https://www.cloudflare.com/privacypolicy/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Cloudflare privacy policy
+        </a>
+        .
+      </p>
+
+      <h3>Cloudflare Web Analytics</h3>
+      <p>
+        If Cloudflare Web Analytics is enabled on the zone (it has been
+        observed injecting{' '}
+        <code>static.cloudflareinsights.com/beacon.min.js</code> on live
+        pages), Cloudflare collects cookieless page-view and performance
+        metrics — URL, referrer, coarse country from IP (they say the IP is
+        not stored for this product), user agent in aggregate, and timing /
+        Core Web Vitals. Beacon data goes to Cloudflare&rsquo;s{' '}
+        <code>/cdn-cgi/rum</code> endpoint. Cloudflare states it does not use
+        cookies or <code>localStorage</code> for this product and does not
+        fingerprint individuals for the dashboard.
+      </p>
+      <p>
+        Purpose: understand whether the hiring site loads and which pages are
+        opened. I do not use it to build advertising profiles.
+      </p>
+      <p>
+        The zone owner can turn this off in Cloudflare (Web Analytics /
+        Automatic Setup). If it is off, that beacon should stop. This notice
+        covers the case where it is still on. See Cloudflare&rsquo;s{' '}
+        <a
+          href="https://developers.cloudflare.com/web-analytics/data-metrics/data-origin-and-collection/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          data collection notes
+        </a>
+        .
+      </p>
+      <p>
+        The HTML Content-Security-Policy meta lists <code>script-src
+        &apos;self&apos;</code>. That is a first-party hint. Cloudflare sits
+        in front of GitHub Pages and can inject its beacon anyway. I am not
+        claiming the meta tag blocks Cloudflare.
+      </p>
 
       <h3>Session storage</h3>
       <p>
         For this browser tab only, the site may store the hard-sell slider
         position (<code>{STORAGE_KEY}</code>). That stays on your device,
         isn&rsquo;t a cookie, and clears when the tab closes. Block storage
-        and everything still works with defaults.
+        and everything still works with defaults. Strictly necessary for
+        remembering the slider in the current tab.
       </p>
 
       <h3>When you contact me</h3>
       <p>
-        Email (<a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>) or
-        a DM on X goes through that provider under their terms. I only use the
-        message to reply about observing / booking. Legal basis: Art. 6(1)(b)
-        and/or 6(1)(f) GDPR. You can ask for access, correction, deletion, or to
-        object — same address. EU folks can also complain to their supervisory
-        authority.
+        Book / email links use mailto:{' '}
+        <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>. That opens{' '}
+        <em>your</em> mail client. I do not see the message until you send it.
+        Your provider processes the outbound mail under their terms.
+      </p>
+      <p>
+        Inbound mail to that address is handled by Cloudflare Email Routing
+        and delivered to Gmail. I read it to reply about observing / booking
+        (or security). I do not sell it.
+      </p>
+      <p>
+        A DM on X goes through X under their terms. Same use: reply about
+        work.
+      </p>
+      <p>
+        Google&rsquo;s privacy policy:{' '}
+        <a
+          href="https://policies.google.com/privacy"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          policies.google.com/privacy
+        </a>
+        .
+      </p>
+
+      <h3>Legal bases</h3>
+      <ul>
+        <li>
+          Hire inquiries (email / DMs): Art. 6(1)(b) GDPR — steps prior to a
+          contract — and/or Art. 6(1)(f) legitimate interests in answering
+          booking requests.
+        </li>
+        <li>
+          Server logs and security: Art. 6(1)(f) — operating and protecting
+          the site.
+        </li>
+        <li>
+          Cloudflare Web Analytics, if enabled: Art. 6(1)(f) — seeing that
+          the site works. Cookieless; no consent wall for that product as
+          described by Cloudflare. If a non-essential cookie ever appears, I
+          should disclose it or turn it off rather than hide it.
+        </li>
+      </ul>
+
+      <h3>Retention</h3>
+      <ul>
+        <li>Host logs: GitHub&rsquo;s and Cloudflare&rsquo;s defaults.</li>
+        <li>
+          Cloudflare Web Analytics beacons: per Cloudflare (they publish short
+          raw retention, then aggregates).
+        </li>
+        <li>
+          Email: kept as long as needed to respond or book work, then
+          according to my mailbox practice.
+        </li>
+        <li>
+          Slider <code>sessionStorage</code>: until the tab closes.
+        </li>
+      </ul>
+
+      <h3>Your rights</h3>
+      <p>
+        If GDPR or UK GDPR applies to you, you can ask for access,
+        rectification, erasure, restriction, objection, or portability of
+        personal data I hold, and you can withdraw consent if I ever relied
+        on it (I am not using consent for a cookie wall today). Email{' '}
+        <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>. I may need enough
+        detail to find your message.
+      </p>
+      <p>
+        You can also complain to a supervisory authority in your EU/EEA
+        country or, for the UK, the ICO. I do not name a &ldquo;lead&rdquo;
+        authority — I am based in the US.
+      </p>
+
+      <h3>International transfers</h3>
+      <p>
+        GitHub, Cloudflare, and Google/Gmail are US (and global) processors.
+        Using this site or emailing me means data may be processed in the
+        United States and other countries where those providers operate. They
+        publish their own transfer tools (standard contractual clauses and
+        similar terms). I am not listing certificate numbers I do not
+        control.
+      </p>
+
+      <h3>Cookies and ePrivacy</h3>
+      <p>
+        First-party: no cookies. Slider memory is <code>sessionStorage</code>,
+        tab-scoped, strictly necessary for that UI.
+      </p>
+      <p>
+        If the only extra measurement is Cloudflare&rsquo;s cookieless beacon
+        (or it is disabled), there is no cookie wall. I prefer the zone
+        disable Web Analytics if we want zero third-party script. I will not
+        claim &ldquo;no analytics&rdquo; while that beacon is still injecting.
       </p>
 
       <h3>Photos &amp; clips</h3>
       <p>
-        Events stills are local copies with credit links back to the original
+        Event stills are local copies with credit links back to the original
         Flickr / ESL / organizer albums (Riot / VCT Americas / BLAST / etc.).
         Clips are local files with links to the Twitch originals. The chat
         ticker uses self-hosted 7TV emote frames, not a live Twitch feed.
@@ -1411,38 +1591,32 @@ function PrivacyNotice({ onBack }: { onBack: () => void }) {
 
       <h3>External links</h3>
       <p>
-        Liquipedia, X, LinkedIn, Flickr, Twitch, mailto — once you leave, their
-        rules apply.
+        Liquipedia, X, LinkedIn, Flickr, Twitch, mailto — once you leave,
+        their rules apply.
       </p>
 
-      <h3>Hosting</h3>
+      <h3>Security</h3>
       <p>
-        Served from GitHub Pages for{' '}
-        <a href="https://ingame.observer/">ingame.observer</a>. Hosts see the
-        usual connection fluff (IP, user agent) in logs; that&rsquo;s GitHub&rsquo;s
-        side —{' '}
-        <a
-          href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          their privacy statement
-        </a>
-        . I&rsquo;m not running extra tracking on top.
-      </p>
-      <p>
-        There&rsquo;s a basic Content Security Policy in the HTML. Spotted
-        something sketchy?{' '}
+        There is a basic CSP in the HTML. It does not stop Cloudflare from
+        adding edge scripts. Spotted something sketchy?{' '}
         <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>
         {' · '}
         <a href={SECURITY_TXT}>security.txt</a>
       </p>
 
-      <p className="privacy-updated">Last updated: 30 August 2026</p>
+      <p className="privacy-updated">Last updated: 4 September 2026</p>
 
       <p>
         <button type="button" className="text-btn" onClick={onBack}>
           ← Back to the pitch
+        </button>
+        {' · '}
+        <button
+          type="button"
+          className="text-btn"
+          onClick={() => onGo('contact')}
+        >
+          Book observing
         </button>
       </p>
     </article>

@@ -902,6 +902,11 @@ body.invert #slider::-moz-range-thumb {
   margin-top: 0.45rem;
 }
 
+.privacy a {
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
 .privacy code {
   font-size: 0.9em;
   word-break: break-all;
