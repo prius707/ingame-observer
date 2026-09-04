@@ -23,3 +23,23 @@ Cross-Origin-Resource-Policy: same-origin
 3. Always HTTPS. HSTS preload later if you want.
 
 `public/_headers` mirrors the same list for Cloudflare Pages / Netlify if the host ever moves.
+
+## prius.observer → ingame.observer (Zone / CoS)
+
+Live check 2026-09-04: Cloudflare returns `301 Location: https://ingame.observer/` for every `prius.observer` path (`/`, `/events`, `/cv`, `/clips?x=1`). Path and query are stripped. This repo has no redirect for that host — `public/CNAME` is `ingame.observer` only.
+
+Fix in the Cloudflare zone (Bulk Redirect, Single Redirect, or Dynamic Redirect), not GitHub Pages:
+
+- Source: `https://prius.observer/*`
+- Target: `https://ingame.observer/${1}` (keep path)
+- Status: 301
+- Preserve query string: on
+
+Dynamic expression equivalent:
+
+```
+http.host eq "prius.observer"
+concat("https://ingame.observer", http.request.uri.path, http.request.uri.query != "" ? "?" : "", http.request.uri.query)
+```
+
+After that, `https://prius.observer/events` should land on `https://ingame.observer/events`.
