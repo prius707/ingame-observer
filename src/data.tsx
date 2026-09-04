@@ -215,11 +215,10 @@ export const SOCIAL = {
   liquipedia: liquid,
 } as const
 
-export const MENU_LINKS = [
-  { label: 'CV', href: '/cv', external: false },
-  { label: 'Clips', href: '/clips', external: false },
-  { label: 'Events', href: '/events', external: false },
-  { label: 'Email', href: mail, external: false, mailto: true },
+export const PAGE_LINKS = [
+  { label: 'CV', href: '/cv' },
+  { label: 'Clips', href: '/clips' },
+  { label: 'Events', href: '/events' },
 ] as const
 
 export const CV_SECTIONS = [

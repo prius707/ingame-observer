@@ -3,7 +3,7 @@ import {
   CONTROLLER_EMAIL,
   CV_SECTIONS,
   DEFAULT_PITCH,
-  MENU_LINKS,
+  PAGE_LINKS,
   PAGE_TITLES,
   PITCHES,
   SITE,
@@ -112,6 +112,10 @@ function App() {
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
   }, [])
+
+  useEffect(() => {
+    if (!narrow) setMenuOpen(false)
+  }, [narrow])
 
   useEffect(() => {
     const slug = view === 'clips' ? parseClipSlugFromLocation() : null
@@ -262,6 +266,21 @@ function App() {
           </a>
         </h1>
         <div className="header-actions">
+          <nav className="header-nav" aria-label="Site">
+            {PAGE_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                aria-current={view === link.href.slice(1) ? 'page' : undefined}
+                onClick={(e) => {
+                  e.preventDefault()
+                  onMenuNav(link.href)
+                }}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
           <p className="header-booking">Replies within 48h</p>
           <a className="header-contact" href={SOCIAL.mailto}>
             Email
@@ -294,30 +313,23 @@ function App() {
           {...(menuOpen ? {} : { hidden: true, inert: true })}
         >
           <div className="menu-drawer_inner">
-            <nav className="menu" aria-label="Site">
+            <nav className="menu" aria-label="Pages">
               <ul>
-                {MENU_LINKS.map((link) => (
-                  <li key={link.label}>
-                    {'mailto' in link && link.mailto ? (
-                      <a
-                        className="menu-link menu-link--mail"
-                        href={link.href}
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        {link.label}
-                      </a>
-                    ) : (
-                      <a
-                        href={link.href}
-                        className="menu-link"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          onMenuNav(link.href)
-                        }}
-                      >
-                        {link.label}
-                      </a>
-                    )}
+                {PAGE_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      className="menu-link"
+                      aria-current={
+                        view === link.href.slice(1) ? 'page' : undefined
+                      }
+                      onClick={(e) => {
+                        e.preventDefault()
+                        onMenuNav(link.href)
+                      }}
+                    >
+                      {link.label}
+                    </a>
                   </li>
                 ))}
               </ul>
