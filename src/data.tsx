@@ -199,6 +199,8 @@ export const SITE_TAGLINE = `${SITE.taglineRole} · ${SITE.taglineCreds}`
 
 export { PAGE_TITLES } from './siteMeta'
 
+export const DISCORD_INVITE = 'https://discord.gg/yEPsKWqVbK' as const
+
 export const SOCIAL = {
   twitter: 'https://x.com/priusOBS',
   linkedin: 'https://www.linkedin.com/in/david-kuntz-3521847a',
@@ -206,6 +208,7 @@ export const SOCIAL = {
   mailto: mail,
   location: 'Los Angeles, California',
   liquipedia: liquid,
+  discord: DISCORD_INVITE,
 } as const
 
 export const PAGE_LINKS = [

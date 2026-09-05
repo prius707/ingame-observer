@@ -24,6 +24,18 @@ Cross-Origin-Resource-Policy: same-origin
 
 `public/_headers` mirrors the same list for Cloudflare Pages / Netlify if the host ever moves.
 
+## /discord → Discord invite (Zone)
+
+Repo ships `public/discord/index.html` (meta + JS redirect) so GitHub Pages works at `https://ingame.observer/discord`.
+
+For a real HTTP 301/302 in Cloudflare (orange-cloud), add a Single Redirect:
+
+- Source: `https://ingame.observer/discord` and `https://ingame.observer/discord/`
+- Target: `https://discord.gg/yEPsKWqVbK`
+- Status: 302 (or 301 once the invite is permanent)
+
+`public/_redirects` mirrors the same for Cloudflare Pages / Netlify if the host ever moves.
+
 ## prius.observer → ingame.observer (Zone / CoS)
 
 Live check 2026-09-04: Cloudflare returns `301 Location: https://ingame.observer/` for every `prius.observer` path (`/`, `/events`, `/cv`, `/clips?x=1`). Path and query are stripped. This repo has no redirect for that host — `public/CNAME` is `ingame.observer` only.
