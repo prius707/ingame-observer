@@ -1,0 +1,4 @@
+# Cloudflare Pages / Netlify style redirects (GitHub Pages ignores this file).
+# Prefer a Cloudflare Zone Single Redirect for a real 301 on ingame.observer.
+/discord    https://discord.gg/yEPsKWqVbK  302
+/discord/   https://discord.gg/yEPsKWqVbK  302

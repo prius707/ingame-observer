@@ -8,7 +8,16 @@ import '@fontsource/libre-caslon-text/latin-400-italic.css'
 import '@fontsource/libre-caslon-text/latin-700.css'
 import './index.css'
 import App from './App.tsx'
+import { DISCORD_INVITE } from './data'
 import { PERSON_JSON_LD_TEXT } from './siteMeta'
+
+/** /discord is a static redirect page; if the SPA still loads, bounce out. */
+function redirectDiscordIfNeeded() {
+  const path = window.location.pathname.replace(/\/+$/, '') || '/'
+  if (path !== '/discord') return false
+  window.location.replace(DISCORD_INVITE)
+  return true
+}
 
 function injectPersonJsonLd() {
   if (document.querySelector('script[data-person-jsonld]')) return
@@ -19,10 +28,12 @@ function injectPersonJsonLd() {
   document.head.appendChild(el)
 }
 
-injectPersonJsonLd()
+if (!redirectDiscordIfNeeded()) {
+  injectPersonJsonLd()
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  )
+}
