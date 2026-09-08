@@ -155,17 +155,17 @@ export const EVENT_YEARS: EventYear[] = [
         }
       },
       {
-        "name": "VCT Americas Stage 2",
+        "name": "VCT Americas Stage 2 São Paulo",
         "game": "VALORANT",
+        "albumTitle": "2026 VCT Americas Stage 2 Finals",
         "photo": {
-          "id": "55494987420",
-          "title": "VCT Americas 2026 Stage 2 Playoffs Day 2",
-          "views": 31,
-          "imageUrl": "event-photos/55494987420.jpg",
-          "pageUrl": "https://www.flickr.com/photos/vctamericas/55494987420/",
+          "id": "55512790090",
+          "title": "2026 VCT Americas Stage 2 Finals",
+          "views": 325,
+          "imageUrl": "event-photos/55512790090.jpg",
+          "pageUrl": "https://www.flickr.com/photos/vctamericas/55512790090/",
           "license": "All Rights Reserved",
-          "albumId": "72177720335350721",
-          "credit": "VCT Americas Photos / Riot Games"
+          "albumId": "72177720335506829"
         }
       },
       {
