@@ -141,20 +141,6 @@ export const EVENT_YEARS: EventYear[] = [
         }
       },
       {
-        "name": "VALORANT Masters Santiago",
-        "game": "VALORANT",
-        "albumTitle": "VALORANT Masters Santiago - Grand Finals",
-        "photo": {
-          "id": "55150210232",
-          "title": "VALORANT Masters Santiago - Grand Finals",
-          "views": 16704,
-          "imageUrl": "event-photos/55150210232.jpg",
-          "pageUrl": "https://www.flickr.com/photos/valorantesports/55150210232/",
-          "license": "All Rights Reserved",
-          "albumId": "72177720332556428"
-        }
-      },
-      {
         "name": "VCT Americas Stage 2 São Paulo",
         "game": "VALORANT",
         "albumTitle": "2026 VCT Americas Stage 2 Finals",
@@ -166,6 +152,20 @@ export const EVENT_YEARS: EventYear[] = [
           "pageUrl": "https://www.flickr.com/photos/vctamericas/55512790090/",
           "license": "All Rights Reserved",
           "albumId": "72177720335506829"
+        }
+      },
+      {
+        "name": "VALORANT Masters Santiago",
+        "game": "VALORANT",
+        "albumTitle": "VALORANT Masters Santiago - Grand Finals",
+        "photo": {
+          "id": "55150210232",
+          "title": "VALORANT Masters Santiago - Grand Finals",
+          "views": 16704,
+          "imageUrl": "event-photos/55150210232.jpg",
+          "pageUrl": "https://www.flickr.com/photos/valorantesports/55150210232/",
+          "license": "All Rights Reserved",
+          "albumId": "72177720332556428"
         }
       },
       {
