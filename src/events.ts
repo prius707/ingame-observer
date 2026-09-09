@@ -141,20 +141,6 @@ export const EVENT_YEARS: EventYear[] = [
         }
       },
       {
-        "name": "VCT Americas Stage 2",
-        "game": "VALORANT",
-        "photo": {
-          "id": "55494987420",
-          "title": "VCT Americas 2026 Stage 2 Playoffs Day 2",
-          "views": 31,
-          "imageUrl": "event-photos/55494987420.jpg",
-          "pageUrl": "https://www.flickr.com/photos/vctamericas/55494987420/",
-          "license": "All Rights Reserved",
-          "albumId": "72177720335350721",
-          "credit": "VCT Americas Photos / Riot Games"
-        }
-      },
-      {
         "name": "VALORANT Masters London",
         "game": "VALORANT",
         "albumTitle": "VALORANT Masters London Grand Finals",
@@ -169,20 +155,6 @@ export const EVENT_YEARS: EventYear[] = [
         }
       },
       {
-        "name": "VCT Americas Stage 1",
-        "game": "VALORANT",
-        "albumTitle": "VCT Americas 2026 Stage 1 Finals",
-        "photo": {
-          "id": "55291754913",
-          "title": "VCT Americas 2026 Stage 1 Finals",
-          "views": 5781,
-          "imageUrl": "event-photos/55291754913.jpg",
-          "pageUrl": "https://www.flickr.com/photos/vctamericas/55291754913/",
-          "license": "All Rights Reserved",
-          "albumId": "72177720333830445"
-        }
-      },
-      {
         "name": "VALORANT Masters Santiago",
         "game": "VALORANT",
         "albumTitle": "VALORANT Masters Santiago - Grand Finals",
@@ -194,6 +166,20 @@ export const EVENT_YEARS: EventYear[] = [
           "pageUrl": "https://www.flickr.com/photos/valorantesports/55150210232/",
           "license": "All Rights Reserved",
           "albumId": "72177720332556428"
+        }
+      },
+      {
+        "name": "VCT Americas Stage 1",
+        "game": "VALORANT",
+        "albumTitle": "VCT Americas 2026 Stage 1 Finals",
+        "photo": {
+          "id": "55291754913",
+          "title": "VCT Americas 2026 Stage 1 Finals",
+          "views": 5781,
+          "imageUrl": "event-photos/55291754913.jpg",
+          "pageUrl": "https://www.flickr.com/photos/vctamericas/55291754913/",
+          "license": "All Rights Reserved",
+          "albumId": "72177720333830445"
         }
       },
       {
