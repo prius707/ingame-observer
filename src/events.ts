@@ -53,7 +53,6 @@ const NAMED_EVENT_FLAGS: ReadonlyArray<{ match: RegExp; flag: string }> = [
   { match: /^IEM World Championship$/i, flag: '🇵🇱' }, // Katowice
   { match: /^VALORANT Champions$/i, flag: '🇩🇪' }, // Berlin 2021
   { match: /^VALORANT Game Changers Championship$/i, flag: '🇩🇪' },
-  { match: /^Red Bull Home Ground/i, flag: '🇩🇪' },
   { match: /^VCT LOCK\/\//i, flag: '🇧🇷' },
 ]
 
@@ -70,6 +69,13 @@ function blastPremierFlag(name: string, year: number): string | null {
   return null
 }
 
+/** Red Bull Home Ground — Berlin through 2024; New York 2025 (US venues stay blank). */
+function redBullHomeGroundFlag(name: string, year?: number): string | null {
+  if (!/^Red Bull Home Ground/i.test(name)) return null
+  if (year === 2025) return null
+  return '🇩🇪'
+}
+
 export function eventTravelFlag(name: string, year?: number): string | null {
   for (const { match, flag } of PLACE_FLAGS) {
     if (match.test(name)) return flag
@@ -77,6 +83,9 @@ export function eventTravelFlag(name: string, year?: number): string | null {
   if (year != null) {
     const blast = blastPremierFlag(name, year)
     if (blast) return blast
+  }
+  if (/^Red Bull Home Ground/i.test(name)) {
+    return redBullHomeGroundFlag(name, year)
   }
   for (const { match, flag } of NAMED_EVENT_FLAGS) {
     if (match.test(name)) return flag
