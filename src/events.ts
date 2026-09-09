@@ -127,20 +127,6 @@ export const EVENT_YEARS: EventYear[] = [
     "year": 2026,
     "events": [
       {
-        "name": "VALORANT Masters London",
-        "game": "VALORANT",
-        "albumTitle": "VALORANT Masters London Grand Finals",
-        "photo": {
-          "id": "55348356897",
-          "title": "2026 VALORANT Masters London Grand Finals",
-          "views": 7855,
-          "imageUrl": "event-photos/55348356897.jpg",
-          "pageUrl": "https://www.flickr.com/photos/valorantesports/55348356897/",
-          "license": "All Rights Reserved",
-          "albumId": "72177720334325513"
-        }
-      },
-      {
         "name": "VCT Americas Stage 2 São Paulo",
         "game": "VALORANT",
         "albumTitle": "2026 VCT Americas Stage 2 Finals",
@@ -152,6 +138,20 @@ export const EVENT_YEARS: EventYear[] = [
           "pageUrl": "https://www.flickr.com/photos/vctamericas/55512790090/",
           "license": "All Rights Reserved",
           "albumId": "72177720335506829"
+        }
+      },
+      {
+        "name": "VALORANT Masters London",
+        "game": "VALORANT",
+        "albumTitle": "VALORANT Masters London Grand Finals",
+        "photo": {
+          "id": "55348356897",
+          "title": "2026 VALORANT Masters London Grand Finals",
+          "views": 7855,
+          "imageUrl": "event-photos/55348356897.jpg",
+          "pageUrl": "https://www.flickr.com/photos/valorantesports/55348356897/",
+          "license": "All Rights Reserved",
+          "albumId": "72177720334325513"
         }
       },
       {
