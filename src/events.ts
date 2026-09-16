@@ -159,11 +159,11 @@ export const EVENT_YEARS: EventYear[] = [
         "game": "VALORANT",
         "albumTitle": "VALORANT Masters London Grand Finals",
         "photo": {
-          "id": "55348356897",
+          "id": "55350864564",
           "title": "2026 VALORANT Masters London Grand Finals",
-          "views": 7855,
-          "imageUrl": "event-photos/55348356897.jpg",
-          "pageUrl": "https://www.flickr.com/photos/valorantesports/55348356897/",
+          "views": 8136,
+          "imageUrl": "event-photos/55350864564.jpg",
+          "pageUrl": "https://www.flickr.com/photos/valorantesports/55350864564/",
           "license": "All Rights Reserved",
           "albumId": "72177720334325513"
         }
@@ -187,11 +187,11 @@ export const EVENT_YEARS: EventYear[] = [
         "game": "VALORANT",
         "albumTitle": "VALORANT Masters Santiago - Grand Finals",
         "photo": {
-          "id": "55150210232",
+          "id": "55154281455",
           "title": "VALORANT Masters Santiago - Grand Finals",
-          "views": 16704,
-          "imageUrl": "event-photos/55150210232.jpg",
-          "pageUrl": "https://www.flickr.com/photos/valorantesports/55150210232/",
+          "views": 5887,
+          "imageUrl": "event-photos/55154281455.jpg",
+          "pageUrl": "https://www.flickr.com/photos/valorantesports/55154281455/",
           "license": "All Rights Reserved",
           "albumId": "72177720332556428"
         }
