@@ -10,7 +10,7 @@ The HTML CSP meta in `index.html` still covers a lot (scripts/styles/images/medi
 2. Transform Rule → modify response headers:
 
 ```
-Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' mailto:; upgrade-insecure-requests
+Content-Security-Policy: default-src 'self'; script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' mailto:; upgrade-insecure-requests
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 X-Content-Type-Options: nosniff
 X-Frame-Options: DENY
@@ -63,3 +63,20 @@ Zone confirmed 4 September 2026: Cloudflare Web Analytics is **disabled** on `in
 `/privacy` can say no analytics / pixels / marketing cookies again. If Web Analytics is turned back on, update that page before repeating the claim. Keep HTML CSP `script-src 'self'` — do not add `static.cloudflareinsights.com`.
 
 Email Address Obfuscation (Scrape Shield) remains on. It may inject `/cdn-cgi/` email-decode JS if Cloudflare rewrites an address in HTML — scrape protection, not analytics. `/privacy` discloses it that way.
+
+## CORS (Zone)
+
+Live check 16 September 2026: GitHub Pages still sends `Access-Control-Allow-Origin: *` on HTML and static assets (clips, photos). Harmless for a cookie-less public site, but other origins can fetch media via script.
+
+In the same Transform Rule as above:
+
+- Prefer `Cross-Origin-Resource-Policy: same-origin` (already listed).
+- Optionally **delete** `Access-Control-Allow-Origin` (Pages sets `*`; do not pair `*` with credentials).
+
+Do not set `Access-Control-Allow-Credentials: true`.
+
+## Live header gap (16 September 2026)
+
+Already on the zone/origin: `Strict-Transport-Security` (no `preload` yet), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`.
+
+Not yet on the HTTP response (HTML meta still covers CSP + referrer): `Content-Security-Policy`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`, `Cross-Origin-Resource-Policy`. Add those in the Transform Rule above. `frame-ancestors` only works as a real header, not meta.

@@ -1,8 +1,37 @@
 /** Vite base URL — `/` on the custom domain (and locally). */
 const base = import.meta.env.BASE_URL
 
+function isSafeRelativeAsset(path: string) {
+  if (!path || path.includes('..') || path.includes('\\') || path.includes('\0')) {
+    return false
+  }
+  if (path.startsWith('//') || /^[a-z][a-z0-9+.-]*:/i.test(path)) return false
+  return true
+}
+
 export function assetPath(path: string) {
-  return `${base}${path.replace(/^\//, '')}`
+  const cleaned = path.replace(/^\//, '')
+  if (cleaned === '') return base
+  if (!isSafeRelativeAsset(cleaned)) return `${base}`
+  return `${base}${cleaned}`
+}
+
+/** Same-origin event stills only — no remote http(s) fallback. */
+export function eventPhotoSrc(imageUrl: string): string | null {
+  if (!imageUrl.startsWith('event-photos/')) return null
+  if (!isSafeRelativeAsset(imageUrl)) return null
+  return assetPath(imageUrl)
+}
+
+/** Credit / outbound links: https only. */
+export function httpsUrl(url: string): string | null {
+  try {
+    const parsed = new URL(url)
+    if (parsed.protocol !== 'https:') return null
+    return parsed.href
+  } catch {
+    return null
+  }
 }
 
 export const SITE_ORIGIN = 'https://ingame.observer' as const

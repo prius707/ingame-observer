@@ -63,10 +63,9 @@ export const PITCHES: Pitch[] = [
     weight: 340,
     content: (
       <>
-        I'm prius. Freelance esports observer. I do the camera work that makes
-        your cast land and your broadcast feel sharp. 15+ years, Counter-Strike Majors,
-        VALORANT's biggest stages, Emmy-winning Champions coverage. Challengers
-        to international LANs.
+        I'm prius. Freelance esports observer. I sit the cameras; casters call
+        what I show. 15+ years, Counter-Strike Majors, VALORANT's biggest stages,
+        Emmy-winning Champions coverage. Challengers to international LANs.
       </>
     ),
   },
@@ -86,12 +85,12 @@ export const PITCHES: Pitch[] = [
     weight: 430,
     content: (
       <>
-        <strong>Broadcast-ready observing for VALORANT and Counter-Strike.</strong>
+        <strong>VALORANT and Counter-Strike observer. Chair's open.</strong>
         <br />
         I'm a freelance observer. 15+ years in the chair. Majors, Masters,
         Champions. Sports Emmy win for Champions coverage, four nominations
-        total. Consulted for Riot Games. Currently work with them. ESL FACEIT
-        Group, BLAST, Turner Sports, and Raidiant keep booking me.
+        total. Consulted for Riot Games. Currently work with them. Partners:
+        ESL FACEIT Group, BLAST, Turner Sports, Raidiant.
       </>
     ),
   },
@@ -104,7 +103,7 @@ export const PITCHES: Pitch[] = [
         15+ years of big-stage observing. Majors, Masters, Champions. Four
         Sports Emmy nominations, one win for Champions coverage. Consulted for
         Riot. Currently work with them. ESL FACEIT Group, BLAST, Turner Sports,
-        and Raidiant keep coming back. Get in touch.
+        Raidiant. Get in touch.
       </>
     ),
   },
@@ -191,7 +190,7 @@ export const SITE = {
   taglineCreds: 'Sports Emmy winner — Los Angeles, California',
   availability: 'Booking international LANs & league stages',
   positioning:
-    'Observer for series, playoffs, and internationals. Based in LA, travel-ready.',
+    'Observer for series, playoffs, internationals. LA, will travel.',
   legalName: 'David Kuntz',
 } as const
 

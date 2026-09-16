@@ -34,40 +34,66 @@ function metaForFolder(folder: string): RouteMeta {
   }
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+}
+
+function replaceCaptured(
+  html: string,
+  pattern: RegExp,
+  value: string,
+): string {
+  const escaped = escapeHtml(value).replace(/\$/g, '$$$$')
+  return html.replace(pattern, `$1${escaped}$2`)
+}
+
 function applyPageMeta(html: string, meta: RouteMeta): string {
-  let out = html.replace(/<title>[^<]*<\/title>/, `<title>${meta.title}</title>`)
-  out = out.replace(
+  let out = html.replace(
+    /<title>[^<]*<\/title>/,
+    `<title>${escapeHtml(meta.title)}</title>`,
+  )
+  out = replaceCaptured(
+    out,
     /(<meta\s+name="description"[\s\S]*?content=")[^"]*(")/,
-    `$1${meta.description}$2`,
+    meta.description,
   )
-  out = out.replace(
+  out = replaceCaptured(
+    out,
     /(<meta\s+property="og:url"[\s\S]*?content=")[^"]*(")/,
-    `$1${meta.canonical}$2`,
+    meta.canonical,
   )
-  out = out.replace(
+  out = replaceCaptured(
+    out,
     /(<meta\s+property="og:title"[\s\S]*?content=")[^"]*(")/,
-    `$1${meta.title}$2`,
+    meta.title,
   )
-  out = out.replace(
+  out = replaceCaptured(
+    out,
     /(<meta\s+property="og:description"[\s\S]*?content=")[^"]*(")/,
-    `$1${meta.description}$2`,
+    meta.description,
   )
-  out = out.replace(
+  out = replaceCaptured(
+    out,
     /(<meta\s+name="twitter:title"[\s\S]*?content=")[^"]*(")/,
-    `$1${meta.title}$2`,
+    meta.title,
   )
-  out = out.replace(
+  out = replaceCaptured(
+    out,
     /(<meta\s+name="twitter:description"[\s\S]*?content=")[^"]*(")/,
-    `$1${meta.description}$2`,
+    meta.description,
   )
-  out = out.replace(
+  out = replaceCaptured(
+    out,
     /(<link\s+rel="canonical"[\s\S]*?href=")[^"]*(")/,
-    `$1${meta.canonical}$2`,
+    meta.canonical,
   )
   if (meta.robots && !/name="robots"/.test(out)) {
     out = out.replace(
       '</head>',
-      `    <meta name="robots" content="${meta.robots}" />\n  </head>`,
+      `    <meta name="robots" content="${escapeHtml(meta.robots)}" />\n  </head>`,
     )
   }
   return out
