@@ -31,7 +31,7 @@ Pushes to `main` → `.github/workflows/deploy-pages.yml` → GitHub Pages.
 
 One-time: Pages source = GitHub Actions, custom domain `ingame.observer`, HTTPS on, DNS A records `185.199.108.153` / `.109` / `.110` / `.111`.
 
-Repo needs to be public for free Pages (or GitHub Pro).
+This repo stays private (GitHub Pro Pages). Do not flip it public.
 
 ## Scripts
 

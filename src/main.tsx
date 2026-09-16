@@ -24,7 +24,7 @@ function injectPersonJsonLd() {
   const el = document.createElement('script')
   el.type = 'application/ld+json'
   el.dataset.personJsonld = '1'
-  el.text = PERSON_JSON_LD_TEXT
+  el.textContent = PERSON_JSON_LD_TEXT
   document.head.appendChild(el)
 }
 

@@ -10,15 +10,15 @@ export const PAGE_TITLES = {
 } as const
 
 export const PAGE_DESCRIPTIONS = {
-  home: 'prius — Sports Emmy winner (four nominations, one win). Freelance VALORANT & Counter-Strike observer. Majors, Masters, Champions. Book at dj@ingame.observer.',
-  cv: 'CV for David Kuntz (prius) — freelance VALORANT and Counter-Strike observer. Sports Emmy winner. Based in Los Angeles, travel-ready.',
-  clips: 'Watch-party clips of prius observing VALORANT and Counter-Strike — casters roasting the camera work.',
-  events: 'LAN and league stages prius has observed — VALORANT and Counter-Strike, including Sports Emmy-winning Champions coverage.',
+  home: 'prius — freelance VALORANT & Counter-Strike observer. Sports Emmy winner (Champions coverage; four nominations, one win). Book at dj@ingame.observer.',
+  cv: 'CV for David Kuntz (prius). VALORANT and Counter-Strike observer. Sports Emmy winner. Los Angeles.',
+  clips: 'Watch-party clips of prius on cam — casters roasting the observing. VALORANT and Counter-Strike.',
+  events: 'Stages prius has sat: VALORANT and Counter-Strike LANs, including Sports Emmy-winning Champions coverage.',
   privacy:
-    'Privacy notice for ingame.observer — controller David Kuntz, Cloudflare + GitHub Pages/Fastly, no analytics cookies, mailto booking.',
-  notfound: 'This URL is not on the broadcast. Book prius for VALORANT and Counter-Strike observing at dj@ingame.observer.',
+    'Privacy notice for ingame.observer — David Kuntz, Cloudflare + GitHub Pages, no analytics cookies, mailto booking.',
+  notfound: 'That URL is not on the broadcast. Book prius at dj@ingame.observer.',
   contact:
-    'Book prius for VALORANT and Counter-Strike observing. Email dj@ingame.observer — international LANs and league stages.',
+    'Book prius for VALORANT and Counter-Strike observing. dj@ingame.observer — LANs and league stages.',
 } as const
 
 export const OG_IMAGE_ALT =
@@ -39,7 +39,7 @@ export const PERSON_JSON_LD = {
   description:
     'Sports Emmy winner. VALORANT and Counter-Strike observer for Majors, Masters, and Champions.',
   url: 'https://ingame.observer/',
-  email: 'dj@ingame.observer',
+  email: 'mailto:dj@ingame.observer',
   image: 'https://ingame.observer/og-image.jpg',
   sameAs: [
     'https://x.com/priusOBS',

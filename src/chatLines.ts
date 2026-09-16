@@ -76,7 +76,7 @@ export const CHAT_LINES: ChatLine[] = [
   {
     user: 'pablo_gg',
     color: '#8a5a2b',
-    text: 'book this man already',
+    text: 'clip that xray toggle',
   },
   {
     user: 'yute_',
@@ -126,7 +126,7 @@ export const CHAT_LINES: ChatLine[] = [
   {
     user: 'jadeonmain',
     color: '#8a3a4a',
-    text: 'productions keep booking him for a reason :BASED:',
+    text: 'camera was BASED :BASED:',
   },
   {
     user: 'coryy',
@@ -141,12 +141,12 @@ export const CHAT_LINES: ChatLine[] = [
   {
     user: 'skye0',
     color: '#2a5a9a',
-    text: 'that’s elite observer timing',
+    text: 'timing was filthy',
   },
   {
     user: 'omarrr',
     color: '#6a3a2a',
-    text: 'smell the flowers then book him',
+    text: 'wake up and smell the flowers lmao',
   },
   {
     user: 'nickfromchat',

@@ -40,6 +40,8 @@ import {
   assetPath,
   canonicalForView,
   clipPath,
+  eventPhotoSrc,
+  httpsUrl,
   pathForView,
   usesClipHash,
   viewFromLocation,
@@ -711,6 +713,7 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const stripRef = useRef<HTMLUListElement>(null)
   const clip = CLIPS[index]
+  const twitchUrl = clipPageUrl(clip.slug)
   const total = CLIPS.length
 
   const select = useCallback((i: number, play = true) => {
@@ -746,16 +749,18 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
   }
 
   useEffect(() => {
-    const slug = CLIPS[index].slug
+    const known = parseClipSlugFromLocation()
+    const slug = known ?? CLIPS[0].slug
     if (usesClipHash()) {
-      if (!window.location.hash.startsWith('#clips/')) {
+      if (!window.location.hash.startsWith('#clips/') || !known) {
         history.replaceState(null, '', clipHash(slug))
       }
       return
     }
     if (
       window.location.pathname === '/clips' ||
-      window.location.pathname === '/clips/'
+      window.location.pathname === '/clips/' ||
+      !known
     ) {
       history.replaceState(null, '', clipPath(slug))
     }
@@ -833,8 +838,7 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
       <header className="clips-header">
         <h2>Clips</h2>
         <p className="clips-lead">
-          Casters and co-streams roasting my camera work — included because
-          observing is a live craft.
+          Casters and co-streams roasting the camera work. Comes with the chair.
         </p>
         <p className="clips-keys">
           <span className="clips-keys__hint">← → or ↑ ↓ to change clip</span>
@@ -901,15 +905,17 @@ function ClipsPage({ onBack }: { onBack: () => void }) {
               <p>&ldquo;{clip.quote}&rdquo;</p>
             </blockquote>
           )}
-          <p className="clip-original">
-            <a
-              href={clipPageUrl(clip.slug)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Open original on Twitch
-            </a>
-          </p>
+          {twitchUrl ? (
+            <p className="clip-original">
+              <a
+                href={twitchUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open original on Twitch
+              </a>
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -1125,7 +1131,13 @@ function EventRow({
   onActivate: () => void
   onDeactivate: () => void
 }) {
-  const hasPhoto = Boolean(event.photo?.imageUrl)
+  const photoSrc = event.photo?.imageUrl
+    ? eventPhotoSrc(event.photo.imageUrl)
+    : null
+  const creditHref = event.photo?.pageUrl
+    ? httpsUrl(event.photo.pageUrl)
+    : null
+  const hasPhoto = Boolean(photoSrc)
   const label = event.game === 'CS' ? `${event.name} (CS)` : event.name
   const flag = eventTravelFlag(event.name, year)
   const emmyLabel =
@@ -1199,14 +1211,10 @@ function EventRow({
             </span>
           )}
         </figcaption>
-        {active && event.photo?.imageUrl ? (
+        {active && photoSrc && event.photo ? (
           <img
             className={inlinePhoto ? 'award-inline-photo' : undefined}
-            src={
-              event.photo.imageUrl.startsWith('http')
-                ? event.photo.imageUrl
-                : assetPath(event.photo.imageUrl)
-            }
+            src={photoSrc}
             alt={event.photo.title || `${event.name} still`}
             decoding="async"
             loading="lazy"
@@ -1216,13 +1224,17 @@ function EventRow({
       </figure>
       {active && event.photo && inlinePhoto ? (
         <p className="award-inline-credit">
-          <a
-            href={event.photo.pageUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {event.photo.title || 'Flickr photo'}
-          </a>
+          {creditHref ? (
+            <a
+              href={creditHref}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {event.photo.title || 'Photo'}
+            </a>
+          ) : (
+            <span>{event.photo.title || 'Photo'}</span>
+          )}
           <span>
             {event.photo.license} · {photoCredit}
           </span>
@@ -1230,14 +1242,20 @@ function EventRow({
       ) : null}
       {active && event.photo && !inlinePhoto ? (
         <p className="award-photo-credit">
-          <a
-            className="award-photo-credit__title"
-            href={event.photo.pageUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {event.photo.title || 'Flickr photo'}
-          </a>
+          {creditHref ? (
+            <a
+              className="award-photo-credit__title"
+              href={creditHref}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {event.photo.title || 'Photo'}
+            </a>
+          ) : (
+            <span className="award-photo-credit__title">
+              {event.photo.title || 'Photo'}
+            </span>
+          )}
           <span className="award-photo-credit__copy">
             {event.photo.license} · {photoCredit}
           </span>
@@ -1329,8 +1347,8 @@ function ContactPage({ onBack }: { onBack: () => void }) {
         </a>
       </p>
       <p className="contact-hint">
-        The mailto opens with Event and Dates fields. Same address if you write
-        a new message.
+        Opens your mail app with Event / Dates filled in. Same address if you
+        just write.
       </p>
       <p className="contact-socials">
         <a href={SOCIAL.twitter} target="_blank" rel="noopener noreferrer">
@@ -1556,20 +1574,23 @@ function PrivacyNotice({
 
       <h3>External links</h3>
       <p>
-        Liquipedia, X, LinkedIn, Flickr, Twitch, mailto — once you leave,
-        their rules apply.
+        Liquipedia, X, LinkedIn, Flickr, Twitch, Discord, mailto — once you
+        leave, their rules apply. <code>/discord</code> on this origin is a
+        static bounce to a Discord invite; after that hop you are on Discord.
       </p>
 
       <h3>Security</h3>
       <p>
-        There is a basic CSP in the HTML (<code>script-src &apos;self&apos;</code>
-        ). Keep it. Spotted something sketchy?{' '}
+        There is a CSP meta in the HTML (<code>script-src &apos;self&apos;</code>,
+        no inline handlers). HTTP header copies of that policy belong on the
+        Cloudflare zone — GitHub Pages will not send them. Spotted something
+        sketchy?{' '}
         <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>
         {' · '}
         <a href={SECURITY_TXT}>security.txt</a>
       </p>
 
-      <p className="privacy-updated">Last updated: 4 September 2026</p>
+      <p className="privacy-updated">Last updated: 16 September 2026</p>
 
       <p>
         <button type="button" className="text-btn" onClick={onBack}>
