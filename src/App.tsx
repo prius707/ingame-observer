@@ -21,6 +21,7 @@ import {
   eventTravelFlag,
   filterEventYears,
   type EventEntry,
+  type EventFlag,
   type EventGameFilter,
   type EventRangeFilter,
 } from './events'
@@ -40,6 +41,7 @@ import {
   assetPath,
   canonicalForView,
   clipPath,
+  eventFlagSrc,
   eventPhotoSrc,
   httpsUrl,
   pathForView,
@@ -1116,6 +1118,22 @@ function EventsPage({
   )
 }
 
+function EventFlagMark({ flag }: { flag: EventFlag | null }) {
+  if (!flag) return null
+  const src = eventFlagSrc(flag.code)
+  if (!src) return null
+  return (
+    <img
+      className="award-flag"
+      src={src}
+      alt={flag.country}
+      width={16}
+      height={12}
+      decoding="async"
+    />
+  )
+}
+
 function EventRow({
   event,
   year,
@@ -1184,11 +1202,7 @@ function EventRow({
               aria-pressed={active}
             >
               {label}
-              {flag ? (
-                <span className="award-flag" title="Event location" aria-hidden="true">
-                  {flag}
-                </span>
-              ) : null}
+              <EventFlagMark flag={flag} />
               {emmyLabel ? (
                 <span className={`award-emmy award-emmy--${event.emmy}`}>
                   {emmyLabel}
@@ -1198,11 +1212,7 @@ function EventRow({
           ) : (
             <span className="award-name award-name--static">
               {label}
-              {flag ? (
-                <span className="award-flag" title="Event location" aria-hidden="true">
-                  {flag}
-                </span>
-              ) : null}
+              <EventFlagMark flag={flag} />
               {emmyLabel ? (
                 <span className={`award-emmy award-emmy--${event.emmy}`}>
                   {emmyLabel}

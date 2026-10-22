@@ -23,54 +23,81 @@ export type EventEntry = {
 
 export type EventYear = { year: number; events: EventEntry[] }
 
+/** ISO 3166-1 alpha-2 + accessible country name. SVGs in public/flags/ are flag-icons v7.6.0 (MIT). */
+export type EventFlag = {
+  code: string
+  country: string
+}
+
+const FLAG = {
+  au: { code: 'au', country: 'Australia' },
+  br: { code: 'br', country: 'Brazil' },
+  ca: { code: 'ca', country: 'Canada' },
+  cl: { code: 'cl', country: 'Chile' },
+  cn: { code: 'cn', country: 'China' },
+  de: { code: 'de', country: 'Germany' },
+  dk: { code: 'dk', country: 'Denmark' },
+  es: { code: 'es', country: 'Spain' },
+  fr: { code: 'fr', country: 'France' },
+  gb: { code: 'gb', country: 'United Kingdom' },
+  is: { code: 'is', country: 'Iceland' },
+  jp: { code: 'jp', country: 'Japan' },
+  kr: { code: 'kr', country: 'South Korea' },
+  pl: { code: 'pl', country: 'Poland' },
+  pt: { code: 'pt', country: 'Portugal' },
+  ru: { code: 'ru', country: 'Russia' },
+  th: { code: 'th', country: 'Thailand' },
+  tr: { code: 'tr', country: 'Turkey' },
+} as const satisfies Record<string, EventFlag>
+
 /** City / country flags for event rows (US venues left blank on purpose). */
-const PLACE_FLAGS: ReadonlyArray<{ match: RegExp; flag: string }> = [
-  { match: /Toronto/i, flag: '🇨🇦' },
-  { match: /Santiago/i, flag: '🇨🇱' },
-  { match: /S[aã]o Paulo/i, flag: '🇧🇷' },
-  { match: /Belo Horizonte/i, flag: '🇧🇷' },
-  { match: /London/i, flag: '🇬🇧' },
-  { match: /Berlin/i, flag: '🇩🇪' },
-  { match: /Cologne/i, flag: '🇩🇪' },
-  { match: /Paris/i, flag: '🇫🇷' },
-  { match: /Madrid/i, flag: '🇪🇸' },
-  { match: /Lisbon/i, flag: '🇵🇹' },
-  { match: /Copenhagen/i, flag: '🇩🇰' },
-  { match: /Reykjav[ií]k/i, flag: '🇮🇸' },
-  { match: /Katowice/i, flag: '🇵🇱' },
-  { match: /Krak[oó]w/i, flag: '🇵🇱' },
-  { match: /Moscow/i, flag: '🇷🇺' },
-  { match: /Istanbul/i, flag: '🇹🇷' },
-  { match: /Bangkok/i, flag: '🇹🇭' },
-  { match: /Shanghai/i, flag: '🇨🇳' },
-  { match: /Seoul/i, flag: '🇰🇷' },
-  { match: /Tokyo/i, flag: '🇯🇵' },
-  { match: /Sydney/i, flag: '🇦🇺' },
+const PLACE_FLAGS: ReadonlyArray<{ match: RegExp; flag: EventFlag }> = [
+  { match: /Toronto/i, flag: FLAG.ca },
+  { match: /Santiago/i, flag: FLAG.cl },
+  { match: /S[aã]o Paulo/i, flag: FLAG.br },
+  { match: /Belo Horizonte/i, flag: FLAG.br },
+  { match: /London/i, flag: FLAG.gb },
+  { match: /Berlin/i, flag: FLAG.de },
+  { match: /Cologne/i, flag: FLAG.de },
+  { match: /Paris/i, flag: FLAG.fr },
+  { match: /Madrid/i, flag: FLAG.es },
+  { match: /Lisbon/i, flag: FLAG.pt },
+  { match: /Copenhagen/i, flag: FLAG.dk },
+  { match: /Reykjav[ií]k/i, flag: FLAG.is },
+  { match: /Katowice/i, flag: FLAG.pl },
+  { match: /Krak[oó]w/i, flag: FLAG.pl },
+  { match: /Moscow/i, flag: FLAG.ru },
+  { match: /Istanbul/i, flag: FLAG.tr },
+  { match: /Bangkok/i, flag: FLAG.th },
+  { match: /Shanghai/i, flag: FLAG.cn },
+  { match: /Seoul/i, flag: FLAG.kr },
+  { match: /Tokyo/i, flag: FLAG.jp },
+  { match: /Sydney/i, flag: FLAG.au },
 ]
 
 /** Fallback when the title has no city. */
-const NAMED_EVENT_FLAGS: ReadonlyArray<{ match: RegExp; flag: string }> = [
-  { match: /^IEM World Championship$/i, flag: '🇵🇱' }, // Katowice
-  { match: /^VALORANT Champions$/i, flag: '🇩🇪' }, // Berlin 2021
-  { match: /^VALORANT Game Changers Championship$/i, flag: '🇩🇪' },
-  { match: /^Red Bull Home Ground/i, flag: '🇩🇪' },
-  { match: /^VCT LOCK\/\//i, flag: '🇧🇷' },
+const NAMED_EVENT_FLAGS: ReadonlyArray<{ match: RegExp; flag: EventFlag }> = [
+  { match: /^IEM World Championship$/i, flag: FLAG.pl }, // Katowice
+  { match: /^VALORANT Champions$/i, flag: FLAG.de }, // Berlin 2021
+  { match: /^VALORANT Game Changers Championship$/i, flag: FLAG.de },
+  { match: /^Red Bull Home Ground/i, flag: FLAG.de },
+  { match: /^VCT LOCK\/\//i, flag: FLAG.br },
 ]
 
 /** BLAST Premier rows without a city — by year. Skip online seasons. */
-function blastPremierFlag(name: string, year: number): string | null {
+function blastPremierFlag(name: string, year: number): EventFlag | null {
   if (!/^BLAST Premier\b/i.test(name)) return null
   if (/Fall Finals?/i.test(name)) {
-    if (year === 2021 || year === 2022) return '🇩🇰' // Copenhagen
+    if (year === 2021 || year === 2022) return FLAG.dk // Copenhagen
   }
   if (/Spring Finals?/i.test(name)) {
-    if (year === 2022) return '🇵🇹' // Lisbon
+    if (year === 2022) return FLAG.pt // Lisbon
   }
-  if (/World Final/i.test(name) && year === 2021) return '🇩🇰' // Copenhagen
+  if (/World Final/i.test(name) && year === 2021) return FLAG.dk // Copenhagen
   return null
 }
 
-export function eventTravelFlag(name: string, year?: number): string | null {
+export function eventTravelFlag(name: string, year?: number): EventFlag | null {
   for (const { match, flag } of PLACE_FLAGS) {
     if (match.test(name)) return flag
   }
@@ -126,6 +153,20 @@ export const EVENT_YEARS: EventYear[] = [
   {
     "year": 2026,
     "events": [
+      {
+        "name": "VALORANT Champions Shanghai",
+        "game": "VALORANT",
+        "albumTitle": "VALORANT Champions Shanghai Grand Finals",
+        "photo": {
+          "id": "55596701736",
+          "title": "2026 VALORANT Champions Shanghai Grand Finals",
+          "views": 3224,
+          "imageUrl": "event-photos/55596701736.jpg",
+          "pageUrl": "https://www.flickr.com/photos/valorantesports/55596701736/",
+          "license": "All Rights Reserved",
+          "albumId": "72177720336215728"
+        }
+      },
       {
         "name": "VCT Americas Stage 2 São Paulo",
         "game": "VALORANT",
