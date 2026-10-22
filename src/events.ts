@@ -19,6 +19,8 @@ export type EventEntry = {
   emmy?: 'winner' | 'nominated'
   /** Ceremony year when emmy is "winner" (event year may differ). */
   emmyAwardYear?: number
+  /** Only when Liquipedia lists something other than plain Observer. */
+  role?: string
 }
 
 export type EventYear = { year: number; events: EventEntry[] }
@@ -46,6 +48,7 @@ const PLACE_FLAGS: ReadonlyArray<{ match: RegExp; flag: string }> = [
   { match: /Seoul/i, flag: '🇰🇷' },
   { match: /Tokyo/i, flag: '🇯🇵' },
   { match: /Sydney/i, flag: '🇦🇺' },
+  { match: /Mykonos/i, flag: '🇬🇷' },
 ]
 
 /** Fallback when the title has no city. */
@@ -127,6 +130,10 @@ export const EVENT_YEARS: EventYear[] = [
     "year": 2026,
     "events": [
       {
+        "name": "VALORANT Champions Shanghai",
+        "game": "VALORANT"
+      },
+      {
         "name": "VCT Americas Stage 2 São Paulo",
         "game": "VALORANT",
         "albumTitle": "2026 VCT Americas Stage 2 Finals",
@@ -181,6 +188,10 @@ export const EVENT_YEARS: EventYear[] = [
           "license": "All Rights Reserved",
           "albumId": "72177720333830445"
         }
+      },
+      {
+        "name": "THE CS MINOR",
+        "game": "CS"
       },
       {
         "name": "VALORANT Masters Santiago",
@@ -313,6 +324,22 @@ export const EVENT_YEARS: EventYear[] = [
           "license": "All Rights Reserved",
           "albumId": "72177720323694252"
         }
+      },
+      {
+        "name": "SEN City Classic",
+        "game": "VALORANT"
+      },
+      {
+        "name": "VCT Game Changers North America Stage 2 Open Qualifier 3",
+        "game": "VALORANT"
+      },
+      {
+        "name": "VCT Game Changers North America Stage 1",
+        "game": "VALORANT"
+      },
+      {
+        "name": "VCT Game Changers North America Stage 1 Open Qualifier 2",
+        "game": "VALORANT"
       }
     ]
   },
@@ -404,6 +431,22 @@ export const EVENT_YEARS: EventYear[] = [
           "license": "All Rights Reserved",
           "albumId": "72177720315205520"
         }
+      },
+      {
+        "name": "Spotlight Series Americas",
+        "game": "VALORANT"
+      },
+      {
+        "name": "Ludwig x Tarik Invitational 3",
+        "game": "VALORANT"
+      },
+      {
+        "name": "Ludwig x Tarik Invitational 2",
+        "game": "VALORANT"
+      },
+      {
+        "name": "Ludwig x Tarik Invitational 2 Showmatch",
+        "game": "VALORANT"
       }
     ]
   },
@@ -480,6 +523,26 @@ export const EVENT_YEARS: EventYear[] = [
           "albumId": "72177720313358038",
           "credit": "Davard_"
         }
+      },
+      {
+        "name": "ESL Challenger League Season 46 North America",
+        "game": "CS"
+      },
+      {
+        "name": "Red Bull Home Ground #4 Showmatch",
+        "game": "VALORANT"
+      },
+      {
+        "name": "Red Bull Double Agent",
+        "game": "VALORANT"
+      },
+      {
+        "name": "VCT Americas Last Chance Qualifier",
+        "game": "VALORANT"
+      },
+      {
+        "name": "Ludwig x Tarik Invitational",
+        "game": "VALORANT"
       }
     ]
   },
@@ -571,6 +634,50 @@ export const EVENT_YEARS: EventYear[] = [
           "albumId": "72177720322625041",
           "credit": "BLAST Esports"
         }
+      },
+      {
+        "name": "College VALORANT East Fall Tournament",
+        "game": "VALORANT"
+      },
+      {
+        "name": "The Lil Bro Cup",
+        "game": "VALORANT"
+      },
+      {
+        "name": "BLAST Premier Fall European Showdown",
+        "game": "CS"
+      },
+      {
+        "name": "BLAST Premier Fall American Showdown",
+        "game": "CS"
+      },
+      {
+        "name": "BLAST Premier Fall Groups",
+        "game": "CS"
+      },
+      {
+        "name": "VCT North America Last Chance Qualifier",
+        "game": "VALORANT"
+      },
+      {
+        "name": "VCT North America Stage 2 Challengers",
+        "game": "VALORANT"
+      },
+      {
+        "name": "VCT North America Stage 1 Challengers",
+        "game": "VALORANT"
+      },
+      {
+        "name": "Proving Grounds $20k Spring",
+        "game": "VALORANT"
+      },
+      {
+        "name": "Fragadelphia 16",
+        "game": "CS"
+      },
+      {
+        "name": "BLAST Premier Spring Groups",
+        "game": "CS"
       }
     ]
   },
@@ -650,6 +757,58 @@ export const EVENT_YEARS: EventYear[] = [
       {
         "name": "BLAST Premier Spring Finals",
         "game": "CS"
+      },
+      {
+        "name": "VCT North America Last Chance Qualifier",
+        "game": "VALORANT"
+      },
+      {
+        "name": "BLAST Spike Nations #2",
+        "game": "VALORANT"
+      },
+      {
+        "name": "BLAST Premier Fall Groups",
+        "game": "CS"
+      },
+      {
+        "name": "Red Bull Campus Clutch",
+        "game": "VALORANT"
+      },
+      {
+        "name": "VCT North America Stage 2 Challengers 2",
+        "game": "VALORANT"
+      },
+      {
+        "name": "BLAST Premier Spring Showdown",
+        "game": "CS"
+      },
+      {
+        "name": "VCT Game Changers North America Series 1",
+        "game": "VALORANT"
+      },
+      {
+        "name": "VCT North America Stage 1 Masters",
+        "game": "VALORANT"
+      },
+      {
+        "name": "VCT North America Stage 1 Challengers 3",
+        "game": "VALORANT"
+      },
+      {
+        "name": "BLAST Premier Spring Groups",
+        "game": "CS"
+      },
+      {
+        "name": "cs_summit 7",
+        "game": "CS"
+      },
+      {
+        "name": "BLAST Premier Global Final",
+        "game": "CS"
+      },
+      {
+        "name": "Nerd Street Gamers Winter Championship",
+        "game": "VALORANT"
       }
     ]
   },
@@ -681,6 +840,82 @@ export const EVENT_YEARS: EventYear[] = [
           "albumId": "72177720322521316",
           "credit": "BLAST Esports"
         }
+      },
+      {
+        "name": "BLAST Premier Fall Showdown",
+        "game": "CS"
+      },
+      {
+        "name": "First Strike Europe Playoffs #2",
+        "game": "VALORANT"
+      },
+      {
+        "name": "First Strike Europe Playoffs #1",
+        "game": "VALORANT"
+      },
+      {
+        "name": "BLAST Spike Nations",
+        "game": "VALORANT"
+      },
+      {
+        "name": "BLAST Premier Fall Regular Season",
+        "game": "CS"
+      },
+      {
+        "name": "Face Off",
+        "game": "VALORANT"
+      },
+      {
+        "name": "Pulse Series",
+        "game": "VALORANT"
+      },
+      {
+        "name": "Pop Flash",
+        "game": "VALORANT"
+      },
+      {
+        "name": "FaZe Clan Invitational",
+        "game": "VALORANT"
+      },
+      {
+        "name": "Pittsburgh Knights Valorant Rumble",
+        "game": "VALORANT"
+      },
+      {
+        "name": "Pulse Invitational",
+        "game": "VALORANT"
+      },
+      {
+        "name": "cs_summit 6 Online Europe",
+        "game": "CS"
+      },
+      {
+        "name": "cs_summit 6 Online North America",
+        "game": "CS"
+      },
+      {
+        "name": "cs_summit 6 Online European Closed Qualifier",
+        "game": "CS"
+      },
+      {
+        "name": "BLAST Premier Spring European Showdown",
+        "game": "CS"
+      },
+      {
+        "name": "Immortals First Light",
+        "game": "VALORANT"
+      },
+      {
+        "name": "BLAST Premier Spring American Showdown",
+        "game": "CS"
+      },
+      {
+        "name": "Fnatic Proving Grounds",
+        "game": "VALORANT"
+      },
+      {
+        "name": "BLAST Premier Spring Regular Season",
+        "game": "CS"
       }
     ]
   },
@@ -812,6 +1047,24 @@ export const EVENT_YEARS: EventYear[] = [
           "albumId": "72177720322457792",
           "credit": "BLAST Esports"
         }
+      },
+      {
+        "name": "cs_summit 5",
+        "game": "CS",
+        "role": "Observer + Guest Commentator"
+      },
+      {
+        "name": "Mustache Masters",
+        "game": "CS",
+        "role": "Remote Guest"
+      },
+      {
+        "name": "cs_summit 4",
+        "game": "CS"
+      },
+      {
+        "name": "iBUYPOWER Masters IV",
+        "game": "CS"
       }
     ]
   },
@@ -947,6 +1200,62 @@ export const EVENT_YEARS: EventYear[] = [
           "albumId": "72177720321952514",
           "credit": "BLAST Esports"
         }
+      },
+      {
+        "name": "ESEA Season 29 Global Challenge",
+        "game": "CS"
+      },
+      {
+        "name": "ESL Pro League Season 8 Europe Relegation",
+        "game": "CS"
+      },
+      {
+        "name": "ESL Pro League Season 8 North America Relegation",
+        "game": "CS"
+      },
+      {
+        "name": "ESEA Season 29 Premier Division North America Final",
+        "game": "CS"
+      },
+      {
+        "name": "ESEA Season 29 Premier Division Europe Final",
+        "game": "CS"
+      },
+      {
+        "name": "ESL Pro League Season 8 North America",
+        "game": "CS"
+      },
+      {
+        "name": "DreamHack Masters Stockholm North American Qualifier",
+        "game": "CS"
+      },
+      {
+        "name": "ESL Pro League Season 7 North America",
+        "game": "CS"
+      },
+      {
+        "name": "cs_summit 2",
+        "game": "CS"
+      },
+      {
+        "name": "ESL Pro League Season 6 Europe Relegation",
+        "game": "CS"
+      },
+      {
+        "name": "ESL Pro League Season 6 North America Relegation",
+        "game": "CS"
+      },
+      {
+        "name": "ESEA Season 26 Global Challenge",
+        "game": "CS"
+      },
+      {
+        "name": "ESEA Season 26 Premier Division Europe Finals",
+        "game": "CS"
+      },
+      {
+        "name": "ESEA Season 26 Premier Division NA Finals",
+        "game": "CS"
       }
     ]
   },
@@ -1064,6 +1373,50 @@ export const EVENT_YEARS: EventYear[] = [
           "albumId": "72177720321857477",
           "credit": "BLAST Esports"
         }
+      },
+      {
+        "name": "ESL Pro League Season 6 North America",
+        "game": "CS"
+      },
+      {
+        "name": "IEM Oakland North American Qualifier",
+        "game": "CS"
+      },
+      {
+        "name": "ESG Tour Mykonos",
+        "game": "CS"
+      },
+      {
+        "name": "PGL Major Kraków Offline Qualifier",
+        "game": "CS"
+      },
+      {
+        "name": "ELEAGUE Clash for Cash The Rematch",
+        "game": "CS"
+      },
+      {
+        "name": "ESL Pro League Season 5 North America Relegation",
+        "game": "CS"
+      },
+      {
+        "name": "ESL Pro League Season 5 North America",
+        "game": "CS"
+      },
+      {
+        "name": "cs_summit 1",
+        "game": "CS"
+      },
+      {
+        "name": "ESEA Season 23 Global Challenge",
+        "game": "CS"
+      },
+      {
+        "name": "ESEA Season 23 Premier Division NA Finals",
+        "game": "CS"
+      },
+      {
+        "name": "ESEA Season 23 Premier Division Europe Finals",
+        "game": "CS"
       }
     ]
   },
@@ -1119,6 +1472,26 @@ export const EVENT_YEARS: EventYear[] = [
           "albumId": "",
           "credit": "Damnielle"
         }
+      },
+      {
+        "name": "ELEAGUE Major Atlanta Offline Qualifier",
+        "game": "CS"
+      },
+      {
+        "name": "Americas Minor Championship Atlanta",
+        "game": "CS"
+      },
+      {
+        "name": "ESL Pro League Season 4 North America",
+        "game": "CS"
+      },
+      {
+        "name": "ELEAGUE Season 2 NA Preliminary Rounds",
+        "game": "CS"
+      },
+      {
+        "name": "ELEAGUE Season 2 EU Preliminary Rounds",
+        "game": "CS"
       }
     ]
   }

@@ -1194,6 +1194,9 @@ function EventRow({
                   {emmyLabel}
                 </span>
               ) : null}
+              {event.role ? (
+                <span className="award-role">{event.role}</span>
+              ) : null}
             </button>
           ) : (
             <span className="award-name award-name--static">
@@ -1207,6 +1210,9 @@ function EventRow({
                 <span className={`award-emmy award-emmy--${event.emmy}`}>
                   {emmyLabel}
                 </span>
+              ) : null}
+              {event.role ? (
+                <span className="award-role">{event.role}</span>
               ) : null}
             </span>
           )}
