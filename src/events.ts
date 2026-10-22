@@ -131,7 +131,17 @@ export const EVENT_YEARS: EventYear[] = [
     "events": [
       {
         "name": "VALORANT Champions Shanghai",
-        "game": "VALORANT"
+        "game": "VALORANT",
+        "albumTitle": "2026 VALORANT Champions Shanghai Grand Finals",
+        "photo": {
+          "id": "55596890799",
+          "title": "2026 VALORANT Champions Shanghai Grand Finals",
+          "views": 2044,
+          "imageUrl": "event-photos/55596890799.jpg",
+          "pageUrl": "https://www.flickr.com/photos/valorantesports/55596890799/",
+          "license": "All Rights Reserved",
+          "albumId": "72177720336215728"
+        }
       },
       {
         "name": "VCT Americas Stage 2 São Paulo",
@@ -434,7 +444,18 @@ export const EVENT_YEARS: EventYear[] = [
       },
       {
         "name": "Spotlight Series Americas",
-        "game": "VALORANT"
+        "game": "VALORANT",
+        "albumTitle": "VCT Spotlight Series Americas 2024 - Grand Finals",
+        "photo": {
+          "id": "54191037372",
+          "title": "VCT Spotlight Series Americas 2024 - Grand Finals",
+          "views": 4174,
+          "imageUrl": "event-photos/54191037372.jpg",
+          "pageUrl": "https://www.flickr.com/photos/vctamericas/54191037372/",
+          "license": "All Rights Reserved",
+          "albumId": "",
+          "credit": "VCT Americas Photos / Riot Games"
+        }
       },
       {
         "name": "Ludwig x Tarik Invitational 3",
