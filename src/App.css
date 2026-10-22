@@ -1518,13 +1518,13 @@ body.invert #slider::-moz-range-thumb {
 
 .award-flag {
   display: inline-block;
-  margin-left: 0.4em;
-  font-size: 1.05em;
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: 1;
-  text-transform: none;
-  vertical-align: -0.05em;
+  width: 1.15em;
+  height: 0.86em;
+  margin-left: 0.45em;
+  vertical-align: -0.08em;
+  object-fit: cover;
+  border-radius: 1px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
 
 .award-emmy {
@@ -1559,7 +1559,7 @@ body.invert .award-emmy--winner,
   vertical-align: middle;
 }
 
-.award figure img {
+.award figure img:not(.award-flag) {
   display: none;
   position: fixed;
   top: 4em;
@@ -1579,7 +1579,7 @@ body.invert .award-emmy--winner,
   text-decoration: underline;
 }
 
-.award figure.js-active img {
+.award figure.js-active img:not(.award-flag) {
   display: block;
 }
 
@@ -2025,7 +2025,7 @@ body.invert .award-emmy--winner,
     font-size: 1.45rem;
   }
 
-  .award figure img {
+  .award figure img:not(.award-flag) {
     max-width: 94%;
     max-height: 70%;
     top: 5.5em;
@@ -2061,7 +2061,7 @@ body.invert .award-emmy--winner,
     display: none;
   }
 
-  .award figure img:not(.award-inline-photo) {
+  .award figure img:not(.award-inline-photo):not(.award-flag) {
     display: none !important;
   }
 }

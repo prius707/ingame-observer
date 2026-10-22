@@ -23,6 +23,14 @@ export function eventPhotoSrc(imageUrl: string): string | null {
   return assetPath(imageUrl)
 }
 
+/** Same-origin flag-icons SVGs in public/flags/{cc}.svg */
+export function eventFlagSrc(code: string): string | null {
+  if (!/^[a-z]{2}$/.test(code)) return null
+  const path = `flags/${code}.svg`
+  if (!isSafeRelativeAsset(path)) return null
+  return assetPath(path)
+}
+
 /** Credit / outbound links: https only. */
 export function httpsUrl(url: string): string | null {
   try {
