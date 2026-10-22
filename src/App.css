@@ -1548,6 +1548,17 @@ body.invert .award-emmy--winner,
   color: #ff4d4d;
 }
 
+.award-role {
+  display: inline-block;
+  margin-left: 0.55em;
+  font-size: 0.68em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.55;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
 .award figure img:not(.award-flag) {
   display: none;
   position: fixed;
