@@ -492,10 +492,6 @@ export const EVENT_YEARS: EventYear[] = [
       {
         "name": "Ludwig x Tarik Invitational 2",
         "game": "VALORANT"
-      },
-      {
-        "name": "Ludwig x Tarik Invitational 2 Showmatch",
-        "game": "VALORANT"
       }
     ]
   },
@@ -576,10 +572,6 @@ export const EVENT_YEARS: EventYear[] = [
       {
         "name": "ESL Challenger League Season 46 North America",
         "game": "CS"
-      },
-      {
-        "name": "Red Bull Home Ground #4 Showmatch",
-        "game": "VALORANT"
       },
       {
         "name": "Red Bull Double Agent",
