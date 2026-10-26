@@ -47,6 +47,7 @@ const FLAG = {
   kr: { code: 'kr', country: 'South Korea' },
   pl: { code: 'pl', country: 'Poland' },
   pt: { code: 'pt', country: 'Portugal' },
+  ro: { code: 'ro', country: 'Romania' },
   ru: { code: 'ru', country: 'Russia' },
   th: { code: 'th', country: 'Thailand' },
   tr: { code: 'tr', country: 'Turkey' },
@@ -68,6 +69,8 @@ const PLACE_FLAGS: ReadonlyArray<{ match: RegExp; flag: EventFlag }> = [
   { match: /Copenhagen/i, flag: FLAG.dk },
   { match: /Reykjav[ií]k/i, flag: FLAG.is },
   { match: /Katowice/i, flag: FLAG.pl },
+  // Bucharest qualifier — must beat the Kraków city match below.
+  { match: /Krak[oó]w Offline Qualifier/i, flag: FLAG.ro },
   { match: /Krak[oó]w/i, flag: FLAG.pl },
   { match: /Moscow/i, flag: FLAG.ru },
   { match: /Istanbul/i, flag: FLAG.tr },
@@ -82,9 +85,11 @@ const PLACE_FLAGS: ReadonlyArray<{ match: RegExp; flag: EventFlag }> = [
 /** Fallback when the title has no city. */
 const NAMED_EVENT_FLAGS: ReadonlyArray<{ match: RegExp; flag: EventFlag }> = [
   { match: /^IEM World Championship$/i, flag: FLAG.pl }, // Katowice
-  { match: /^VALORANT Champions$/i, flag: FLAG.de }, // Berlin 2021
+  { match: /^VALORANT Champions$/i, flag: FLAG.de }, // Berlin 2021 (pre-rename fallback)
   { match: /^VALORANT Game Changers Championship$/i, flag: FLAG.de },
-  { match: /^Red Bull Home Ground/i, flag: FLAG.de },
+  { match: /^Red Bull Home Ground #4/i, flag: FLAG.jp }, // Tokyo
+  { match: /^Red Bull Campus Clutch/i, flag: FLAG.es }, // Madrid
+  { match: /^ESL Pro League Season 4 Finals$/i, flag: FLAG.br }, // São Paulo
   { match: /^VCT LOCK\/\//i, flag: FLAG.br },
 ]
 
@@ -98,6 +103,8 @@ function blastPremierFlag(name: string, year: number): EventFlag | null {
     if (year === 2022) return FLAG.pt // Lisbon
   }
   if (/World Final/i.test(name) && year === 2021) return FLAG.dk // Copenhagen
+  if (/Fall Groups/i.test(name) && year === 2022) return FLAG.dk // Copenhagen (offline)
+  if (/Spring Regular Season/i.test(name) && year === 2020) return FLAG.gb // London
   return null
 }
 
@@ -172,34 +179,6 @@ export const EVENT_YEARS: EventYear[] = [
         }
       },
       {
-        "name": "VCT Americas Stage 2 São Paulo",
-        "game": "VALORANT",
-        "albumTitle": "2026 VCT Americas Stage 2 Finals",
-        "photo": {
-          "id": "55512790090",
-          "title": "2026 VCT Americas Stage 2 Finals",
-          "views": 325,
-          "imageUrl": "event-photos/55512790090.jpg",
-          "pageUrl": "https://www.flickr.com/photos/vctamericas/55512790090/",
-          "license": "All Rights Reserved",
-          "albumId": "72177720335506829"
-        }
-      },
-      {
-        "name": "VCT Americas Stage 2",
-        "game": "VALORANT",
-        "photo": {
-          "id": "55494987420",
-          "title": "VCT Americas 2026 Stage 2 Playoffs Day 2",
-          "views": 31,
-          "imageUrl": "event-photos/55494987420.jpg",
-          "pageUrl": "https://www.flickr.com/photos/vctamericas/55494987420/",
-          "license": "All Rights Reserved",
-          "albumId": "72177720335350721",
-          "credit": "VCT Americas Photos / Riot Games"
-        }
-      },
-      {
         "name": "VALORANT Masters London",
         "game": "VALORANT",
         "albumTitle": "VALORANT Masters London Grand Finals",
@@ -211,6 +190,34 @@ export const EVENT_YEARS: EventYear[] = [
           "pageUrl": "https://www.flickr.com/photos/valorantesports/55348356897/",
           "license": "All Rights Reserved",
           "albumId": "72177720334325513"
+        }
+      },
+      {
+        "name": "VALORANT Masters Santiago",
+        "game": "VALORANT",
+        "albumTitle": "VALORANT Masters Santiago - Grand Finals",
+        "photo": {
+          "id": "55150210232",
+          "title": "VALORANT Masters Santiago - Grand Finals",
+          "views": 16704,
+          "imageUrl": "event-photos/55150210232.jpg",
+          "pageUrl": "https://www.flickr.com/photos/valorantesports/55150210232/",
+          "license": "All Rights Reserved",
+          "albumId": "72177720332556428"
+        }
+      },
+      {
+        "name": "VCT Americas Stage 2 São Paulo",
+        "game": "VALORANT",
+        "albumTitle": "2026 VCT Americas Stage 2 Finals",
+        "photo": {
+          "id": "55512790090",
+          "title": "2026 VCT Americas Stage 2 Finals",
+          "views": 325,
+          "imageUrl": "event-photos/55512790090.jpg",
+          "pageUrl": "https://www.flickr.com/photos/vctamericas/55512790090/",
+          "license": "All Rights Reserved",
+          "albumId": "72177720335506829"
         }
       },
       {
@@ -228,24 +235,6 @@ export const EVENT_YEARS: EventYear[] = [
         }
       },
       {
-        "name": "THE CS MINOR",
-        "game": "CS"
-      },
-      {
-        "name": "VALORANT Masters Santiago",
-        "game": "VALORANT",
-        "albumTitle": "VALORANT Masters Santiago - Grand Finals",
-        "photo": {
-          "id": "55150210232",
-          "title": "VALORANT Masters Santiago - Grand Finals",
-          "views": 16704,
-          "imageUrl": "event-photos/55150210232.jpg",
-          "pageUrl": "https://www.flickr.com/photos/valorantesports/55150210232/",
-          "license": "All Rights Reserved",
-          "albumId": "72177720332556428"
-        }
-      },
-      {
         "name": "VCT Americas Kickoff",
         "game": "VALORANT",
         "albumTitle": "VCT Americas 2026 Kickoff Day 15",
@@ -258,6 +247,10 @@ export const EVENT_YEARS: EventYear[] = [
           "license": "All Rights Reserved",
           "albumId": "72177720332036292"
         }
+      },
+      {
+        "name": "THE CS MINOR",
+        "game": "CS"
       }
     ]
   },
@@ -308,20 +301,6 @@ export const EVENT_YEARS: EventYear[] = [
         }
       },
       {
-        "name": "Red Bull Home Ground",
-        "game": "VALORANT",
-        "photo": {
-          "id": "54987140393",
-          "title": "Showmatch - Red Bull Home Ground 2025",
-          "views": 52,
-          "imageUrl": "event-photos/54987140393.jpg",
-          "pageUrl": "https://www.flickr.com/photos/152807917@N03/54987140393/",
-          "license": "All Rights Reserved",
-          "albumId": "",
-          "credit": "Cloud9gg"
-        }
-      },
-      {
         "name": "VCT Americas Stage 2",
         "game": "VALORANT",
         "albumTitle": "2025 VCT Americas Stage 2 Grand Finals",
@@ -361,6 +340,20 @@ export const EVENT_YEARS: EventYear[] = [
           "pageUrl": "https://www.flickr.com/photos/vctamericas/54315577061/",
           "license": "All Rights Reserved",
           "albumId": "72177720323694252"
+        }
+      },
+      {
+        "name": "Red Bull Home Ground",
+        "game": "VALORANT",
+        "photo": {
+          "id": "54987140393",
+          "title": "Showmatch - Red Bull Home Ground 2025",
+          "views": 52,
+          "imageUrl": "event-photos/54987140393.jpg",
+          "pageUrl": "https://www.flickr.com/photos/152807917@N03/54987140393/",
+          "license": "All Rights Reserved",
+          "albumId": "",
+          "credit": "Cloud9gg"
         }
       },
       {
@@ -734,7 +727,7 @@ export const EVENT_YEARS: EventYear[] = [
     "year": 2021,
     "events": [
       {
-        "name": "VALORANT Champions",
+        "name": "VALORANT Champions Berlin",
         "game": "VALORANT",
         "albumTitle": "VALORANT Champions Tour 2021: Champions - Finals",
         "photo": {
@@ -865,7 +858,7 @@ export const EVENT_YEARS: EventYear[] = [
     "year": 2020,
     "events": [
       {
-        "name": "BLAST Premier Fall",
+        "name": "BLAST Premier Fall Finals",
         "game": "CS"
       },
       {
@@ -877,18 +870,8 @@ export const EVENT_YEARS: EventYear[] = [
         "game": "CS"
       },
       {
-        "name": "BLAST Premier Spring Finals",
-        "game": "CS",
-        "photo": {
-          "id": "54199629219",
-          "title": "Copy of 20200202_Jak-Howard_BLAST-Premier-London_08635",
-          "views": 89,
-          "imageUrl": "event-photos/54199629219.jpg",
-          "pageUrl": "https://www.flickr.com/photos/blastesports/54199629219/",
-          "license": "All Rights Reserved",
-          "albumId": "72177720322521316",
-          "credit": "BLAST Esports"
-        }
+        "name": "BLAST Premier Spring Finals (Europe & Americas)",
+        "game": "CS"
       },
       {
         "name": "BLAST Premier Fall Showdown",
@@ -964,7 +947,17 @@ export const EVENT_YEARS: EventYear[] = [
       },
       {
         "name": "BLAST Premier Spring Regular Season",
-        "game": "CS"
+        "game": "CS",
+        "photo": {
+          "id": "54199629219",
+          "title": "Copy of 20200202_Jak-Howard_BLAST-Premier-London_08635",
+          "views": 89,
+          "imageUrl": "event-photos/54199629219.jpg",
+          "pageUrl": "https://www.flickr.com/photos/blastesports/54199629219/",
+          "license": "All Rights Reserved",
+          "albumId": "72177720322521316",
+          "credit": "BLAST Esports"
+        }
       }
     ]
   },
@@ -1001,31 +994,11 @@ export const EVENT_YEARS: EventYear[] = [
       },
       {
         "name": "ESL Pro League Season 10 Americas",
-        "game": "CS",
-        "photo": {
-          "id": "",
-          "title": "ESL Pro League Season 10",
-          "views": 0,
-          "imageUrl": "event-photos/20191113_Jak-Howard_ESL-Pro-League-EU_06465-XL.jpg",
-          "pageUrl": "https://photos.eslgaming.com/2019/ESL-Pro-League/ESL-Pro-League-Season-10",
-          "license": "All Rights Reserved",
-          "albumId": "",
-          "credit": "ESL FACEIT Group"
-        }
+        "game": "CS"
       },
       {
         "name": "ESL Pro League Season 9 Americas",
-        "game": "CS",
-        "photo": {
-          "id": "",
-          "title": "ESL Pro League Season 9",
-          "views": 0,
-          "imageUrl": "event-photos/20190521_Graeme-Duncan_ESL-Pro-League-Season-9-Europe_08906-XL.jpg",
-          "pageUrl": "https://photos.eslgaming.com/2019/ESL-Pro-League/ESL-Pro-League-Season-9",
-          "license": "All Rights Reserved",
-          "albumId": "",
-          "credit": "ESL FACEIT Group"
-        }
+        "game": "CS"
       },
       {
         "name": "BLAST Pro Series Los Angeles",
