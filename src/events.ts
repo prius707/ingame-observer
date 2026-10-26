@@ -197,11 +197,11 @@ export const EVENT_YEARS: EventYear[] = [
         "game": "VALORANT",
         "albumTitle": "VALORANT Masters Santiago - Grand Finals",
         "photo": {
-          "id": "55148776212",
+          "id": "55149963099",
           "title": "VALORANT Masters Santiago - Grand Finals",
-          "views": 2817,
-          "imageUrl": "event-photos/55148776212.jpg",
-          "pageUrl": "https://www.flickr.com/photos/valorantesports/55148776212/",
+          "views": 2892,
+          "imageUrl": "event-photos/55149963099.jpg",
+          "pageUrl": "https://www.flickr.com/photos/valorantesports/55149963099/",
           "license": "All Rights Reserved",
           "albumId": "72177720332556428"
         }
