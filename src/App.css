@@ -1577,10 +1577,97 @@ body.invert .award-emmy--winner,
 
 .award figure.js-active .award-name {
   text-decoration: underline;
+  background: rgba(0, 0, 0, 0.58);
+  box-shadow: 0 0 0 0.4em rgba(0, 0, 0, 0.58);
+  border-radius: 1px;
 }
 
 .award figure.js-active img:not(.award-flag) {
   display: block;
+}
+
+/*
+  Overlay stills are position:fixed at z-index 1 (opacity ~0.62). Bright
+  photos (BLAST yellow, white stage light) wash out the white copy.
+  Scrim + raised text + chip/row backing keep AA contrast; skip when the
+  still is inlined (prefers-reduced-motion).
+*/
+.events-page:has(.award.is-active):not(:has(.award-inline-photo))::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.82) 0%,
+      rgba(0, 0, 0, 0.48) 32%,
+      rgba(0, 0, 0, 0.4) 58%,
+      rgba(0, 0, 0, 0.62) 100%
+    ),
+    radial-gradient(ellipse 75% 70% at 50% 38%, rgba(0, 0, 0, 0.38), transparent 72%);
+}
+
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-header,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .year h3,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .award figcaption,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-empty,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-credit,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .page-back {
+  position: relative;
+  z-index: 2;
+}
+
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-header,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .year h3,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .award-name,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-filter,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-empty,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-credit,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .page-back {
+  text-shadow:
+    0 1px 1px #000,
+    0 0 10px rgba(0, 0, 0, 0.9);
+}
+
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-hint {
+  opacity: 0.92;
+}
+
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-chip {
+  background: rgba(0, 0, 0, 0.78);
+  border-color: rgba(255, 255, 255, 0.72);
+  text-shadow: none;
+}
+
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-chip:hover,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-chip:focus-visible {
+  background: rgba(0, 0, 0, 0.92);
+  border-color: #fff;
+}
+
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-chip.is-on,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-chip.is-on:hover,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-chip.is-on:focus-visible {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+  text-shadow: none;
+}
+
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-chip:focus-visible,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-filter:focus-within {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .award-emmy {
+  opacity: 0.95;
+  padding: 0.12em 0.4em;
+  background: rgba(0, 0, 0, 0.72);
+  border-radius: 1px;
+  text-shadow: 0 1px 1px #000;
 }
 
 .award-inline-photo {
