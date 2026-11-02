@@ -1476,6 +1476,21 @@ body.invert #slider::-moz-range-thumb {
   accent-color: #fff;
 }
 
+.events-boardui {
+  margin: 1.15rem 0 1.85rem;
+  text-align: left;
+  text-transform: none;
+}
+
+.events-boardui__note {
+  margin: 0 0 0.65rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
 .events-page .year + .year {
   margin-top: 1.5em;
 }
@@ -1610,6 +1625,7 @@ body.invert .award-emmy--winner,
 }
 
 .events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-header,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-boardui,
 .events-page:has(.award.is-active):not(:has(.award-inline-photo)) .year h3,
 .events-page:has(.award.is-active):not(:has(.award-inline-photo)) .award figcaption,
 .events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-empty,
@@ -1620,6 +1636,7 @@ body.invert .award-emmy--winner,
 }
 
 .events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-header,
+.events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-boardui__note,
 .events-page:has(.award.is-active):not(:has(.award-inline-photo)) .year h3,
 .events-page:has(.award.is-active):not(:has(.award-inline-photo)) .award-name,
 .events-page:has(.award.is-active):not(:has(.award-inline-photo)) .events-filter,

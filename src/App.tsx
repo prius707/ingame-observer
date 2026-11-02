@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useId, useRef, useState } from 'react'
 import {
   CONTROLLER_EMAIL,
   CV_SECTIONS,
@@ -50,6 +50,11 @@ import {
   type View,
 } from './paths'
 import './App.css'
+
+const EventBoardUi = lazy(async () => {
+  const mod = await import('./EventBoardUi')
+  return { default: mod.EventBoardUi }
+})
 
 const STORAGE_KEY = 'priusSliderPos'
 const SECURITY_TXT = '/.well-known/security.txt'
@@ -1032,6 +1037,10 @@ function EventsPage({
           </label>
         </div>
       </header>
+
+      <Suspense fallback={null}>
+        <EventBoardUi groups={filtered} />
+      </Suspense>
 
       {empty ? (
         <p className="events-empty">

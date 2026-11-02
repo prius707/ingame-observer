@@ -1,7 +1,10 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
+
+const rootDir = path.dirname(fileURLToPath(import.meta.url))
 import {
   PAGE_DESCRIPTIONS,
   PAGE_TITLES,
@@ -171,4 +174,9 @@ function spaFallback404(): Plugin {
 export default defineConfig({
   base: '/',
   plugins: [react(), spaFallback404()],
+  resolve: {
+    alias: {
+      '@': path.resolve(rootDir, 'src'),
+    },
+  },
 })
