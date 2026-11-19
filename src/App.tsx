@@ -49,6 +49,7 @@ import {
   viewFromLocation,
   type View,
 } from './paths'
+import { parseSavedPitch } from './sliderPos'
 import './App.css'
 
 const STORAGE_KEY = 'priusSliderPos'
@@ -91,11 +92,8 @@ function App() {
   const [view, setView] = useState<View>(readInitialView)
   const [pos, setPos] = useState(() => {
     try {
-      const saved = sessionStorage.getItem(STORAGE_KEY)
-      if (saved != null) {
-        const n = Number(saved)
-        if (!Number.isNaN(n) && n >= 0 && n < PITCHES.length) return n
-      }
+      const n = parseSavedPitch(sessionStorage.getItem(STORAGE_KEY), PITCHES.length)
+      if (n != null) return n
     } catch {
       /* private mode / blocked storage */
     }
