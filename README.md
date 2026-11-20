@@ -1,5 +1,7 @@
 # prius · ingame.observer
 
+> **Deploying or previewing the site?** See [INSTALL.md](INSTALL.md).
+
 Hiring site for **prius** — Sports Emmy winner (four nominations, one win). VALORANT & Counter-Strike observer.
 
 Live: **https://ingame.observer/** · Repo: [github.com/prius707/ingame-observer](https://github.com/prius707/ingame-observer)
