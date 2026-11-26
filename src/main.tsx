@@ -9,7 +9,6 @@ import '@fontsource/libre-caslon-text/latin-700.css'
 import './index.css'
 import App from './App.tsx'
 import { DISCORD_INVITE } from './data'
-import { PERSON_JSON_LD_TEXT } from './siteMeta'
 
 /** /discord is a static redirect page; if the SPA still loads, bounce out. */
 function redirectDiscordIfNeeded() {
@@ -19,18 +18,7 @@ function redirectDiscordIfNeeded() {
   return true
 }
 
-function injectPersonJsonLd() {
-  if (document.querySelector('script[data-person-jsonld]')) return
-  const el = document.createElement('script')
-  el.type = 'application/ld+json'
-  el.dataset.personJsonld = '1'
-  el.textContent = PERSON_JSON_LD_TEXT
-  document.head.appendChild(el)
-}
-
 if (!redirectDiscordIfNeeded()) {
-  injectPersonJsonLd()
-
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <App />

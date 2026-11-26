@@ -1,6 +1,6 @@
 /** Curated watch-party chat lines for the Clips ticker (not a live embed). */
 
-import { assetPath } from './paths'
+import { assetPath } from './paths.ts'
 
 export type ChatLine = {
   user: string
@@ -14,11 +14,8 @@ export const CHAT_EMOTES = [
   'Clap',
   'CatJam',
   'peepoHappy',
-  'EZ',
   'BASED',
-  'NODDERS',
   'Gladge',
-  'AlienPls',
 ] as const
 
 export type ChatEmote = (typeof CHAT_EMOTES)[number]
@@ -30,132 +27,132 @@ export function emoteSrc(name: ChatEmote) {
 export const CHAT_LINES: ChatLine[] = [
   {
     user: 'jaylen_ttv',
-    color: '#1f8a70',
+    color: '#34d399',
     text: 'prius is the GOAT it has to be said',
   },
   {
     user: 'milo4k',
-    color: '#c45c26',
+    color: '#fb923c',
     text: 'that x-ray toggle was filthy :CatJam:',
   },
   {
     user: 'nassir',
-    color: '#2a6fdb',
+    color: '#60a5fa',
     text: 'So good.',
   },
   {
     user: 'kevinthethird',
-    color: '#b33b5c',
+    color: '#f472b6',
     text: 'You’re pretty good at it',
   },
   {
     user: 'ryu_cs',
-    color: '#0f7a8a',
+    color: '#22d3ee',
     text: 'obs cooking rn',
   },
   {
     user: 'softreset_',
-    color: '#6b4f2a',
+    color: '#d4a373',
     text: 'four Emmy noms and a win and still catching strays :PRIUS:',
   },
   {
     user: 'annafromohio',
-    color: '#3d6b4f',
+    color: '#6ee7b7',
     text: 'rare praise arc ??',
   },
   {
     user: 'bren4sen',
-    color: '#c0392b',
+    color: '#f87171',
     text: 'Thank you Prius I appreciate you :peepoHappy:',
   },
   {
     user: 'noctis92',
-    color: '#1a6b8a',
+    color: '#38bdf8',
     text: 'timing on that multi was insane',
   },
   {
     user: 'pablo_gg',
-    color: '#8a5a2b',
+    color: '#f59e0b',
     text: 'clip that xray toggle',
   },
   {
     user: 'yute_',
-    color: '#2f6b3a',
+    color: '#4ade80',
     text: 's1mple 1v2 was NOT even him btw',
   },
   {
     user: 'drewwins',
-    color: '#a14a3a',
+    color: '#fb7185',
     text: 'PRIUs W :Clap:',
   },
   {
     user: 'samiira',
-    color: '#1b6b9a',
+    color: '#67e8f9',
     text: 'wait the cam was actually cracked there',
   },
   {
     user: 'coldbrew7',
-    color: '#9a4a2a',
+    color: '#fdba74',
     text: 'chat stop blaming him he hit that :PRIUS:',
   },
   {
     user: 'nxde_',
-    color: '#2d7a4e',
+    color: '#5eead4',
     text: 'obs saved the round fr',
   },
   {
     user: 'markymarktv',
-    color: '#7a5a1a',
+    color: '#facc15',
     text: 'named in the toolkit patch and still catching Ls :Gladge:',
   },
   {
     user: 'louie_fps',
-    color: '#c45a6a',
+    color: '#f9a8d4',
     text: 'suspense xray then BAM',
   },
   {
     user: 'tristanx',
-    color: '#3a6a8a',
+    color: '#7dd3fc',
     text: 'tarik said goat out loud????',
   },
   {
     user: 'elli0t',
-    color: '#5a4a8a',
+    color: '#a78bfa',
     text: 'clean switch clean kill clean everything',
   },
   {
     user: 'jadeonmain',
-    color: '#8a3a4a',
+    color: '#fda4af',
     text: 'camera was BASED :BASED:',
   },
   {
     user: 'coryy',
-    color: '#1a7a5a',
+    color: '#2dd4bf',
     text: 'bro the hold was perfect',
   },
   {
     user: 'benji_live',
-    color: '#b35a20',
+    color: '#fb923c',
     text: 'how is the roast also a compliment :PRIUS:',
   },
   {
     user: 'skye0',
-    color: '#2a5a9a',
+    color: '#93c5fd',
     text: 'timing was filthy',
   },
   {
     user: 'omarrr',
-    color: '#6a3a2a',
+    color: '#e6a57e',
     text: 'wake up and smell the flowers lmao',
   },
   {
     user: 'nickfromchat',
-    color: '#0a6a7a',
+    color: '#38bdf8',
     text: 'caught the whole sequence for once chat',
   },
   {
     user: 'zoe_vct',
-    color: '#8a2a3a',
+    color: '#f472b6',
     text: 'PRIUs COOKED :PRIUS: :Clap:',
   },
 ]

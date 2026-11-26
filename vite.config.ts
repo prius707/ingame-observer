@@ -2,10 +2,13 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
+import { CLIPS } from './src/clipsData.ts'
 import {
   PAGE_DESCRIPTIONS,
   PAGE_TITLES,
+  PERSON_JSON_LD_TEXT,
   SPA_FOLDERS,
+  clipPageMeta,
   type MetaView,
 } from './src/siteMeta.ts'
 
@@ -16,6 +19,8 @@ type RouteMeta = {
   description: string
   canonical: string
   robots?: string
+  image?: string
+  imageAlt?: string
 }
 
 function metaForFolder(folder: string): RouteMeta {
@@ -90,6 +95,31 @@ function applyPageMeta(html: string, meta: RouteMeta): string {
     /(<link\s+rel="canonical"[\s\S]*?href=")[^"]*(")/,
     meta.canonical,
   )
+  if (meta.image) {
+    out = replaceCaptured(
+      out,
+      /(<meta\s+property="og:image"[\s\S]*?content=")[^"]*(")/,
+      meta.image,
+    )
+    out = replaceCaptured(
+      out,
+      /(<meta\s+name="twitter:image"[\s\S]*?content=")[^"]*(")/,
+      meta.image,
+    )
+    out = out.replace(/\s*<meta\s+property="og:image:(?:width|height)"[^>]*>/g, '')
+  }
+  if (meta.imageAlt) {
+    out = replaceCaptured(
+      out,
+      /(<meta\s+property="og:image:alt"[\s\S]*?content=")[^"]*(")/,
+      meta.imageAlt,
+    )
+    out = replaceCaptured(
+      out,
+      /(<meta\s+name="twitter:image:alt"[\s\S]*?content=")[^"]*(")/,
+      meta.imageAlt,
+    )
+  }
   if (meta.robots && !/name="robots"/.test(out)) {
     out = out.replace(
       '</head>',
@@ -107,7 +137,7 @@ function writeSitemap(dist: string, clipSlugs: string[]) {
     `${SITE}/events`,
     `${SITE}/contact`,
     `${SITE}/privacy`,
-    ...clipSlugs.map((slug) => `${SITE}/clips/${slug}`),
+    ...clipSlugs.map((slug) => `${SITE}/clips/${encodeURIComponent(slug)}`),
   ]
   const body = locs
     .map((loc) => `  <url>\n    <loc>${loc}</loc>\n  </url>`)
@@ -118,10 +148,21 @@ function writeSitemap(dist: string, clipSlugs: string[]) {
   )
 }
 
-/** Copy index → 404.html and real path folders so GitHub Pages returns 200. */
-function spaFallback404(): Plugin {
+/**
+ * Inject static Person JSON-LD into HTML and emit static route HTML files +
+ * 404.html + sitemap.xml so GitHub Pages serves clean URLs with 200 OK.
+ */
+function spaStaticPages(): Plugin {
   return {
-    name: 'spa-fallback-404',
+    name: 'spa-static-pages',
+    transformIndexHtml(html) {
+      if (html.includes('application/ld+json')) return html
+      const safeJson = PERSON_JSON_LD_TEXT.replace(/</g, '\\u003c')
+      return html.replace(
+        '</head>',
+        `    <script type="application/ld+json">${safeJson}</script>\n  </head>`,
+      )
+    },
     closeBundle() {
       const dist = path.resolve('dist')
       const index = path.join(dist, 'index.html')
@@ -139,30 +180,41 @@ function spaFallback404(): Plugin {
       )
 
       for (const folder of SPA_FOLDERS) {
-        const dir = path.join(dist, folder)
-        fs.mkdirSync(dir, { recursive: true })
-        fs.writeFileSync(
-          path.join(dir, 'index.html'),
-          applyPageMeta(html, metaForFolder(folder)),
-        )
+        const meta = metaForFolder(folder)
+        if (folder === 'clips') {
+          const dir = path.join(dist, 'clips')
+          fs.mkdirSync(dir, { recursive: true })
+          fs.writeFileSync(path.join(dir, 'index.html'), applyPageMeta(html, meta))
+        } else {
+          // Extensionless HTML file lets GitHub Pages serve /cv, /events, etc.
+          // directly with 200 OK instead of a 301 redirect to /cv/.
+          fs.writeFileSync(
+            path.join(dist, `${folder}.html`),
+            applyPageMeta(html, meta),
+          )
+        }
       }
 
-      const clipsSrc = fs.readFileSync(path.resolve('src/clips.ts'), 'utf8')
-      const slugs = [...clipsSrc.matchAll(/slug:\s*'([^']+)'/g)].map((m) => m[1])
-      for (const slug of slugs) {
-        const dir = path.join(dist, 'clips', slug)
-        fs.mkdirSync(dir, { recursive: true })
+      const clipsDir = path.join(dist, 'clips')
+      fs.mkdirSync(clipsDir, { recursive: true })
+      for (const clip of CLIPS) {
+        const { title, description } = clipPageMeta(clip)
         fs.writeFileSync(
-          path.join(dir, 'index.html'),
+          path.join(clipsDir, `${clip.slug}.html`),
           applyPageMeta(html, {
-            title: PAGE_TITLES.clips,
-            description: PAGE_DESCRIPTIONS.clips,
-            canonical: `${SITE}/clips/${encodeURIComponent(slug)}`,
+            title,
+            description,
+            canonical: `${SITE}/clips/${encodeURIComponent(clip.slug)}`,
+            image: `${SITE}/clips/${clip.file}.jpg`,
+            imageAlt: `${clip.title} — ${clip.note}`,
           }),
         )
       }
 
-      writeSitemap(dist, slugs)
+      writeSitemap(
+        dist,
+        CLIPS.map((c) => c.slug),
+      )
     },
   }
 }
@@ -170,5 +222,5 @@ function spaFallback404(): Plugin {
 /** Custom domain: https://ingame.observer/ */
 export default defineConfig({
   base: '/',
-  plugins: [react(), spaFallback404()],
+  plugins: [react(), spaStaticPages()],
 })

@@ -1,6 +1,4 @@
-/*
-  GitHub Pages ignores _headers. Kept for Cloudflare Pages / Netlify — see docs/cloudflare-headers.md
-*/
+# GitHub Pages ignores _headers. Kept for Cloudflare Pages / Netlify — see docs/cloudflare-headers.md
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

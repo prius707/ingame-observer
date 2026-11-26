@@ -125,7 +125,7 @@ export function eventTravelFlag(name: string, year?: number): EventFlag | null {
 export type EventGameFilter = 'all' | 'VALORANT' | 'CS'
 export type EventRangeFilter = 'recent' | 'all'
 
-/** Year-level stand-in for last ~24 months (rows are year-tagged only). */
+/** Earliest calendar year included in the "Last 3 years" cut (rows are year-tagged only). */
 export function recentEventYearFrom(now = new Date()): number {
   return now.getFullYear() - 2
 }
