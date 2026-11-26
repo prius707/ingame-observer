@@ -4,6 +4,11 @@ This repository deploys continuously to GitHub Pages from `main` (`.github/workf
 
 ## 2026-11-26
 
+- Fixed site bugs, accessibility/SEO issues, and split `src/App.tsx` into per-page modules (`src/pages/`, `src/components/`, `src/clipsData.ts`) (#42):
+  - Separated Events hover vs. pinned still state across desktop, mobile, keyboard, and `prefers-reduced-motion`, fixed `BOOK` button contrast in invert mode, fixed `.page-footer` z-index, and removed a ref read during render.
+  - Preserved video volume/mute and updated document/OG metadata across clip changes without hijacking `ArrowUp`/`ArrowDown` or focused `<video>` controls.
+  - Improved chat ticker contrast (WCAG AA), reduced-motion/screen-reader handling, marquee seam, photosensitivity pause on direct jumps to max, mobile drawer focus trap, and `Skip to content` with hash URLs.
+  - Hardened `assetPath()` against protocol-relative `//` URLs, injected static `Person` JSON-LD and per-clip OG metadata at build time, generated `sitemap.xml` and extensionless `.html` routes for GitHub Pages, fixed `public/_headers` comment syntax, preserved `scripts/event-photo-map.json` on re-runs, removed unused assets and `NEW_REPO.md`, added PR/lint checks to CI, and expanded unit tests (`tests/*.test.ts`).
 - Added `CHANGELOG.md`.
 - Updated `.gitignore` to ignore `.env` and `.env.*` files while keeping `.env.example` allowed.
 
