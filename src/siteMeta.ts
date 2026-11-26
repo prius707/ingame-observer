@@ -40,7 +40,7 @@ export const PERSON_JSON_LD = {
     'Sports Emmy winner. VALORANT and Counter-Strike observer for Majors, Masters, and Champions.',
   url: 'https://ingame.observer/',
   email: 'mailto:dj@ingame.observer',
-  image: 'https://ingame.observer/og-image.jpg',
+  image: 'https://ingame.observer/og-image.jpg?v=2',
   sameAs: [
     'https://x.com/priusOBS',
     'https://www.linkedin.com/in/david-kuntz-3521847a',
@@ -70,4 +70,11 @@ export type MetaView = keyof typeof PAGE_TITLES
 
 export function descriptionForView(view: MetaView): string {
   return PAGE_DESCRIPTIONS[view]
+}
+
+export function clipPageMeta(clip: { title: string; note: string; quote: string }) {
+  return {
+    title: `${clip.title} · ${PAGE_TITLES.clips}`,
+    description: `${clip.note} — "${clip.quote}"`,
+  }
 }

@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 # Least privilege at workflow level; jobs raise only what they need.
@@ -10,7 +12,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: pages
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.ref) || 'pages' }}
   cancel-in-progress: true
 
 jobs:
@@ -39,7 +41,11 @@ jobs:
         run: npm ci
 
       - name: Audit
+        continue-on-error: true
         run: npm audit --audit-level=high
+
+      - name: Lint
+        run: npm run lint
 
       - name: Test
         run: npm test
@@ -48,12 +54,14 @@ jobs:
         run: npm run build
 
       - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:
           path: dist
 
   deploy:
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       pages: write

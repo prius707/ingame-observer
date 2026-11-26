@@ -72,7 +72,19 @@ def main() -> None:
 
     new, n = re.subn(r'"imageUrl":\s*"([^"]+)"', repl, text)
     EVENTS.write_text(new)
-    MAP.write_text(json.dumps({k: v for k, v in mapping.items() if k.startswith("http")}, indent=2) + "\n")
+    existing_map: dict[str, str] = {}
+    if MAP.exists():
+        try:
+            loaded = json.loads(MAP.read_text())
+            if isinstance(loaded, dict):
+                existing_map = {str(k): str(v) for k, v in loaded.items()}
+        except json.JSONDecodeError:
+            existing_map = {}
+    merged_map = {
+        **existing_map,
+        **{k: v for k, v in mapping.items() if k.startswith("http")},
+    }
+    MAP.write_text(json.dumps(merged_map, indent=2) + "\n")
     print(f"rewrote {n} imageUrl fields")
 
 

@@ -1,78 +1,51 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import {
-  CONTROLLER_EMAIL,
-  CV_SECTIONS,
   DEFAULT_PITCH,
   PAGE_LINKS,
   PAGE_TITLES,
   PITCHES,
   SITE,
-  SITE_TAGLINE,
   SOCIAL,
 } from './data'
-import { BOOKING, PAGE_DESCRIPTIONS } from './siteMeta'
-import {
-  AMERICAS_FLICKR_CREDIT,
-  AMERICAS_FLICKR_OWNER_URL,
-  EVENT_YEARS,
-  FLICKR_CREDIT,
-  FLICKR_NOTE,
-  FLICKR_OWNER_URL,
-  eventTravelFlag,
-  filterEventYears,
-  type EventEntry,
-  type EventFlag,
-  type EventGameFilter,
-  type EventRangeFilter,
-} from './events'
-import { CV_QUOTES } from './quotes'
-import {
-  CLIPS,
-  clipHash,
-  clipIndexFromSlug,
-  clipPageUrl,
-  clipPoster,
-  clipQuoteRepeatsTitle,
-  clipSrc,
-  parseClipSlugFromLocation,
-} from './clips'
-import { CHAT_LINES, emoteSrc, parseChatText } from './chatLines'
+import { BOOKING, PAGE_DESCRIPTIONS, clipPageMeta } from './siteMeta'
+import { CLIPS, clipIndexFromSlug, parseClipSlugFromLocation } from './clips'
 import {
   assetPath,
   canonicalForView,
-  clipPath,
-  eventFlagSrc,
-  eventPhotoSrc,
-  httpsUrl,
   pathForView,
-  usesClipHash,
   viewFromLocation,
   type View,
 } from './paths'
 import { parseSavedPitch } from './sliderPos'
+import { CvPage } from './pages/CvPage'
+import { ClipsPage } from './pages/ClipsPage'
+import { EventsPage } from './pages/EventsPage'
+import { ContactPage } from './pages/ContactPage'
+import { PrivacyNotice } from './pages/PrivacyNotice'
+import { NotFoundPage } from './pages/NotFoundPage'
 import './App.css'
 
 const STORAGE_KEY = 'priusSliderPos'
-const SECURITY_TXT = '/.well-known/security.txt'
+const TALLEST_PITCH = PITCHES.reduce((a, b) => (a.weight >= b.weight ? a : b))
 
 function readInitialView(): View {
   return viewFromLocation()
 }
 
-function setMeta(
-  selector: string,
-  attr: string,
-  value: string,
-) {
+function setMeta(selector: string, attr: string, value: string) {
   const el = document.querySelector<HTMLMetaElement>(selector)
   if (el) el.setAttribute(attr, value)
 }
 
 function setDocumentMeta(view: View, clipSlug?: string | null) {
-  const title = PAGE_TITLES[view]
-  const description = PAGE_DESCRIPTIONS[view]
+  const clipIndex = view === 'clips' ? clipIndexFromSlug(clipSlug) : -1
+  const clip = clipIndex >= 0 ? CLIPS[clipIndex] : null
+  const { title, description } = clip
+    ? clipPageMeta(clip)
+    : { title: PAGE_TITLES[view], description: PAGE_DESCRIPTIONS[view] }
+
   document.title = title
-  const canonical = canonicalForView(view, clipSlug)
+  const canonical = canonicalForView(view, clip?.slug ?? clipSlug)
   let link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')
   if (!link) {
     link = document.createElement('link')
@@ -112,10 +85,32 @@ function App() {
   const heat = pos / max
   const hardMode = heat > 0.85
   const flashMode = pos === max && !reduceMotion && !narrow
-  const sizeGuideRef = useRef<HTMLParagraphElement>(null)
   const menuToggleRef = useRef<HTMLButtonElement>(null)
   const didNavRef = useRef(false)
   const drawerId = useId()
+
+  const handleClipChange = useCallback((slug: string) => {
+    setDocumentMeta('clips', slug)
+  }, [])
+
+  const updatePos = useCallback(
+    (next: number) => {
+      setPos((prev) => {
+        const clamped = Math.max(0, Math.min(next, max))
+        // Require pausing on the warning step before jumping straight into flash mode.
+        if (
+          clamped === max &&
+          prev < max - 1 &&
+          !reduceMotion &&
+          !narrow
+        ) {
+          return max - 1
+        }
+        return clamped
+      })
+    },
+    [max, reduceMotion, narrow],
+  )
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -178,7 +173,7 @@ function App() {
       return
     }
     setInvert(true)
-    const id = window.setInterval(() => setInvert((v) => !v), 280)
+    const id = window.setInterval(() => setInvert((v) => !v), 340)
     return () => window.clearInterval(id)
   }, [flashMode, menuOpen, view])
 
@@ -192,6 +187,7 @@ function App() {
       'hard-mode',
       hardMode && !flashMode && view === 'home' && !reduceMotion,
     )
+    return () => document.body.classList.remove('hard-mode')
   }, [hardMode, flashMode, view, reduceMotion])
 
   useEffect(() => {
@@ -200,6 +196,7 @@ function App() {
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', menuOpen)
+    return () => document.body.classList.remove('menu-open')
   }, [menuOpen])
 
   useEffect(() => {
@@ -262,18 +259,22 @@ function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [view, menuOpen, max])
 
-  const goHome = () => {
+  const goHome = useCallback(() => {
     setMenuOpen(false)
     setView('home')
-    history.pushState(null, '', '/')
-  }
+    if (window.location.pathname !== '/' || window.location.hash !== '') {
+      history.pushState(null, '', '/')
+    }
+  }, [])
 
-  const goView = (next: View) => {
+  const goView = useCallback((next: Exclude<View, 'notfound'>) => {
     setMenuOpen(false)
-    if (next === 'notfound') return
     setView(next)
-    history.pushState(null, '', pathForView(next))
-  }
+    const target = pathForView(next)
+    if (window.location.pathname !== target || window.location.hash !== '') {
+      history.pushState(null, '', target)
+    }
+  }, [])
 
   const onMenuNav = (href: string) => {
     if (href === '/privacy' || href === '#privacy') goView('privacy')
@@ -301,7 +302,16 @@ function App() {
 
   return (
     <div className={homeClass}>
-      <a className="skip-link" href="#main">
+      <a
+        className="skip-link"
+        href="#main"
+        onClick={(e) => {
+          e.preventDefault()
+          const main = document.getElementById('main')
+          main?.focus()
+          main?.scrollIntoView({ behavior: 'auto', block: 'start' })
+        }}
+      >
         Skip to content
       </a>
 
@@ -353,10 +363,9 @@ function App() {
           </button>
         </div>
         {menuOpen && (
-          <button
-            type="button"
+          <div
             className="menu-backdrop"
-            aria-label="Close menu"
+            aria-hidden="true"
             onClick={() => setMenuOpen(false)}
           />
         )}
@@ -461,15 +470,27 @@ function App() {
 
       <main id="main" className="wrapper" tabIndex={-1}>
         {view === 'privacy' ? (
-          <PrivacyNotice onBack={goHome} onGo={goView} />
+          <PrivacyNotice
+            storageKey={STORAGE_KEY}
+            onBack={goHome}
+            onGo={goView}
+          />
         ) : view === 'contact' ? (
-          <ContactPage onBack={goHome} />
+          <ContactPage onBack={goHome} onGo={goView} />
         ) : view === 'cv' ? (
-          <CvPage onBack={goHome} />
+          <CvPage onBack={goHome} onGo={goView} />
         ) : view === 'clips' ? (
-          <ClipsPage onBack={goHome} />
+          <ClipsPage
+            onBack={goHome}
+            onGo={goView}
+            onClipChange={handleClipChange}
+          />
         ) : view === 'events' ? (
-          <EventsPage onBack={goHome} reduceMotion={reduceMotion} />
+          <EventsPage
+            onBack={goHome}
+            onGo={goView}
+            reduceMotion={reduceMotion}
+          />
         ) : view === 'notfound' ? (
           <NotFoundPage onBack={goHome} onGo={goView} />
         ) : (
@@ -478,14 +499,10 @@ function App() {
               <div
                 id="output"
                 className={hardMode ? 'is-hot' : undefined}
-                style={{ minHeight: sizeGuideRef.current?.offsetHeight }}
                 aria-live="polite"
               >
-                <p className="size-guide" ref={sizeGuideRef} aria-hidden="true">
-                  {
-                    PITCHES.reduce((a, b) => (a.weight >= b.weight ? a : b))
-                      .content
-                  }
+                <p className="size-guide" aria-hidden="true">
+                  {TALLEST_PITCH.content}
                 </p>
                 <span key={pos}>{pitch.content}</span>
               </div>
@@ -511,7 +528,6 @@ function App() {
       {view === 'home' && heat > 0.78 && !reduceMotion ? (
         <div className="tactibear" aria-hidden="true">
           <img
-            key={heat > 0.78 ? 'squish-on' : 'squish-off'}
             src={assetPath('mascot/tactibear.webp')}
             alt=""
             width={220}
@@ -522,11 +538,14 @@ function App() {
       ) : null}
 
       {view === 'home' &&
-      pos === max - 1 &&
+      pos >= max - 2 &&
+      pos < max &&
       !reduceMotion &&
       !narrow ? (
         <p className="epilepsy-warn" role="status">
-          Photosensitivity warning: the next step flashes black &amp; white.
+          {pos === max - 1
+            ? 'Photosensitivity warning: the next step flashes black & white.'
+            : 'Photosensitivity warning: max hard sell flashes black & white.'}
         </p>
       ) : null}
 
@@ -566,7 +585,7 @@ function App() {
                   ? 'Balanced'
                   : 'Hard sell'
             }
-            onChange={(e) => setPos(Number(e.target.value))}
+            onChange={(e) => updatePos(Number(e.target.value))}
           />
           <p className="site-credit">
             Inspiration taken from getcoleman.com
@@ -574,1052 +593,6 @@ function App() {
         </div>
       )}
     </div>
-  )
-}
-
-function PageFooter() {
-  return (
-    <footer className="page-footer">
-      <p className="page-footer__name">{SITE.legalName}</p>
-      <p className="page-footer__availability">{SITE.availability}</p>
-      <p className="page-footer__book">
-        <a href={SOCIAL.mailto} aria-label={BOOKING.aria}>
-          {BOOKING.longLabel}
-        </a>
-      </p>
-      <p className="page-footer__contact">
-        <a href={SOCIAL.mailto}>{SOCIAL.email}</a>
-        {' · '}
-        <a
-          href={SOCIAL.twitter}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          @priusOBS
-        </a>
-        {' · '}
-        <a href="/privacy">Privacy</a>
-        {' · '}
-        <a href={SECURITY_TXT}>security.txt</a>
-      </p>
-    </footer>
-  )
-}
-
-function CvPage({ onBack }: { onBack: () => void }) {
-  return (
-    <article className="cv-page">
-      <h2 className="sr-only">CV</h2>
-      <p className="cv-name">{SITE.legalName}</p>
-      <p className="cv-lead">{SITE_TAGLINE}</p>
-      <p className="cv-positioning">{SITE.positioning}</p>
-      <p className="cv-availability">
-        {SITE.availability}
-        {' · '}
-        <a href={SOCIAL.mailto} aria-label={BOOKING.aria}>
-          {BOOKING.longLabel}
-        </a>
-      </p>
-
-      <div className="cv-quotes">
-        {CV_QUOTES.map((q) => (
-          <blockquote key={q.text.slice(0, 32)} className="cv-quote">
-            <p>&ldquo;{q.text}&rdquo;</p>
-            <footer>{q.attribution}</footer>
-          </blockquote>
-        ))}
-      </div>
-
-      <div className="cv-body">
-        {CV_SECTIONS.map((section) => (
-          <section key={section.title} className="cv-section">
-            <h3>{section.title}</h3>
-            {section.lines.map((line) => (
-              <p key={line}>{line}</p>
-            ))}
-          </section>
-        ))}
-      </div>
-
-      <p className="cv-print">
-        <button
-          type="button"
-          className="text-btn"
-          onClick={() => window.print()}
-        >
-          Print / save as PDF
-        </button>
-      </p>
-
-      <PageFooter />
-
-      <p className="page-back">
-        <button type="button" className="text-btn" onClick={onBack}>
-          ← Back to the pitch
-        </button>
-      </p>
-    </article>
-  )
-}
-
-function ChatTicker() {
-  // Duplicate for a seamless CSS marquee loop.
-  const loop = [...CHAT_LINES, ...CHAT_LINES]
-
-  return (
-    <aside className="chat-ticker" aria-label="Curated watch-party chat">
-      <p className="chat-ticker__label">Chat</p>
-      <div className="chat-ticker__viewport">
-        <ul className="chat-ticker__track">
-          {loop.map((line, i) => (
-            <li key={`${line.user}-${i}`} className="chat-ticker__line">
-              <span className="chat-ticker__user" style={{ color: line.color }}>
-                {line.user}
-              </span>
-              <span className="chat-ticker__text">
-                {parseChatText(line.text).map((part, j) =>
-                  part.type === 'emote' ? (
-                    <img
-                      key={j}
-                      className="chat-ticker__emote"
-                      src={emoteSrc(part.name)}
-                      alt={part.name}
-                      title={part.name}
-                      width={28}
-                      height={28}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  ) : (
-                    <span key={j}>{part.value}</span>
-                  ),
-                )}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </aside>
-  )
-}
-
-const CLIP_DEFAULT_VOLUME = 0.3
-
-function ClipsPage({ onBack }: { onBack: () => void }) {
-  const initialSlug = parseClipSlugFromLocation()
-  const initialIndex = clipIndexFromSlug(initialSlug)
-  const [index, setIndex] = useState(initialIndex >= 0 ? initialIndex : 0)
-  const [shouldPlay, setShouldPlay] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const stripRef = useRef<HTMLUListElement>(null)
-  const clip = CLIPS[index]
-  const twitchUrl = clipPageUrl(clip.slug)
-  const total = CLIPS.length
-
-  const select = useCallback((i: number, play = true) => {
-    const next = ((i % total) + total) % total
-    setIndex(next)
-    setShouldPlay(play)
-    const slug = CLIPS[next].slug
-    if (usesClipHash()) {
-      const nextHash = clipHash(slug)
-      if (window.location.hash !== nextHash) {
-        history.replaceState(null, '', nextHash)
-      }
-    } else {
-      const nextPath = clipPath(slug)
-      if (window.location.pathname !== nextPath) {
-        history.replaceState(null, '', nextPath)
-      }
-    }
-  }, [total])
-
-  const pickRandom = () => {
-    if (total <= 1) return
-    let next = index
-    while (next === index) {
-      next = Math.floor(Math.random() * total)
-    }
-    select(next)
-  }
-
-  function applyDefaultVolume(el: HTMLVideoElement | null) {
-    if (!el) return
-    el.volume = CLIP_DEFAULT_VOLUME
-  }
-
-  useEffect(() => {
-    const known = parseClipSlugFromLocation()
-    const slug = known ?? CLIPS[0].slug
-    if (usesClipHash()) {
-      if (!window.location.hash.startsWith('#clips/') || !known) {
-        history.replaceState(null, '', clipHash(slug))
-      }
-      return
-    }
-    if (
-      window.location.pathname === '/clips' ||
-      window.location.pathname === '/clips/' ||
-      !known
-    ) {
-      history.replaceState(null, '', clipPath(slug))
-    }
-  }, [])
-
-  useEffect(() => {
-    const onHash = () => {
-      const slug = parseClipSlugFromLocation()
-      const i = clipIndexFromSlug(slug)
-      if (i >= 0) {
-        setIndex(i)
-        setShouldPlay(false)
-      }
-    }
-    window.addEventListener('hashchange', onHash)
-    window.addEventListener('popstate', onHash)
-    return () => {
-      window.removeEventListener('hashchange', onHash)
-      window.removeEventListener('popstate', onHash)
-    }
-  }, [])
-
-  useEffect(() => {
-    const el = videoRef.current
-    applyDefaultVolume(el)
-    if (!el) return
-    el.setAttribute('controlsList', 'nodownload noremoteplayback')
-    try {
-      el.disablePictureInPicture = true
-    } catch {
-      /* older browsers */
-    }
-  }, [index])
-
-  useEffect(() => {
-    const el = videoRef.current
-    if (!el || !shouldPlay) return
-    applyDefaultVolume(el)
-    void el.play().catch(() => {
-      /* autoplay blocked until gesture — controls still work */
-    })
-  }, [index, shouldPlay])
-
-  useEffect(() => {
-    const activeBtn = stripRef.current?.querySelector<HTMLElement>('[aria-current="true"]')
-    activeBtn?.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' })
-  }, [index])
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (document.body.classList.contains('menu-open')) return
-      if (e.metaKey || e.ctrlKey || e.altKey) return
-      const target = e.target
-      if (
-        target instanceof HTMLElement &&
-        (target.closest('input, textarea, select, [contenteditable="true"]') ||
-          target.isContentEditable)
-      ) {
-        return
-      }
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        e.preventDefault()
-        select(index + 1)
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault()
-        select(index - 1)
-      }
-    }
-    // Capture so ←/→ still change clips when the video is focused (not seek).
-    window.addEventListener('keydown', onKey, true)
-    return () => window.removeEventListener('keydown', onKey, true)
-  }, [index, select])
-  return (
-    <article className="clips-page">
-      <header className="clips-header">
-        <h2>Clips</h2>
-        <p className="clips-lead">
-          Casters and co-streams roasting the camera work. Comes with the chair.
-        </p>
-        <p className="clips-keys">
-          <span className="clips-keys__hint">← → or ↑ ↓ to change clip</span>
-          <button
-            type="button"
-            className="text-btn clips-keys__random"
-            onClick={pickRandom}
-          >
-            Random clip
-          </button>
-        </p>
-      </header>
-
-      <div className="clips-viewer">
-        <div className="clip-stage">
-          <video
-            ref={videoRef}
-            key={clip.file}
-            controls
-            controlsList="nodownload noremoteplayback"
-            disablePictureInPicture
-            disableRemotePlayback
-            playsInline
-            preload="metadata"
-            poster={clipPoster(clip.file)}
-            src={clipSrc(clip.file)}
-            aria-label={clip.title}
-            draggable={false}
-            onContextMenu={(e) => e.preventDefault()}
-            onDragStart={(e) => e.preventDefault()}
-            onLoadedMetadata={(e) => applyDefaultVolume(e.currentTarget)}
-            onEnded={() => select(index + 1)}
-          />
-        </div>
-
-        <div className="clip-now">
-          <div className="clip-now__top">
-            <p className="clip-now__count">
-              {index + 1} / {total}
-            </p>
-            <div className="clip-now__nav">
-              <button
-                type="button"
-                className="clip-nav-btn"
-                onClick={() => select(index - 1)}
-                aria-label="Previous clip"
-              >
-                ←
-              </button>
-              <button
-                type="button"
-                className="clip-nav-btn"
-                onClick={() => select(index + 1)}
-                aria-label="Next clip"
-              >
-                →
-              </button>
-            </div>
-          </div>
-          <h3 className="clip-now__title">{clip.title}</h3>
-          <p className="clip-note">{clip.note}</p>
-          {clipQuoteRepeatsTitle(clip) ? null : (
-            <blockquote className="clip-quote">
-              <p>&ldquo;{clip.quote}&rdquo;</p>
-            </blockquote>
-          )}
-          {twitchUrl ? (
-            <p className="clip-original">
-              <a
-                href={twitchUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Open original on Twitch
-              </a>
-            </p>
-          ) : null}
-        </div>
-      </div>
-
-      <ChatTicker />
-
-      <ul
-        ref={stripRef}
-        className="clips-strip"
-        aria-label="Clip playlist"
-      >
-        {CLIPS.map((item, i) => {
-          const active = i === index
-          return (
-            <li key={item.slug}>
-              <button
-                type="button"
-                className={`clips-strip__item${active ? ' is-active' : ''}`}
-                onClick={() => select(i)}
-                aria-current={active ? 'true' : undefined}
-              >
-                <img
-                  src={clipPoster(item.file)}
-                  alt=""
-                  width={160}
-                  height={90}
-                  loading={i === 0 ? 'eager' : 'lazy'}
-                  decoding="async"
-                />
-                <span className="clips-strip__title">{item.title}</span>
-              </button>
-            </li>
-          )
-        })}
-      </ul>
-
-      <PageFooter />
-
-      <p className="page-back">
-        <button type="button" className="text-btn" onClick={onBack}>
-          ← Back to the pitch
-        </button>
-      </p>
-    </article>
-  )
-}
-
-function EventsPage({
-  onBack,
-  reduceMotion,
-}: {
-  onBack: () => void
-  reduceMotion: boolean
-}) {
-  const [activeId, setActiveId] = useState<string | null>(null)
-  const [emmyOnly, setEmmyOnly] = useState(false)
-  const [game, setGame] = useState<EventGameFilter>('all')
-  const [range, setRange] = useState<EventRangeFilter>('recent')
-
-  const filtered = filterEventYears(EVENT_YEARS, { game, range, emmyOnly })
-  const empty = filtered.length === 0
-
-  return (
-    <article className="events-page">
-      <header className="events-header">
-        <h2>Events</h2>
-        <p className="events-hint">Tap or hover an event to view the still</p>
-        <div className="events-toolbar">
-          <div className="events-filters" role="group" aria-label="Game">
-            {(
-              [
-                ['all', 'All games'],
-                ['VALORANT', 'VALORANT'],
-                ['CS', 'Counter-Strike'],
-              ] as const
-            ).map(([value, label]) => (
-              <button
-                key={value}
-                type="button"
-                className={`events-chip${game === value ? ' is-on' : ''}`}
-                aria-pressed={game === value}
-                onClick={() => setGame(value)}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-          <div className="events-filters" role="group" aria-label="Years">
-            <button
-              type="button"
-              className={`events-chip${range === 'recent' ? ' is-on' : ''}`}
-              aria-pressed={range === 'recent'}
-              onClick={() => setRange('recent')}
-            >
-              Last 24 months
-            </button>
-            <button
-              type="button"
-              className={`events-chip${range === 'all' ? ' is-on' : ''}`}
-              aria-pressed={range === 'all'}
-              onClick={() => setRange('all')}
-            >
-              All years
-            </button>
-          </div>
-          <label className="events-filter">
-            <input
-              type="checkbox"
-              checked={emmyOnly}
-              onChange={(e) => setEmmyOnly(e.target.checked)}
-            />
-            Sports Emmy only
-          </label>
-        </div>
-      </header>
-
-      {empty ? (
-        <p className="events-empty">
-          Nothing in this cut.{' '}
-          {range === 'recent' ? (
-            <button
-              type="button"
-              className="text-btn"
-              onClick={() => setRange('all')}
-            >
-              Show all years
-            </button>
-          ) : game !== 'all' ? (
-            <button
-              type="button"
-              className="text-btn"
-              onClick={() => setGame('all')}
-            >
-              Show all games
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="text-btn"
-              onClick={() => setEmmyOnly(false)}
-            >
-              Clear Emmy filter
-            </button>
-          )}
-        </p>
-      ) : null}
-
-      {filtered.map((group) => (
-        <section key={group.year} id={`events-year-${group.year}`} className="year">
-          <h3>{group.year}</h3>
-          {group.events.map((event) => (
-            <EventRow
-              key={`${group.year}-${event.name}`}
-              event={event}
-              year={group.year}
-              active={activeId === `${group.year}-${event.name}`}
-              inlinePhoto={reduceMotion}
-              onActivate={() =>
-                setActiveId(`${group.year}-${event.name}`)
-              }
-              onDeactivate={() =>
-                setActiveId((id) =>
-                  id === `${group.year}-${event.name}` ? null : id,
-                )
-              }
-            />
-          ))}
-        </section>
-      ))}
-
-      <footer className="events-credit">
-        <p>
-          VALORANT stills credited to{' '}
-          <a href={FLICKR_OWNER_URL} target="_blank" rel="noopener noreferrer">
-            {FLICKR_CREDIT}
-          </a>
-          ; Americas league to{' '}
-          <a
-            href={AMERICAS_FLICKR_OWNER_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {AMERICAS_FLICKR_CREDIT}
-          </a>
-          . CS / other events use organizer albums where we have them — check
-          each credit. Files are hosted here; links go to the originals.
-        </p>
-        <p className="events-credit-note">{FLICKR_NOTE}</p>
-      </footer>
-
-      <PageFooter />
-
-      <p className="page-back">
-        <button type="button" className="text-btn" onClick={onBack}>
-          ← Back to the pitch
-        </button>
-      </p>
-    </article>
-  )
-}
-
-function EventFlagMark({ flag }: { flag: EventFlag | null }) {
-  if (!flag) return null
-  const src = eventFlagSrc(flag.code)
-  if (!src) return null
-  return (
-    <img
-      className="award-flag"
-      src={src}
-      alt={flag.country}
-      width={16}
-      height={12}
-      decoding="async"
-    />
-  )
-}
-
-function EventRow({
-  event,
-  year,
-  active,
-  inlinePhoto,
-  onActivate,
-  onDeactivate,
-}: {
-  event: EventEntry
-  year: number
-  active: boolean
-  inlinePhoto: boolean
-  onActivate: () => void
-  onDeactivate: () => void
-}) {
-  const photoSrc = event.photo?.imageUrl
-    ? eventPhotoSrc(event.photo.imageUrl)
-    : null
-  const creditHref = event.photo?.pageUrl
-    ? httpsUrl(event.photo.pageUrl)
-    : null
-  const hasPhoto = Boolean(photoSrc)
-  const label = event.game === 'CS' ? `${event.name} (CS)` : event.name
-  const flag = eventTravelFlag(event.name, year)
-  const emmyLabel =
-    event.emmy === 'winner'
-      ? event.emmyAwardYear
-        ? `Sports Emmy Winner · ${event.emmyAwardYear}`
-        : 'Sports Emmy Winner'
-      : event.emmy === 'nominated'
-        ? 'Emmy Nominated'
-        : null
-  const photoCredit =
-    event.photo?.credit ||
-    (event.photo?.pageUrl.includes('vctamericas')
-      ? AMERICAS_FLICKR_CREDIT
-      : event.photo?.pageUrl.includes('eslgaming.com') ||
-          event.photo?.pageUrl.includes('smugmug.com')
-        ? 'ESL FACEIT Group'
-        : event.photo?.pageUrl.includes('blast')
-          ? 'BLAST Esports'
-          : FLICKR_CREDIT)
-
-  return (
-    <div className={`award${active && hasPhoto ? ' is-active' : ''}`}>
-      <figure
-        className={active && hasPhoto ? 'js-active' : undefined}
-        onMouseEnter={() => {
-          if (hasPhoto) onActivate()
-        }}
-        onMouseLeave={() => {
-          if (hasPhoto) onDeactivate()
-        }}
-      >
-        <figcaption>
-          {hasPhoto ? (
-            <button
-              type="button"
-              className="award-name"
-              onClick={(e) => {
-                e.preventDefault()
-                if (active) onDeactivate()
-                else onActivate()
-              }}
-              onFocus={() => onActivate()}
-              aria-pressed={active}
-            >
-              {label}
-              <EventFlagMark flag={flag} />
-              {emmyLabel ? (
-                <span className={`award-emmy award-emmy--${event.emmy}`}>
-                  {emmyLabel}
-                </span>
-              ) : null}
-              {event.role ? (
-                <span className="award-role">{event.role}</span>
-              ) : null}
-            </button>
-          ) : (
-            <span className="award-name award-name--static">
-              {label}
-              <EventFlagMark flag={flag} />
-              {emmyLabel ? (
-                <span className={`award-emmy award-emmy--${event.emmy}`}>
-                  {emmyLabel}
-                </span>
-              ) : null}
-              {event.role ? (
-                <span className="award-role">{event.role}</span>
-              ) : null}
-            </span>
-          )}
-        </figcaption>
-        {active && photoSrc && event.photo ? (
-          <img
-            className={inlinePhoto ? 'award-inline-photo' : undefined}
-            src={photoSrc}
-            alt={event.photo.title || `${event.name} still`}
-            decoding="async"
-            loading="lazy"
-            referrerPolicy="no-referrer"
-          />
-        ) : null}
-      </figure>
-      {active && event.photo && inlinePhoto ? (
-        <p className="award-inline-credit">
-          {creditHref ? (
-            <a
-              href={creditHref}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {event.photo.title || 'Photo'}
-            </a>
-          ) : (
-            <span>{event.photo.title || 'Photo'}</span>
-          )}
-          <span>
-            {event.photo.license} · {photoCredit}
-          </span>
-        </p>
-      ) : null}
-      {active && event.photo && !inlinePhoto ? (
-        <p className="award-photo-credit">
-          {creditHref ? (
-            <a
-              className="award-photo-credit__title"
-              href={creditHref}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {event.photo.title || 'Photo'}
-            </a>
-          ) : (
-            <span className="award-photo-credit__title">
-              {event.photo.title || 'Photo'}
-            </span>
-          )}
-          <span className="award-photo-credit__copy">
-            {event.photo.license} · {photoCredit}
-          </span>
-        </p>
-      ) : null}
-    </div>
-  )
-}
-
-function NotFoundPage({
-  onBack,
-  onGo,
-}: {
-  onBack: () => void
-  onGo: (next: Exclude<View, 'notfound'>) => void
-}) {
-  return (
-    <article className="not-found">
-      <header className="not-found__intro">
-        <p className="not-found__code">404</p>
-        <h2 className="not-found__title">Missed the play.</h2>
-        <p className="not-found__lead">
-          This URL isn&rsquo;t on the broadcast. Prius is observing a different
-          map.
-        </p>
-      </header>
-      <figure className="not-found__clip">
-        <img
-          src={assetPath('404/s1mple-1v2.jpg')}
-          alt="s1mple winning a 1v2 clutch"
-          width={420}
-          height={237}
-          decoding="async"
-          fetchPriority="high"
-          draggable={false}
-        />
-      </figure>
-      <nav className="not-found__recover" aria-label="Still on the site">
-        <a
-          href="/cv"
-          onClick={(e) => {
-            e.preventDefault()
-            onGo('cv')
-          }}
-        >
-          CV
-        </a>
-        <a
-          href="/clips"
-          onClick={(e) => {
-            e.preventDefault()
-            onGo('clips')
-          }}
-        >
-          Clips
-        </a>
-        <a
-          href="/events"
-          onClick={(e) => {
-            e.preventDefault()
-            onGo('events')
-          }}
-        >
-          Events
-        </a>
-        <a href={SOCIAL.mailto} aria-label={BOOKING.aria}>
-          {BOOKING.longLabel}
-        </a>
-      </nav>
-      <p className="page-back">
-        <button type="button" className="text-btn" onClick={onBack}>
-          ← Back to the pitch
-        </button>
-      </p>
-    </article>
-  )
-}
-
-function ContactPage({ onBack }: { onBack: () => void }) {
-  return (
-    <article className="contact-page">
-      <h2>Book observing</h2>
-      <p className="contact-lead">{SITE.positioning}</p>
-      <p className="contact-availability">{SITE.availability}</p>
-      <p className="contact-place">{SOCIAL.location}</p>
-      <p className="contact-mail">
-        <a href={SOCIAL.mailto} aria-label={BOOKING.aria}>
-          {SOCIAL.email}
-        </a>
-      </p>
-      <p className="contact-hint">
-        Opens your mail app with Event / Dates filled in. Same address if you
-        just write.
-      </p>
-      <p className="contact-socials">
-        <a href={SOCIAL.twitter} target="_blank" rel="noopener noreferrer">
-          @priusOBS
-        </a>
-        {' · '}
-        <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer">
-          LinkedIn
-        </a>
-        {' · '}
-        <a href={SOCIAL.liquipedia} target="_blank" rel="noopener noreferrer">
-          Liquipedia
-        </a>
-      </p>
-      <PageFooter />
-      <p className="page-back">
-        <button type="button" className="text-btn" onClick={onBack}>
-          ← Back to the pitch
-        </button>
-      </p>
-    </article>
-  )
-}
-
-function PrivacyNotice({
-  onBack,
-  onGo,
-}: {
-  onBack: () => void
-  onGo: (next: Exclude<View, 'notfound'>) => void
-}) {
-  return (
-    <article className="privacy">
-      <h2>Privacy</h2>
-      <p className="privacy-lead">
-        Personal hiring site for David &ldquo;prius&rdquo; Kuntz. This page
-        describes what actually happens when you use{' '}
-        <a href="https://ingame.observer/">ingame.observer</a>. It is not a
-        GDPR certificate and I am not claiming the site is &ldquo;fully
-        compliant.&rdquo;
-      </p>
-
-      <h3>Who is responsible</h3>
-      <p>
-        Controller: David Kuntz (prius).
-        <br />
-        Contact:{' '}
-        <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>
-        <br />
-        Place of business: Los Angeles, California, United States.
-      </p>
-
-      <h3>What this site does not do</h3>
-      <ul>
-        <li>No accounts, logins, or newsletter signup.</li>
-        <li>
-          No analytics, pixels, or marketing cookies. Cloudflare Web Analytics
-          and Zaraz are off on this hostname (zone confirmed 4 September
-          2026). Live HTML does not inject a{' '}
-          <code>cloudflareinsights</code> beacon.
-        </li>
-        <li>
-          Fonts are self-hosted. Your browser does not fetch Google Fonts from
-          this site.
-        </li>
-        <li>
-          Event photos and clip videos are served from this origin. Opening an
-          event still does not call Flickr or Smugmug.
-        </li>
-        <li>
-          No first-party cookies. The only client storage is tab-scoped{' '}
-          <code>sessionStorage</code> for the slider (below).
-        </li>
-      </ul>
-
-      <h3>Hosting and server logs</h3>
-      <p>
-        Visitors hit a Cloudflare proxy first. The origin is GitHub Pages,
-        which is served from GitHub&rsquo;s own edge (Fastly). I do not run a
-        separate application server or log store. Those hosts see ordinary
-        connection data: IP address, user agent, referrer, requested URL, and
-        timestamp. Retention follows each host&rsquo;s defaults.
-      </p>
-      <p>
-        Cloudflare may also send Network Error Logging reports (connection
-        failures) to its own endpoints. That is reliability telemetry, not
-        analytics I turned on.
-      </p>
-      <p>
-        Email Address Obfuscation (Cloudflare Scrape Shield) is on. If
-        Cloudflare rewrites an address in HTML it may load a small{' '}
-        <code>/cdn-cgi/</code> decode script. That is scrape protection, not
-        a tracker. First-party pages put the booking address in after
-        JavaScript, so that script often never appears.
-      </p>
-      <p>
-        Provider notices:{' '}
-        <a
-          href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub privacy statement
-        </a>
-        {' · '}
-        <a
-          href="https://www.cloudflare.com/privacypolicy/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Cloudflare privacy policy
-        </a>
-        .
-      </p>
-
-      <h3>Session storage</h3>
-      <p>
-        For this browser tab only, the site may store the hard-sell slider
-        position (<code>{STORAGE_KEY}</code>). That stays on your device,
-        isn&rsquo;t a cookie, and clears when the tab closes. Block storage
-        and everything still works with defaults. Strictly necessary for
-        remembering the slider in the current tab.
-      </p>
-
-      <h3>When you contact me</h3>
-      <p>
-        Book / email links use mailto:{' '}
-        <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>. That opens{' '}
-        <em>your</em> mail client. I do not see the message until you send it.
-        Your provider processes the outbound mail under their terms.
-      </p>
-      <p>
-        Inbound mail to that address is handled by Cloudflare Email Routing
-        and delivered to Gmail. I read it to reply about observing / booking
-        (or security). I do not sell it.
-      </p>
-      <p>
-        A DM on X goes through X under their terms. Same use: reply about
-        work.
-      </p>
-      <p>
-        Google&rsquo;s privacy policy:{' '}
-        <a
-          href="https://policies.google.com/privacy"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          policies.google.com/privacy
-        </a>
-        .
-      </p>
-
-      <h3>Legal bases</h3>
-      <ul>
-        <li>
-          Hire inquiries (email / DMs): Art. 6(1)(b) GDPR — steps prior to a
-          contract — and/or Art. 6(1)(f) legitimate interests in answering
-          booking requests.
-        </li>
-        <li>
-          Server logs and security: Art. 6(1)(f) — operating and protecting
-          the site.
-        </li>
-      </ul>
-
-      <h3>Retention</h3>
-      <ul>
-        <li>
-          Host logs: Cloudflare&rsquo;s, GitHub&rsquo;s, and Fastly&rsquo;s
-          defaults.
-        </li>
-        <li>
-          Email: kept as long as needed to reply or book work, then according
-          to my mailbox practice.
-        </li>
-        <li>
-          Slider <code>sessionStorage</code>: until the tab closes.
-        </li>
-      </ul>
-
-      <h3>Your rights</h3>
-      <p>
-        If GDPR or UK GDPR applies to you, you can ask for access,
-        rectification, erasure, restriction, objection, or portability of
-        personal data I hold, and you can withdraw consent if I ever relied
-        on it (I am not using consent for a cookie wall today). Email{' '}
-        <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>. I may need enough
-        detail to find your message.
-      </p>
-      <p>
-        You can also complain to a supervisory authority in your EU/EEA
-        country or, for the UK, the ICO. I do not name a &ldquo;lead&rdquo;
-        authority — I am based in the US.
-      </p>
-
-      <h3>International transfers</h3>
-      <p>
-        Cloudflare, GitHub/Fastly, and Google/Gmail are US (and global)
-        processors. Using this site or emailing me means data may be processed
-        in the United States and other countries where those providers
-        operate. They publish their own transfer tools (standard contractual
-        clauses and similar terms). I am not listing certificate numbers I do
-        not control.
-      </p>
-
-      <h3>Cookies and ePrivacy</h3>
-      <p>
-        No cookies anywhere on this origin. Slider memory is{' '}
-        <code>sessionStorage</code> key <code>{STORAGE_KEY}</code> — tab
-        scoped, not a cookie, strictly necessary for that UI. There is no
-        cookie wall.
-      </p>
-
-      <h3>Photos &amp; clips</h3>
-      <p>
-        Event stills are local copies with credit links back to the original
-        Flickr / ESL / organizer albums (Riot / VCT Americas / BLAST / etc.).
-        Clips are local files with links to the Twitch originals. The chat
-        ticker uses self-hosted 7TV emote frames, not a live Twitch feed.
-        Rights stay with the photographers and organizers unless a source page
-        says otherwise.
-      </p>
-
-      <h3>External links</h3>
-      <p>
-        Liquipedia, X, LinkedIn, Flickr, Twitch, Discord, mailto — once you
-        leave, their rules apply. <code>/discord</code> on this origin is a
-        static bounce to a Discord invite; after that hop you are on Discord.
-      </p>
-
-      <h3>Security</h3>
-      <p>
-        There is a CSP meta in the HTML (<code>script-src &apos;self&apos;</code>,
-        no inline handlers). HTTP header copies of that policy belong on the
-        Cloudflare zone — GitHub Pages will not send them. Spotted something
-        sketchy?{' '}
-        <a href={SOCIAL.mailto}>{CONTROLLER_EMAIL}</a>
-        {' · '}
-        <a href={SECURITY_TXT}>security.txt</a>
-      </p>
-
-      <p className="privacy-updated">Last updated: 16 September 2026</p>
-
-      <p>
-        <button type="button" className="text-btn" onClick={onBack}>
-          ← Back to the pitch
-        </button>
-        {' · '}
-        <button
-          type="button"
-          className="text-btn"
-          onClick={() => onGo('contact')}
-        >
-          Book observing
-        </button>
-      </p>
-    </article>
   )
 }
 

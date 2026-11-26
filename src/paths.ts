@@ -1,15 +1,16 @@
 /** Vite base URL — `/` on the custom domain (and locally). */
-const base = import.meta.env.BASE_URL
+const base = import.meta.env?.BASE_URL ?? '/'
 
 function isSafeRelativeAsset(path: string) {
   if (!path || path.includes('..') || path.includes('\\') || path.includes('\0')) {
     return false
   }
-  if (path.startsWith('//') || /^[a-z][a-z0-9+.-]*:/i.test(path)) return false
+  if (path.startsWith('/') || /^[a-z][a-z0-9+.-]*:/i.test(path)) return false
   return true
 }
 
 export function assetPath(path: string) {
+  if (path.startsWith('//')) return base
   const cleaned = path.replace(/^\//, '')
   if (cleaned === '') return base
   if (!isSafeRelativeAsset(cleaned)) return `${base}`
